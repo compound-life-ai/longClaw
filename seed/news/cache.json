@@ -1,0 +1,71 @@
+{
+  "fetched_at": "2026-03-19T06:00:00+00:00",
+  "sources": [
+    {
+      "name": "Fight Aging!",
+      "feed": "https://www.fightaging.org/feed/",
+      "site": "https://www.fightaging.org/"
+    },
+    {
+      "name": "National Institute on Aging",
+      "feed": "https://www.nia.nih.gov/news/rss.xml",
+      "site": "https://www.nia.nih.gov/"
+    },
+    {
+      "name": "ScienceDaily Nutrition",
+      "feed": "https://www.sciencedaily.com/rss/health_medicine/nutrition.xml",
+      "site": "https://www.sciencedaily.com/news/health_medicine/nutrition/"
+    }
+  ],
+  "errors": [],
+  "items": [
+    {
+      "source": "Fight Aging!",
+      "title": "Senolytics Reduce Markers of Aging in Human Trial",
+      "url": "https://www.fightaging.org/archives/2026/03/senolytics-reduce-markers-human-trial/",
+      "summary": "A small clinical trial reports that a dasatinib plus quercetin regimen reduced circulating SASP biomarkers in adults over 65. Participants showed improved grip strength and reduced inflammatory markers over 12 weeks.",
+      "published_at": "Wed, 19 Mar 2026 08:00:00 GMT",
+      "score": 9
+    },
+    {
+      "source": "ScienceDaily Nutrition",
+      "title": "High-Protein Breakfast Linked to Better Metabolic Markers",
+      "url": "https://www.sciencedaily.com/releases/2026/03/260318142300.htm",
+      "summary": "Researchers found that participants who consumed at least 30g of protein at breakfast had significantly better postprandial glucose control and reported higher satiety through midday compared to carbohydrate-heavy breakfasts.",
+      "published_at": "Tue, 18 Mar 2026 14:23:00 GMT",
+      "score": 8
+    },
+    {
+      "source": "National Institute on Aging",
+      "title": "Sleep Fragmentation Accelerates Cognitive Decline in Over-50s",
+      "url": "https://www.nia.nih.gov/news/sleep-fragmentation-cognitive-decline-study",
+      "summary": "A longitudinal NIA-funded study following 4,200 adults over 8 years found that frequent nighttime awakenings were independently associated with faster cognitive decline, even after controlling for total sleep duration.",
+      "published_at": "Mon, 17 Mar 2026 12:00:00 GMT",
+      "score": 6
+    },
+    {
+      "source": "Fight Aging!",
+      "title": "Exercise Mimetics: Where the Field Stands in 2026",
+      "url": "https://www.fightaging.org/archives/2026/03/exercise-mimetics-field-2026/",
+      "summary": "An overview of current exercise mimetic compounds under investigation, including AICAR analogs and newer mitochondrial uncouplers. Most remain in preclinical stages, with no clear candidate yet matching the broad benefits of actual exercise.",
+      "published_at": "Sun, 16 Mar 2026 09:00:00 GMT",
+      "score": 6
+    },
+    {
+      "source": "ScienceDaily Nutrition",
+      "title": "Fiber Intake and Gut Microbiome Diversity: New Dose-Response Data",
+      "url": "https://www.sciencedaily.com/releases/2026/03/260315110000.htm",
+      "summary": "A controlled feeding study shows that increasing fiber intake from 15g to 35g per day over 6 weeks significantly increased gut microbial diversity and short-chain fatty acid production, with the largest gains seen between 25g and 35g.",
+      "published_at": "Sat, 15 Mar 2026 11:00:00 GMT",
+      "score": 5
+    },
+    {
+      "source": "National Institute on Aging",
+      "title": "Walking Speed as a Biomarker of Aging: Updated Guidelines",
+      "url": "https://www.nia.nih.gov/news/walking-speed-biomarker-aging-guidelines-2026",
+      "summary": "NIA releases updated reference ranges for gait speed as a functional aging biomarker. Adults maintaining over 1.0 m/s walking speed showed consistently better outcomes across multiple aging domains in a 15,000-participant meta-analysis.",
+      "published_at": "Fri, 14 Mar 2026 10:30:00 GMT",
+      "score": 5
+    }
+  ]
+}

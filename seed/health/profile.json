@@ -1,0 +1,74 @@
+{
+  "updated_at": "2026-03-17T06:00:00+00:00",
+  "goals": [
+    "improve sleep quality",
+    "increase daily protein intake to 140g",
+    "maintain consistent exercise routine"
+  ],
+  "constraints": [
+    "no caffeine after 14:00",
+    "avoid high-GI carbs at dinner"
+  ],
+  "preferences": {
+    "language": "en",
+    "units": "metric"
+  },
+  "questionnaire": {
+    "sleep_notes": "Average 6.5h, wake once around 3am most nights. Better on days with morning exercise.",
+    "training_notes": "Strength training Mon/Wed/Fri, easy run Tue/Thu, long ride Sat. Rest Sunday.",
+    "diet_notes": "Aiming for higher protein. Tend to under-eat at lunch and overcompensate at dinner."
+  },
+  "apple_health": {
+    "imported_at": "2026-03-15T10:00:00+00:00",
+    "source": "apple_health_export_xml",
+    "file_name": "export.xml",
+    "counts": {
+      "records": 2450000,
+      "workouts": 380,
+      "days_with_steps": 1200,
+      "days_with_sleep": 950
+    },
+    "activity": {
+      "daily_steps_avg": 8950,
+      "daily_active_energy_kcal_avg": 420.0,
+      "daily_basal_energy_kcal_avg": 1710.0,
+      "daily_exercise_minutes_avg": 38.5,
+      "daily_walking_running_distance_avg_km": 6.3,
+      "daily_cycling_distance_avg_km": 3.8,
+      "step_days": 1200
+    },
+    "sleep": {
+      "daily_sleep_hours_avg": 6.48,
+      "sleep_days": 950,
+      "daily_sleep_hours_values": [6.1, 5.8, 7.2, 6.9, 6.5]
+    },
+    "heart": {
+      "resting_heart_rate_avg": 58.4,
+      "heart_rate_avg": 88.7,
+      "walking_heart_rate_avg": 96.2,
+      "heart_rate_variability_sdnn_avg": 48.3,
+      "oxygen_saturation_avg": 0.97,
+      "respiratory_rate_avg": 15.2,
+      "vo2_max_avg": 47.8,
+      "sample_count": 580000
+    },
+    "workouts": {
+      "workout_count": 380,
+      "average_workout_minutes": 42.6,
+      "by_type": {
+        "HKWorkoutActivityTypeRunning": 95,
+        "HKWorkoutActivityTypeCycling": 82,
+        "HKWorkoutActivityTypeTraditionalStrengthTraining": 145,
+        "HKWorkoutActivityTypeYoga": 30,
+        "HKWorkoutActivityTypeHiking": 28
+      }
+    }
+  },
+  "imports": [
+    {
+      "source": "apple_health_export_xml",
+      "imported_at": "2026-03-15T10:00:00+00:00",
+      "file_name": "export.xml"
+    }
+  ]
+}

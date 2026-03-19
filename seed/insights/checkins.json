@@ -1,0 +1,101 @@
+[
+  {
+    "id": "c3d4e5f6-0001-4000-8000-000000000001",
+    "experiment_id": "b2c3d4e5-0001-4000-8000-000000000001",
+    "timestamp": "2026-03-13T07:00:00+00:00",
+    "compliance": 1,
+    "primary_outcome_scores": {
+      "sleep_quality": 6
+    },
+    "confounders": ["late workout"],
+    "note": "Fell asleep around 22:30. Woke once at 3am."
+  },
+  {
+    "id": "c3d4e5f6-0002-4000-8000-000000000002",
+    "experiment_id": "b2c3d4e5-0001-4000-8000-000000000001",
+    "timestamp": "2026-03-14T07:15:00+00:00",
+    "compliance": 1,
+    "primary_outcome_scores": {
+      "sleep_quality": 7
+    },
+    "confounders": [],
+    "note": "Slept through the night for once. Felt noticeably more rested."
+  },
+  {
+    "id": "c3d4e5f6-0003-4000-8000-000000000003",
+    "experiment_id": "b2c3d4e5-0001-4000-8000-000000000001",
+    "timestamp": "2026-03-15T07:30:00+00:00",
+    "compliance": 0,
+    "primary_outcome_scores": {
+      "sleep_quality": 5
+    },
+    "confounders": ["had espresso at 13:30"],
+    "note": "Broke protocol, had a coffee after lunch meeting. Sleep was worse."
+  },
+  {
+    "id": "c3d4e5f6-0004-4000-8000-000000000004",
+    "experiment_id": "b2c3d4e5-0001-4000-8000-000000000001",
+    "timestamp": "2026-03-16T07:00:00+00:00",
+    "compliance": 1,
+    "primary_outcome_scores": {
+      "sleep_quality": 7
+    },
+    "confounders": [],
+    "note": "Back on track. Good sleep, about 7 hours total."
+  },
+  {
+    "id": "c3d4e5f6-0005-4000-8000-000000000005",
+    "experiment_id": "b2c3d4e5-0001-4000-8000-000000000001",
+    "timestamp": "2026-03-17T07:10:00+00:00",
+    "compliance": 1,
+    "primary_outcome_scores": {
+      "sleep_quality": 8
+    },
+    "confounders": [],
+    "note": "Best night in weeks. Morning exercise day yesterday might be helping too."
+  },
+  {
+    "id": "c3d4e5f6-0010-4000-8000-000000000010",
+    "experiment_id": "b2c3d4e5-0002-4000-8000-000000000002",
+    "timestamp": "2026-02-24T07:00:00+00:00",
+    "compliance": 1,
+    "primary_outcome_scores": {
+      "soreness_score": 5
+    },
+    "confounders": [],
+    "note": "Had shake right after squats and deadlifts."
+  },
+  {
+    "id": "c3d4e5f6-0011-4000-8000-000000000011",
+    "experiment_id": "b2c3d4e5-0002-4000-8000-000000000002",
+    "timestamp": "2026-02-26T07:00:00+00:00",
+    "compliance": 1,
+    "primary_outcome_scores": {
+      "soreness_score": 4
+    },
+    "confounders": ["lighter session"],
+    "note": "Upper body day, less intense than usual."
+  },
+  {
+    "id": "c3d4e5f6-0012-4000-8000-000000000012",
+    "experiment_id": "b2c3d4e5-0002-4000-8000-000000000002",
+    "timestamp": "2026-02-28T07:00:00+00:00",
+    "compliance": 1,
+    "primary_outcome_scores": {
+      "soreness_score": 3
+    },
+    "confounders": [],
+    "note": "Noticeably less sore than baseline week."
+  },
+  {
+    "id": "c3d4e5f6-0013-4000-8000-000000000013",
+    "experiment_id": "b2c3d4e5-0002-4000-8000-000000000002",
+    "timestamp": "2026-03-03T07:00:00+00:00",
+    "compliance": 0,
+    "primary_outcome_scores": {
+      "soreness_score": 6
+    },
+    "confounders": ["forgot shake"],
+    "note": "Missed the shake, was rushing to a meeting. Definitely more sore next day."
+  }
+]
