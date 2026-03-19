@@ -1,0 +1,17 @@
+{
+  "name": "Daily Health Coach",
+  "schedule": { "kind": "cron", "expr": "10 7 * * *", "tz": "America/Los_Angeles" },
+  "sessionTarget": "isolated",
+  "wakeMode": "next-heartbeat",
+  "payload": {
+    "kind": "agentTurn",
+    "lightContext": true,
+    "message": "Use the daily-coach skill to generate today's personalized health coaching message. Keep it compact, conservative, and grounded in local health, nutrition, experiment, and cached-news context."
+  },
+  "delivery": {
+    "mode": "announce",
+    "channel": "telegram",
+    "to": "__TELEGRAM_DM_CHAT_ID__",
+    "bestEffort": true
+  }
+}

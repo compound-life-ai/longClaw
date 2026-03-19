@@ -78,6 +78,7 @@ openclaw skills info snap
 openclaw skills info health
 openclaw skills info news
 openclaw skills info insights
+openclaw skills info daily-coach
 ```
 
 Expected result:
@@ -111,11 +112,13 @@ Before adding cron jobs:
 1. Replace `__TELEGRAM_DM_CHAT_ID__` in:
    - `cron/health-brief.example.json`
    - `cron/news-digest.example.json`
+   - `cron/daily-health-coach.example.json`
 2. Add the jobs:
 
 ```bash
 openclaw cron add --from-file cron/health-brief.example.json
 openclaw cron add --from-file cron/news-digest.example.json
+openclaw cron add --from-file cron/daily-health-coach.example.json
 ```
 
 ## Apple Health Import
@@ -138,3 +141,4 @@ If you prefer manual extraction, extract `apple_health_export/export.xml` from t
 3. Test `/snap` with a food photo.
 4. Run `/health`.
 5. Run `/insights`.
+6. Enable `cron/daily-health-coach.example.json` if you want the personalized daily coaching message.

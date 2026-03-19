@@ -15,7 +15,7 @@ from scripts.common.paths import ensure_dir, repo_root
 from scripts.common.storage import write_json
 
 
-SKILLS = ["snap", "health", "news", "insights"]
+SKILLS = ["snap", "health", "news", "insights", "daily-coach"]
 BUNDLE_NAME = "compound-clawskill"
 DATA_DIR_NAME = "longevityOS-data"
 COPY_DIRS = ["skills", "scripts", "cron", "docs"]

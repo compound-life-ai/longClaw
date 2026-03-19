@@ -112,6 +112,7 @@ class InstallBundleTests(unittest.TestCase):
             self.assertIn("skills", result)
             self.assertIn(str(bundle_root(openclaw_home, BUNDLE_NAME) / "skills"), result["extra_dirs"])
             self.assertIn("Ready", result["skills"]["snap"])
+            self.assertIn("Ready", result["skills"]["daily-coach"])
 
     def test_verify_install_requires_registered_skills_dir(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:

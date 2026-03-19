@@ -10,6 +10,7 @@ It currently provides:
 - `/health` for Apple Health XML import and structured health profile updates
 - `/news` for a curated health/longevity digest
 - `/insights` for structured self-experiments and gap-aware recommendations
+- a cron-driven daily health coach that combines local health data, experiment context, and relevant curated news into personalized daily guidance
 
 The bundle is designed for OpenClaw + Telegram and installs as a managed bundle under `~/.openclaw/bundles/compound-clawskill`.
 
@@ -20,7 +21,7 @@ The bundle is designed for OpenClaw + Telegram and installs as a managed bundle 
 - `/health` builds a reusable health profile from Apple Health exports and structured questionnaire-style inputs. That profile becomes shared context for future recommendations instead of forcing the user to restate the same baseline every time.
 - `/news` produces a curated digest focused on health, longevity, nutrition, sleep, exercise, and related research, using predefined sources instead of generic open-ended news search.
 - `/insights` is designed for structured self-experimentation. It tracks hypotheses, interventions, check-ins, and follow-up analysis, and it is intentionally allowed to say “not enough data yet” instead of pretending to know the answer.
-- Morning automation is supported through separate cron-driven health and news messages, so the system can proactively send a daily brief and a separate curated digest instead of waiting for the user to ask each time.
+- Morning automation is supported through separate cron-driven health brief, news digest, and daily coach messages, so the system can proactively summarize, curate, and coach instead of waiting for the user to ask each time.
 - Everything is local-first. Runtime state lives under `longevityOS-data/`, which keeps meal logs, health profile data, experiment state, and cached news separate from unrelated OpenClaw workspace data.
 
 [Back to top](#top)
@@ -28,7 +29,7 @@ The bundle is designed for OpenClaw + Telegram and installs as a managed bundle 
 ## Table Of Contents
 
 - [Core Features](#core-features)
-- [Agent Install Instruction](#agent-install-instruction)
+- [Copy And Paste To Your OpenClaw To Install (Recommended)](#copy-and-paste-to-your-openclaw-to-install-recommended)
 - [Install](#install)
 - [Install Verification](#install-verification)
 - [Fresh Session Required](#fresh-session-required)
@@ -116,6 +117,7 @@ openclaw skills info snap
 openclaw skills info health
 openclaw skills info news
 openclaw skills info insights
+openclaw skills info daily-coach
 ```
 
 Expected result:
@@ -169,12 +171,14 @@ Files:
 
 - `cron/health-brief.example.json`
 - `cron/news-digest.example.json`
+- `cron/daily-health-coach.example.json`
 
 Then create the jobs:
 
 ```bash
 openclaw cron add --from-file cron/health-brief.example.json
 openclaw cron add --from-file cron/news-digest.example.json
+openclaw cron add --from-file cron/daily-health-coach.example.json
 ```
 
 [Back to top](#top)
@@ -188,6 +192,7 @@ After install:
 3. Test `/snap` with a food photo.
 4. Run `/health`.
 5. Run `/insights`.
+6. Configure and enable `cron/daily-health-coach.example.json` if you want the personalized daily coach message.
 
 [Back to top](#top)
 
@@ -195,7 +200,7 @@ After install:
 
 To remove the installed bundle:
 
-1. Remove any cron jobs you created from `cron/health-brief.example.json` and `cron/news-digest.example.json`.
+1. Remove any cron jobs you created from `cron/health-brief.example.json`, `cron/news-digest.example.json`, and `cron/daily-health-coach.example.json`.
 2. Remove `~/.openclaw/bundles/compound-clawskill/skills` from `skills.load.extraDirs` in `~/.openclaw/openclaw.json`.
 3. Delete `~/.openclaw/bundles/compound-clawskill` to remove the installed skills, copied files, and `longevityOS-data/`.
 4. Start a fresh OpenClaw session.
