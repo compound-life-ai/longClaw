@@ -97,7 +97,7 @@ function FeatureCard({
     amber: "border-claw-amber/30 text-claw-amber",
   };
   return (
-    <div className="group flex flex-col rounded-lg border border-claw-border bg-claw-bg-card p-5 transition-all duration-300 hover:border-claw-red/40 hover:shadow-[0_0_20px_rgba(232,77,61,0.06)]">
+    <div className="group rounded-lg border border-claw-border bg-claw-bg-card p-5 transition-all duration-300 hover:border-claw-red/40 hover:shadow-[0_0_20px_rgba(232,77,61,0.06)]">
       <div className="mb-3 flex justify-between items-start">
         <div className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-claw-bg-elevated border border-claw-border text-claw-red">
           {icon}
@@ -108,19 +108,16 @@ function FeatureCard({
           {tag}
         </span>
       </div>
-      {command && (
-        <code className="text-xs font-mono text-claw-coral mb-1">{command}</code>
-      )}
       <h3 className="text-base font-semibold mb-1.5 font-mono text-claw-text">{title}</h3>
-      <p className="text-sm text-claw-text-muted leading-relaxed mb-4">{description}</p>
-      <div className="mt-auto">{children}</div>
+      <p className="text-sm text-claw-text-muted leading-relaxed mb-3">{description}</p>
+      <div>{children}</div>
     </div>
   );
 }
 
 function ChatMock({ messages }: { messages: { role: "user" | "assistant"; text: string }[] }) {
   return (
-    <div className="bg-claw-bg rounded-lg p-3 border border-claw-border-subtle text-xs space-y-2 font-mono">
+    <div className="bg-claw-bg rounded-lg p-2.5 border border-claw-border-subtle text-xs space-y-1.5 font-mono">
       {messages.map((m, i) => (
         <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
           <div
@@ -205,19 +202,19 @@ export default function Home() {
               <span className="w-8 h-px bg-claw-border inline-block" />
               you talk, it acts
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
               <FeatureCard
                 icon={<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>}
                 title="Meal Snap"
                 description="Send a food photo or describe what you ate. The agent breaks it down into ingredients with full micronutrient detail."
                 tag="conversational"
               >
-                <div className="bg-claw-bg rounded-lg p-3 border border-claw-border-subtle text-xs space-y-2 font-mono">
+                <div className="bg-claw-bg rounded-lg p-2.5 border border-claw-border-subtle text-xs space-y-1.5 font-mono">
                   <div className="flex justify-end">
-                    <img src="/meal-snap-demo.jpg" alt="Salmon with rice and vegetables" className="rounded-lg max-w-[75%] border border-claw-red/20" />
+                    <img src="/meal-snap-demo.jpg" alt="Salmon with rice and vegetables" className="rounded-md w-32 border border-claw-red/20" />
                   </div>
                   <div className="flex justify-start">
-                    <div className="rounded-lg px-3 py-1.5 max-w-[90%] bg-claw-border/60 text-claw-text border border-claw-border" dangerouslySetInnerHTML={{ __html: "<b>logged</b> &mdash; lunch &bull; 495 kcal &bull; 53g protein<br/><span style='opacity:0.7'>Zn 3.2mg &middot; Ca 58mg &middot; VitD 16.4&micro;g &middot; Se 73mcg &middot; Omega-3 1.98g</span><br/><br/><span style='opacity:0.5'>today so far: 1,240 / 2,500 kcal<br/>protein 98 / 140g &#10003; &middot; fiber 12 / 38g &#9888;</span>" }} />
+                    <div className="rounded-lg px-2.5 py-1.5 max-w-[90%] bg-claw-border/60 text-claw-text border border-claw-border" dangerouslySetInnerHTML={{ __html: "<b>logged</b> &mdash; lunch &bull; 495 kcal &bull; 53g protein<br/><span style='opacity:0.7'>Zn 3.2mg &middot; Ca 58mg &middot; VitD 16.4&micro;g &middot; Se 73mcg &middot; Omega-3 1.98g</span><br/><span style='opacity:0.5'>today: 1,240 / 2,500 kcal &middot; protein 98/140g &#10003;</span>" }} />
                   </div>
                 </div>
               </FeatureCard>
@@ -244,7 +241,7 @@ export default function Home() {
               <span className="w-8 h-px bg-claw-border inline-block" />
               it thinks, it tells you
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
               <FeatureCard
                 icon={<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>}
                 title="Curated News"
@@ -253,7 +250,7 @@ export default function Home() {
                 tagColor="green"
               >
                 <ChatMock messages={[
-                  { role: "assistant", text: "<b>relevant to your sleep goal</b> &mdash;<br/><br/><span style='opacity:0.7'>New study: sleep fragmentation (waking 3+ times) accelerates cognitive decline even when total sleep is 7+ hours.<br/><br/>Your data shows 2.1 avg wake episodes &mdash; just below the risk threshold. Worth monitoring.</span><br/><br/><span style='opacity:0.5'>2 more items in today's digest &rarr;</span>" },
+                  { role: "assistant", text: "<b>relevant to your sleep goal</b><br/><span style='opacity:0.7'>New study: sleep fragmentation (waking 3+ times) accelerates cognitive decline even at 7+ hours total sleep.<br/>Your data: 2.1 avg wake episodes &mdash; just below risk threshold.</span><br/><span style='opacity:0.5'>2 more items in today's digest &rarr;</span>" },
                 ]} />
               </FeatureCard>
 
@@ -265,7 +262,7 @@ export default function Home() {
                 tagColor="green"
               >
                 <ChatMock messages={[
-                  { role: "assistant", text: "<b>pattern detected</b> &mdash; sleep + caffeine<br/><br/><span style='opacity:0.7'>Past 14 days:<br/>&bull; 4 nights deep sleep &lt;1hr &mdash; 3 had caffeine after 15:00<br/>&bull; Late eating (after 21:00) &rarr; resting HR +5bpm avg</span><br/><br/>Want me to set up a 14-day experiment with an earlier caffeine cutoff?" },
+                  { role: "assistant", text: "<b>pattern detected</b> &mdash; sleep + caffeine<br/><span style='opacity:0.7'>Past 14 days:<br/>&bull; 4 nights deep sleep &lt;1hr &mdash; 3 had caffeine after 15:00<br/>&bull; Late eating (after 21:00) &rarr; resting HR +5bpm avg</span><br/>Set up a 14-day experiment with earlier cutoff?" },
                 ]} />
               </FeatureCard>
 
@@ -277,7 +274,7 @@ export default function Home() {
                 tagColor="amber"
               >
                 <ChatMock messages={[
-                  { role: "assistant", text: "<b>good morning</b> &mdash; Mar 19<br/><br/><span style='opacity:0.7'>overnight: 7h15m sleep &middot; HRV 52ms (&uarr;8% vs 7-day avg) &middot; RHR 56bpm<br/><br/>yesterday: 1,850 kcal &middot; 134g protein &#10003;<br/>gaps: zinc 42% &middot; calcium 58% of RDA<br/><br/>action: add pumpkin seeds or yogurt<br/><br/>news: protein at breakfast improves satiety all day (NIA) &rarr; your goal<br/><br/>experiment: caffeine cutoff day 8/14 &#10003;</span>" },
+                  { role: "assistant", text: "<b>good morning</b> &mdash; Mar 19<br/><span style='opacity:0.7'>overnight: 7h15m &middot; HRV 52ms (&uarr;8%) &middot; RHR 56<br/>yesterday: 1,850 kcal &middot; 134g protein &#10003;<br/>gaps: zinc 42% &middot; calcium 58% of RDA<br/>action: pumpkin seeds or yogurt today<br/>experiment: caffeine cutoff day 8/14 &#10003;</span>" },
                 ]} />
               </FeatureCard>
             </div>
