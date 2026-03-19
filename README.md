@@ -49,7 +49,7 @@ The bundle is designed for OpenClaw + Telegram and installs as a managed bundle 
 Use the following block as a copy-paste instruction for an OpenClaw agent that should install this bundle on the user's device:
 
 ```text
-1. Clone this repository to a stable local path.
+1. Clone `https://github.com/compound-life-ai/longClaw` to a stable local path.
 2. Change into the cloned repository.
 3. Run `python3 scripts/install_bundle.py`.
 4. Run `python3 scripts/install_bundle.py --verify`.
