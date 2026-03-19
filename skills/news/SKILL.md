@@ -8,8 +8,9 @@ user-invocable: true
 
 Use this skill when:
 
-- the user invokes `/news`
+- the user asks about health/longevity news or research (e.g. "any interesting longevity news?", "what's new in sleep research?")
 - a scheduled digest needs to be generated
+- the user invokes `/news` (legacy shortcut)
 
 Rules:
 

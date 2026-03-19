@@ -1,6 +1,6 @@
 ---
 name: insights
-description: Guide structured self-experiments using observation, hypothesis, design, check-ins, analysis, and next-step recommendations grounded in local health and nutrition data.
+description: Discover patterns in health data, answer questions about correlations, and guide structured self-experiments with observation, hypothesis, check-ins, analysis, and next-step recommendations.
 user-invocable: true
 ---
 
@@ -8,8 +8,21 @@ user-invocable: true
 
 Use this skill when:
 
-- the user invokes `/insights`
+- the user asks about patterns, correlations, or trends in their health data (e.g. "why am I sleeping poorly?", "what's affecting my HRV?", "summarize my recent patterns")
 - the user wants a hypothesis, experiment, or analysis of recent health data
+- the user invokes `/insights` (legacy shortcut)
+
+Pattern discovery mode:
+
+When the user asks about patterns or correlations, **proactively analyze all available local data** (Apple Health metrics, nutrition logs, experiment check-ins) to find correlations. Do not ask the user to manually report confounders — infer them from the data. Present findings as specific, data-backed observations, for example:
+
+- "Past 2 weeks: 4 nights with deep sleep < 1hr — 3 of those had caffeine intake after 15:00"
+- "Wed and Fri HRV notably low — both days had 10hr+ screen time"
+- "Late eating (after 21:00) correlates with resting HR +5bpm average"
+
+This proactive pattern discovery from data is a core differentiator. The agent should look smart — it sees correlations the user would never manually track.
+
+Experiment mode:
 
 Rules:
 

@@ -1,6 +1,6 @@
 ---
 name: snap
-description: Log meals from food photos or meal text with ingredient-centric calorie and micronutrient estimates, brief confirmations, and daily running totals.
+description: Log meals from food photos or natural language meal descriptions with ingredient-centric calorie, macro, and full micronutrient detail.
 user-invocable: true
 ---
 
@@ -8,9 +8,9 @@ user-invocable: true
 
 Use this skill when:
 
-- the user invokes `/snap`
 - the user sends a likely food photo
-- the user sends a meal description they want logged
+- the user describes what they ate or are eating (e.g. "had salmon with rice for lunch", "just grabbed a yogurt and some berries")
+- the user invokes `/snap` (legacy shortcut)
 
 Behavior rules:
 
@@ -18,7 +18,9 @@ Behavior rules:
 - If a photo-only message has low confidence, ask a brief confirmation before logging anything.
 - If confidence is high, proceed directly.
 - Infer ingredients and portions, but do not invent detailed nutrient numbers when the script can enrich them deterministically.
-- Store the full micronutrient payload, but only mention the top 3 notable micronutrient signals in the visible confirmation.
+- After logging, show the **full micronutrient breakdown** in a compact inline format, for example:
+  `Zn 3.2mg · Ca 58mg · VitD 16.4µg · Se 73mcg · Fe 1.8mg · Folate 57µg · Omega-3 1.98g`
+  This level of quantitative detail is a core differentiator — do not abbreviate to just "Notable: Vitamin D".
 
 Logging flow:
 
@@ -69,5 +71,23 @@ After logging:
 
 - confirm what was logged
 - show meal calories/macros
+- show the full micronutrient breakdown (all non-zero micronutrients) in compact inline format
 - include today's running totals if they are useful
 - keep the response short unless the user asks for detail
+
+Weekly nutrition review:
+
+When the user asks about weekly nutrition (e.g. "how's my nutrition looking this week?", "weekly summary"), run:
+
+```bash
+python3 "{baseDir}/../../scripts/nutrition/weekly_summary.py" \
+  --data-root "{baseDir}/../../longevityOS-data" \
+  --end-date "YYYY-MM-DD" \
+  --rda-profile default
+```
+
+Present the results as:
+- daily averages for macros and key micronutrients
+- percentage of RDA for each nutrient
+- highlight gaps (below 75% of RDA) and strengths (above 100%)
+- suggest specific foods to address the biggest gaps

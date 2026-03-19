@@ -1,0 +1,103 @@
+"""Recommended Dietary Allowances (RDA) and Adequate Intakes (AI).
+
+Sources (all public domain):
+  - DRI Tables, Food and Nutrition Board, National Academies (Elements & Vitamins)
+  - FDA Daily Values (2024 label reference, 2,000 kcal diet)
+  - USDA Dietary Guidelines for Americans, 2020-2025
+  - NIH ODS Omega-3 Fatty Acids Fact Sheet
+"""
+
+from __future__ import annotations
+
+# Daily recommended values.  The "default" profile uses FDA Daily Values
+# (label reference).  Sex-specific profiles use IOM/NASEM RDAs and AIs.
+
+RDA_DAILY: dict[str, dict[str, float | None]] = {
+    "default": {
+        "calories_kcal": 2000,
+        "protein_g": 50,
+        "carbs_g": 275,
+        "fat_g": 78,
+        "fiber_g": 28,
+        "calcium_mg": 1300,
+        "iron_mg": 18,
+        "magnesium_mg": 420,
+        "phosphorus_mg": 1250,
+        "potassium_mg": 4700,
+        "sodium_mg": 2300,
+        "zinc_mg": 11,
+        "copper_mg": 0.9,
+        "manganese_mg": 2.3,
+        "selenium_mcg": 55,
+        "vitamin_a_mcg": 900,
+        "vitamin_c_mg": 90,
+        "vitamin_d_mcg": 20,
+        "vitamin_e_mg": 15,
+        "vitamin_k_mcg": 120,
+        "thiamin_mg": 1.2,
+        "riboflavin_mg": 1.3,
+        "niacin_mg": 16,
+        "vitamin_b6_mg": 1.7,
+        "folate_mcg": 400,
+        "vitamin_b12_mcg": 2.4,
+        "choline_mg": 550,
+    },
+    "male_19_50": {
+        "calories_kcal": 2500,
+        "protein_g": 56,
+        "carbs_g": 130,
+        "fat_g": 83,
+        "fiber_g": 38,
+        "calcium_mg": 1000,
+        "iron_mg": 8,
+        "magnesium_mg": 400,
+        "phosphorus_mg": 700,
+        "potassium_mg": 3400,
+        "sodium_mg": 2300,
+        "zinc_mg": 11,
+        "copper_mg": 0.9,
+        "manganese_mg": 2.3,
+        "selenium_mcg": 55,
+        "vitamin_a_mcg": 900,
+        "vitamin_c_mg": 90,
+        "vitamin_d_mcg": 15,
+        "vitamin_e_mg": 15,
+        "vitamin_k_mcg": 120,
+        "thiamin_mg": 1.2,
+        "riboflavin_mg": 1.3,
+        "niacin_mg": 16,
+        "vitamin_b6_mg": 1.3,
+        "folate_mcg": 400,
+        "vitamin_b12_mcg": 2.4,
+        "choline_mg": 550,
+    },
+    "female_19_50": {
+        "calories_kcal": 2000,
+        "protein_g": 46,
+        "carbs_g": 130,
+        "fat_g": 67,
+        "fiber_g": 25,
+        "calcium_mg": 1000,
+        "iron_mg": 18,
+        "magnesium_mg": 310,
+        "phosphorus_mg": 700,
+        "potassium_mg": 2600,
+        "sodium_mg": 2300,
+        "zinc_mg": 8,
+        "copper_mg": 0.9,
+        "manganese_mg": 1.8,
+        "selenium_mcg": 55,
+        "vitamin_a_mcg": 700,
+        "vitamin_c_mg": 75,
+        "vitamin_d_mcg": 15,
+        "vitamin_e_mg": 15,
+        "vitamin_k_mcg": 90,
+        "thiamin_mg": 1.1,
+        "riboflavin_mg": 1.1,
+        "niacin_mg": 14,
+        "vitamin_b6_mg": 1.3,
+        "folate_mcg": 400,
+        "vitamin_b12_mcg": 2.4,
+        "choline_mg": 425,
+    },
+}

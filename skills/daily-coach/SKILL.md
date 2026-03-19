@@ -28,10 +28,21 @@ python3 "{baseDir}/../../scripts/coach/daily_health_coach.py" \
 
 Then produce a hybrid daily coaching message with:
 
-- a short recap of what matters most today
+- a short recap of what matters most today (sleep duration, HRV trend, RHR, yesterday's calorie/protein totals)
+- specific micronutrient gaps from recent days with food suggestions (e.g. "zinc low — try pumpkin seeds or beef today")
 - 1 to 3 prioritized actions
 - an experiment check-in prompt only if `checkin_needed` is true
 - at most 1 directly relevant news-derived note
+
+For richer nutrition context, also run the weekly summary:
+
+```bash
+python3 "{baseDir}/../../scripts/nutrition/weekly_summary.py" \
+  --data-root "{baseDir}/../../longevityOS-data" \
+  --end-date "YYYY-MM-DD"
+```
+
+Use the gaps list to make specific, actionable food suggestions.
 
 If `insufficient_data` is true:
 

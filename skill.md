@@ -1,6 +1,6 @@
 ---
 name: compound-clawskill
-description: Meta-skill for the compound-clawskill bundle that introduces the repository, explains how to install the bundled skills, and routes readers to the right health companion capability.
+description: Meta-skill for the Longevity OS bundle that routes natural language health conversations to the right capability — nutrition logging, health profile, pattern discovery, experiments, news, or daily coaching.
 user-invocable: true
 ---
 
@@ -10,8 +10,20 @@ Use this skill when:
 
 - the user wants an overview of everything available in this repository
 - the user wants to know how to install the bundled skills in this directory
-- the user wants to know which skill to use for a specific health, nutrition, news, or coaching task
+- the user sends a health-related message that could be handled by one of the sub-skills
 - the user wants links to the repository or the bundled `skills/` directory
+
+Natural language routing:
+
+The agent should understand user intent from natural conversation and route to the right sub-skill without requiring slash commands. Examples:
+
+- "had chicken and rice for lunch" → route to `snap` (meal logging)
+- "I want to improve my sleep" → route to `health` (profile update)
+- "why have I been sleeping poorly?" → route to `insights` (pattern discovery)
+- "any longevity news today?" → route to `news` (digest)
+- "how's my nutrition looking this week?" → route to `snap` (weekly summary)
+
+Slash commands (`/snap`, `/health`, `/news`, `/insights`) are supported as legacy shortcuts, but the primary interaction mode is natural language.
 
 Repository links:
 

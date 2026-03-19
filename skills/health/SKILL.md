@@ -1,6 +1,6 @@
 ---
 name: health
-description: Build and update a normalized personal health profile from Apple Health XML imports and structured questionnaire answers for higher-quality lifestyle recommendations.
+description: Build and update a normalized personal health profile from Apple Health XML imports and natural conversation about goals, constraints, and preferences.
 user-invocable: true
 ---
 
@@ -8,10 +8,11 @@ user-invocable: true
 
 Use this skill when:
 
-- the user invokes `/health`
+- the user mentions health goals, constraints, or preferences in conversation (e.g. "I want to improve my sleep", "no caffeine after 2pm", "I'm trying to hit 140g protein daily")
 - the user wants more personalized recommendations
 - the user uploads Apple Health export XML
 - the user is answering health baseline questions
+- the user invokes `/health` (legacy shortcut)
 
 Rules:
 

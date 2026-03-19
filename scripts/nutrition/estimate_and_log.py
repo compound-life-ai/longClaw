@@ -74,7 +74,7 @@ def nutrition_csv_path(data_root: Path) -> Path:
 
 def summarize_day(data_root: Path, date_str: str) -> dict[str, Any]:
     path = nutrition_csv_path(data_root)
-    totals = {
+    totals: dict[str, Any] = {
         "date": date_str,
         "entries": 0,
         "meal_count": 0,
@@ -83,9 +83,10 @@ def summarize_day(data_root: Path, date_str: str) -> dict[str, Any]:
         "carbs_g": 0.0,
         "fat_g": 0.0,
         "fiber_g": 0.0,
+        "micronutrients": {},
         "top_micros": [],
     }
-    micro_counts: dict[str, int] = defaultdict(int)
+    micro_totals: dict[str, float] = defaultdict(float)
     meal_ids: set[str] = set()
     if not path.exists():
         return totals
@@ -101,15 +102,18 @@ def summarize_day(data_root: Path, date_str: str) -> dict[str, Any]:
                 totals[key] = round(totals[key] + to_float(row.get(key)), 2)
             micros = json.loads(row.get("micronutrients_json") or "{}")
             if isinstance(micros, dict):
-                for micro_key in micros:
-                    micro_counts[str(micro_key)] += 1
+                for micro_key, micro_val in micros.items():
+                    micro_totals[str(micro_key)] += to_float(micro_val)
 
     totals["meal_count"] = len(meal_ids)
+    totals["micronutrients"] = {
+        k: round(v, 2) for k, v in sorted(micro_totals.items()) if v > 0
+    }
     totals["top_micros"] = [
-        {"name": name, "mentions": mentions}
-        for name, mentions in sorted(
-            micro_counts.items(), key=lambda item: (-item[1], item[0])
-        )[:3]
+        {"name": name, "value": round(value, 2)}
+        for name, value in sorted(
+            micro_totals.items(), key=lambda item: (-item[1], item[0])
+        )[:5]
     ]
     return totals
 

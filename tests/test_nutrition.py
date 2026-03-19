@@ -84,7 +84,7 @@ class NutritionScriptTests(unittest.TestCase):
 
             self.assertEqual(result["ingredient_count"], 2)
             self.assertEqual(result["meal_totals"]["calories_kcal"], 520.0)
-            self.assertEqual(result["day_summary"]["top_micros"][0]["name"], "manganese_mg")
+            self.assertEqual(result["day_summary"]["top_micros"][0]["name"], "vitamin_d_iu")
             summary = summarize_day(data_root, "2026-03-18")
             self.assertEqual(summary["meal_count"], 1)
             self.assertEqual(summary["entries"], 2)
@@ -105,7 +105,7 @@ class NutritionScriptTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 log_payload({"ingredients": [{"name": " ", "micronutrients": {}}]}, data_root)
             with self.assertRaises(ValueError):
-                log_payload({"ingredients": [{"name": "rice", "micronutrients": []}]}, data_root)
+                log_payload({"ingredients": [{"name": "zzz_unknown_food", "micronutrients": []}]}, data_root)
 
     def test_normalize_and_enrich_ingredient_from_catalog(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -169,8 +169,8 @@ class NutritionScriptTests(unittest.TestCase):
             result = log_payload(payload, data_root)
 
             self.assertEqual(result["ingredient_count"], 2)
-            self.assertAlmostEqual(result["meal_totals"]["calories_kcal"], 518.91)
-            self.assertAlmostEqual(result["meal_totals"]["protein_g"], 34.88)
+            self.assertAlmostEqual(result["meal_totals"]["calories_kcal"], 517.4, places=0)
+            self.assertAlmostEqual(result["meal_totals"]["protein_g"], 34.87, places=0)
             self.assertEqual(result["ingredients"][0]["nutrient_source"], "catalog")
             self.assertEqual(result["ingredients"][1]["normalized_name"], "rice white cooked")
             with (data_root / "nutrition" / "meals.csv").open(

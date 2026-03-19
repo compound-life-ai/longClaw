@@ -163,10 +163,10 @@ export default function Home() {
         </h1>
 
         <p className="text-lg md:text-xl text-claw-text-muted max-w-3xl mx-auto leading-relaxed">
-          A personal health companion for{" "}
+          An AI health agent for{" "}
           <span className="text-claw-coral">OpenClaw</span> &{" "}
           <span className="text-claw-cyan">Telegram</span>.
-          Deterministic nutrition, structured health profiles, curated longevity news, and rigorous self-experiments.
+          Talk to it naturally. It quantifies your nutrition, discovers patterns in your wearable data, and coaches you daily.
         </p>
 
         <div className="mt-10 flex justify-center gap-4">
@@ -195,41 +195,38 @@ export default function Home() {
               <span className="text-claw-red">&gt;</span> core_capabilities
             </h2>
             <p className="text-claw-text-muted max-w-2xl mx-auto">
-              Five specialized modules. Two you invoke, three that come to you.
+              Just talk to it. No buttons, no slash commands — natural language in, quantified health out.
             </p>
           </div>
 
-          {/* Interactive Skills */}
+          {/* Conversational Skills */}
           <div className="mb-6">
             <p className="text-[10px] font-mono uppercase tracking-widest text-claw-text-dim mb-4 flex items-center gap-2">
               <span className="w-8 h-px bg-claw-border inline-block" />
-              user-initiated
+              you talk, it acts
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FeatureCard
                 icon={<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>}
                 title="Meal Snap"
-                command="/snap"
-                description="Turns food photos into structured logs with deterministic macro/micronutrient data."
-                tag="user-initiated"
+                description="Send a food photo or describe what you ate. The agent breaks it down into ingredients with full micronutrient detail."
+                tag="conversational"
               >
                 <ChatMock messages={[
-                  { role: "user", text: "[photo: salmon fillet]" },
-                  { role: "assistant", text: "<b>logged</b> &mdash; 150g Salmon &bull; 380 kcal<br/><span style='opacity:0.7'>Notable: Vitamin D, Omega-3</span>" },
+                  { role: "user", text: "had salmon with brown rice and broccoli for lunch" },
+                  { role: "assistant", text: "<b>logged</b> &mdash; lunch &bull; 495 kcal &bull; 53g protein<br/><span style='opacity:0.7'>Zn 3.2mg · Ca 58mg · VitD 16.4µg · Se 73mcg · Fe 1.8mg · Folate 57µg · Omega-3 1.98g</span>" },
                 ]} />
               </FeatureCard>
 
               <FeatureCard
                 icon={<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>}
                 title="Health Profile"
-                command="/health"
-                description="Builds a reusable health profile from Apple Health XML exports and structured questionnaire inputs."
-                tag="user-initiated"
+                description="Tell the agent about your goals and constraints. Import Apple Health data for a complete baseline."
+                tag="conversational"
               >
                 <ChatMock messages={[
-                  { role: "user", text: "/health" },
-                  { role: "assistant", text: "What is your primary health goal?" },
-                  { role: "user", text: "Improve sleep quality." },
+                  { role: "user", text: "I want to improve my sleep. No caffeine after 2pm." },
+                  { role: "assistant", text: "Got it. Goals updated: <b>improve sleep quality</b>. Constraint added: <b>no caffeine after 14:00</b>. Want me to import your Apple Health data for a sleep baseline?" },
                 ]} />
               </FeatureCard>
             </div>
@@ -239,44 +236,42 @@ export default function Home() {
           <div>
             <p className="text-[10px] font-mono uppercase tracking-widest text-claw-text-dim mb-4 flex items-center gap-2">
               <span className="w-8 h-px bg-claw-border inline-block" />
-              proactive
+              it thinks, it tells you
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <FeatureCard
                 icon={<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>}
                 title="Curated News"
-                description="Automated daily digest from high-signal longevity, health, and exercise sources."
+                description="Automated daily digest from high-signal longevity, health, and exercise sources. Also responds to natural questions about recent research."
                 tag="proactive"
                 tagColor="green"
               >
                 <ChatMock messages={[
-                  { role: "assistant", text: "<b>morning digest</b><br/><span style='opacity:0.7'>&bull; TRF shows metabolic benefits<br/>&bull; Resistance training lowers mortality</span>" },
+                  { role: "assistant", text: "<b>morning digest</b> &mdash; Mar 19<br/><span style='opacity:0.7'>&bull; Senolytics trial shows 12% improvement in grip strength (Fight Aging!)<br/>&bull; High-protein breakfast linked to better satiety markers (NIA)<br/>&bull; Sleep fragmentation accelerates cognitive decline (ScienceDaily)</span>" },
                 ]} />
               </FeatureCard>
 
               <FeatureCard
                 icon={<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>}
-                title="Experiment Insights"
-                description="Tracks hypotheses and actively reaches out for daily check-ins."
-                tag="automated"
+                title="Insights"
+                description="Ask about patterns in your data. The agent cross-references wearable metrics, nutrition, and activity to surface correlations — then helps you design experiments to test them."
+                tag="agent-initiated"
                 tagColor="green"
               >
                 <ChatMock messages={[
-                  { role: "assistant", text: "Sleep quality last night (1-10)?" },
-                  { role: "user", text: "7. Late workout." },
-                  { role: "assistant", text: "Logged. 3 more days needed." },
+                  { role: "assistant", text: "<b>pattern detected</b> &mdash; sleep + caffeine<br/><span style='opacity:0.7'>Past 14 days: 4 nights deep sleep &lt;1hr &mdash; 3 had caffeine after 15:00.<br/>Late eating (after 21:00) → resting HR +5bpm avg.<br/>Want me to set up an experiment to test an earlier cutoff?</span>" },
                 ]} />
               </FeatureCard>
 
               <FeatureCard
                 icon={<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>}
                 title="Daily Health Coach"
-                description="Combines health data, experiments, and news into personalized daily guidance."
+                description="A morning briefing that synthesizes overnight sleep, yesterday's nutrition, active experiments, and relevant longevity news."
                 tag="coaching"
                 tagColor="amber"
               >
                 <ChatMock messages={[
-                  { role: "assistant", text: "<b>good morning</b><br/><span style='opacity:0.7'>1,850 kcal &bull; 7h 15m sleep<br/><b>tip:</b> HRV is up. Train heavy today.</span>" },
+                  { role: "assistant", text: "<b>good morning</b> &mdash; Mar 19<br/><span style='opacity:0.7'>Sleep 7h15m · HRV 52ms (↑8%) · RHR 56bpm<br/>Yesterday: 1,850 kcal · protein 134g ✓ · zinc low<br/><b>Try:</b> pumpkin seeds or beef today for zinc<br/>Experiment day 8/14: caffeine cutoff ✓</span>" },
                 ]} />
               </FeatureCard>
             </div>

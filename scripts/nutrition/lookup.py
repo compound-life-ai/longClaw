@@ -6,6 +6,11 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.storage import load_json, utc_now_iso, write_json
+from scripts.nutrition.catalog_data import (
+    INGREDIENT_ALIASES,
+    INGREDIENT_CATALOG,
+    PORTION_GRAMS,
+)
 
 
 DEFAULT_CACHE_TTL_DAYS = 90
@@ -17,86 +22,6 @@ MACRO_FIELDS = (
     "fat_g",
     "fiber_g",
 )
-
-INGREDIENT_ALIASES = {
-    "鸡蛋": "egg whole raw",
-    "eggs": "egg whole raw",
-    "egg": "egg whole raw",
-    "salmon": "salmon atlantic raw",
-    "三文鱼": "salmon atlantic raw",
-    "white rice": "rice white cooked",
-    "米饭": "rice white cooked",
-    "白米饭": "rice white cooked",
-    "oatmeal": "oats",
-    "燕麦": "oats",
-}
-
-# Deterministic nutrition seed data, mostly based on standard USDA-style per-100g values.
-INGREDIENT_CATALOG = {
-    "egg whole raw": {
-        "calories_kcal": 143.0,
-        "protein_g": 12.6,
-        "carbs_g": 0.72,
-        "fat_g": 9.51,
-        "fiber_g": 0.0,
-        "micronutrients": {
-            "selenium_mcg": 30.7,
-            "vitamin_b12_mcg": 1.11,
-            "choline_mg": 294.0,
-        },
-    },
-    "salmon atlantic raw": {
-        "calories_kcal": 208.67,
-        "protein_g": 20.24,
-        "carbs_g": 0.0,
-        "fat_g": 13.42,
-        "fiber_g": 0.0,
-        "micronutrients": {
-            "vitamin_d_mcg": 10.9,
-            "selenium_mcg": 36.5,
-            "vitamin_b12_mcg": 3.18,
-        },
-    },
-    "rice white cooked": {
-        "calories_kcal": 130.32,
-        "protein_g": 2.86,
-        "carbs_g": 28.17,
-        "fat_g": 0.28,
-        "fiber_g": 0.4,
-        "micronutrients": {
-            "manganese_mg": 0.47,
-            "selenium_mcg": 7.5,
-            "folate_mcg": 58.0,
-        },
-    },
-    "oats": {
-        "calories_kcal": 389.0,
-        "protein_g": 16.89,
-        "carbs_g": 66.27,
-        "fat_g": 6.9,
-        "fiber_g": 10.6,
-        "micronutrients": {
-            "iron_mg": 4.72,
-            "magnesium_mg": 177.0,
-            "manganese_mg": 4.92,
-        },
-    },
-}
-
-PORTION_GRAMS = {
-    "egg whole raw": {
-        "1 egg": 50.0,
-        "2 eggs": 100.0,
-    },
-    "rice white cooked": {
-        "1 bowl": 158.0,
-        "1 cup": 158.0,
-    },
-    "oats": {
-        "1 bowl": 40.0,
-        "1 cup": 80.0,
-    },
-}
 
 
 def normalize_ingredient_name(name: str) -> str:
