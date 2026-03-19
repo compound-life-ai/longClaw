@@ -24,9 +24,21 @@ APPLE_XML = """<?xml version="1.0" encoding="UTF-8"?>
 <HealthData>
   <Record type="HKQuantityTypeIdentifierStepCount" sourceName="Apple Watch" unit="count" value="8000" startDate="2026-03-17 09:00:00 -0700" endDate="2026-03-17 10:00:00 -0700" />
   <Record type="HKQuantityTypeIdentifierStepCount" sourceName="Apple Watch" unit="count" value="4000" startDate="2026-03-18 09:00:00 -0700" endDate="2026-03-18 10:00:00 -0700" />
+  <Record type="HKQuantityTypeIdentifierActiveEnergyBurned" sourceName="Apple Watch" unit="kcal" value="520" startDate="2026-03-17 09:00:00 -0700" endDate="2026-03-17 10:00:00 -0700" />
+  <Record type="HKQuantityTypeIdentifierBasalEnergyBurned" sourceName="Apple Watch" unit="kcal" value="1600" startDate="2026-03-17 00:00:00 -0700" endDate="2026-03-17 23:59:59 -0700" />
+  <Record type="HKQuantityTypeIdentifierAppleExerciseTime" sourceName="Apple Watch" unit="min" value="45" startDate="2026-03-17 09:00:00 -0700" endDate="2026-03-17 10:00:00 -0700" />
+  <Record type="HKQuantityTypeIdentifierDistanceWalkingRunning" sourceName="Apple Watch" unit="m" value="6200" startDate="2026-03-17 09:00:00 -0700" endDate="2026-03-17 10:00:00 -0700" />
+  <Record type="HKQuantityTypeIdentifierDistanceCycling" sourceName="Apple Watch" unit="m" value="14000" startDate="2026-03-17 11:00:00 -0700" endDate="2026-03-17 12:00:00 -0700" />
   <Record type="HKCategoryTypeIdentifierSleepAnalysis" sourceName="Apple Watch" value="HKCategoryValueSleepAnalysisAsleep" startDate="2026-03-17 23:00:00 -0700" endDate="2026-03-18 06:30:00 -0700" />
   <Record type="HKQuantityTypeIdentifierRestingHeartRate" sourceName="Apple Watch" unit="count/min" value="58" startDate="2026-03-18 08:00:00 -0700" endDate="2026-03-18 08:00:00 -0700" />
+  <Record type="HKQuantityTypeIdentifierHeartRate" sourceName="Apple Watch" unit="count/min" value="101" startDate="2026-03-18 08:10:00 -0700" endDate="2026-03-18 08:10:00 -0700" />
+  <Record type="HKQuantityTypeIdentifierWalkingHeartRateAverage" sourceName="Apple Watch" unit="count/min" value="92" startDate="2026-03-18 08:30:00 -0700" endDate="2026-03-18 08:30:00 -0700" />
+  <Record type="HKQuantityTypeIdentifierHeartRateVariabilitySDNN" sourceName="Apple Watch" unit="ms" value="52" startDate="2026-03-18 06:45:00 -0700" endDate="2026-03-18 06:45:00 -0700" />
+  <Record type="HKQuantityTypeIdentifierVO2Max" sourceName="Apple Watch" unit="mL/min·kg" value="41.5" startDate="2026-03-18 09:00:00 -0700" endDate="2026-03-18 09:00:00 -0700" />
+  <Record type="HKQuantityTypeIdentifierOxygenSaturation" sourceName="Apple Watch" unit="%" value="0.98" startDate="2026-03-18 07:00:00 -0700" endDate="2026-03-18 07:00:00 -0700" />
+  <Record type="HKQuantityTypeIdentifierRespiratoryRate" sourceName="Apple Watch" unit="count/min" value="14.2" startDate="2026-03-18 07:30:00 -0700" endDate="2026-03-18 07:30:00 -0700" />
   <Workout workoutActivityType="HKWorkoutActivityTypeRunning" duration="45" durationUnit="min" startDate="2026-03-18 07:00:00 -0700" endDate="2026-03-18 07:45:00 -0700" />
+  <Workout workoutActivityType="HKWorkoutActivityTypeWalking" duration="1.5" durationUnit="h" startDate="2026-03-18 12:00:00 -0700" endDate="2026-03-18 13:30:00 -0700" />
 </HealthData>
 """
 
@@ -46,8 +58,21 @@ class HealthScriptTests(unittest.TestCase):
             self.assertEqual(summary["counts"]["days_with_steps"], 2)
             self.assertGreater(summary["sleep"]["daily_sleep_hours_avg"], 7.0)
             self.assertEqual(summary["heart"]["resting_heart_rate_avg"], 58.0)
-            self.assertEqual(summary["workouts"]["workout_count"], 1)
-            self.assertEqual(summary["workouts"]["average_workout_minutes"], 45.0)
+            self.assertEqual(summary["heart"]["heart_rate_avg"], 101.0)
+            self.assertEqual(summary["heart"]["walking_heart_rate_avg"], 92.0)
+            self.assertEqual(summary["heart"]["heart_rate_variability_sdnn_avg"], 52.0)
+            self.assertEqual(summary["heart"]["vo2_max_avg"], 41.5)
+            self.assertEqual(summary["heart"]["oxygen_saturation_avg"], 0.98)
+            self.assertEqual(summary["heart"]["respiratory_rate_avg"], 14.2)
+            self.assertEqual(summary["activity"]["daily_active_energy_kcal_avg"], 520.0)
+            self.assertEqual(summary["activity"]["daily_basal_energy_kcal_avg"], 1600.0)
+            self.assertEqual(summary["activity"]["daily_exercise_minutes_avg"], 45.0)
+            self.assertEqual(summary["activity"]["daily_walking_running_distance_avg_km"], 6.2)
+            self.assertEqual(summary["activity"]["daily_cycling_distance_avg_km"], 14.0)
+            self.assertEqual(summary["workouts"]["workout_count"], 2)
+            self.assertEqual(summary["workouts"]["average_workout_minutes"], 67.5)
+            self.assertEqual(summary["workouts"]["by_type"]["HKWorkoutActivityTypeRunning"], 1)
+            self.assertEqual(summary["workouts"]["by_type"]["HKWorkoutActivityTypeWalking"], 1)
 
     def test_profile_merges_questionnaire_and_import(self) -> None:
         profile = default_profile()
@@ -159,7 +184,8 @@ class HealthScriptTests(unittest.TestCase):
             )
             payload = json.loads(result.stdout)
             self.assertEqual(payload["file_name"], "export.xml")
-            self.assertEqual(payload["counts"]["workouts"], 1)
+            self.assertEqual(payload["counts"]["workouts"], 2)
+            self.assertEqual(payload["heart"]["vo2_max_avg"], 41.5)
 
 
 if __name__ == "__main__":
