@@ -13,7 +13,7 @@ const sourceSerif = Source_Serif_4({
 });
 
 export const metadata: Metadata = {
-  title: "Compound Clawskill",
+  title: "Longevity OS",
   description: "An OpenClaw skill bundle for a personal health companion.",
 };
 

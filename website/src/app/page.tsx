@@ -47,7 +47,7 @@ export default function Home() {
           OpenClaw Skill Bundle
         </div>
         <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 font-serif">
-          Compound Clawskill
+          Longevity OS
         </h1>
         <p className="text-xl md:text-2xl text-zinc-600 dark:text-zinc-400 max-w-3xl mx-auto leading-relaxed font-serif">
           A personal health companion designed for Telegram and OpenClaw. 
@@ -229,7 +229,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-zinc-200 dark:border-zinc-800 py-12 px-6 text-center text-zinc-500">
-        <p>© {new Date().getFullYear()} Compound Clawskill. Built with Next.js & Tailwind CSS.</p>
+        <p>© {new Date().getFullYear()} Longevity OS. Built with Next.js & Tailwind CSS.</p>
       </footer>
     </main>
   );
