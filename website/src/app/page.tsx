@@ -97,7 +97,7 @@ function FeatureCard({
     amber: "border-claw-amber/30 text-claw-amber",
   };
   return (
-    <div className="group rounded-lg border border-claw-border bg-claw-bg-card p-5 transition-all duration-300 hover:border-claw-red/40 hover:shadow-[0_0_20px_rgba(232,77,61,0.06)]">
+    <div className="group flex flex-col rounded-lg border border-claw-border bg-claw-bg-card p-5 transition-all duration-300 hover:border-claw-red/40 hover:shadow-[0_0_20px_rgba(232,77,61,0.06)]">
       <div className="mb-3 flex justify-between items-start">
         <div className="inline-flex h-9 w-9 items-center justify-center rounded-md bg-claw-bg-elevated border border-claw-border text-claw-red">
           {icon}
@@ -110,7 +110,7 @@ function FeatureCard({
       </div>
       <h3 className="text-base font-semibold mb-1.5 font-mono text-claw-text">{title}</h3>
       <p className="text-sm text-claw-text-muted leading-relaxed mb-3">{description}</p>
-      <div>{children}</div>
+      <div className="mt-auto">{children}</div>
     </div>
   );
 }
@@ -202,7 +202,7 @@ export default function Home() {
               <span className="w-8 h-px bg-claw-border inline-block" />
               you talk, it acts
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FeatureCard
                 icon={<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>}
                 title="Meal Snap"
