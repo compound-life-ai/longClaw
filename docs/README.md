@@ -21,8 +21,9 @@ Read these docs in order:
 1. `openclaw-extension-survey.md`
 2. `longevity-os-reference-notes.md`
 3. `proposed-health-companion-architecture.md`
-4. `news-sources.md`
-5. `open-questions.md`
+4. `install.md`
+5. `news-sources.md`
+6. `open-questions.md`
 
 What these docs are trying to answer:
 
@@ -30,4 +31,3 @@ What these docs are trying to answer:
 - What should be copied from `longevity-os`, and what should not
 - Where the real implementation boundaries are between skill prompt, helper script, hook, cron job, and plugin
 - Which decisions are still unresolved before implementation starts
-
