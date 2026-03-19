@@ -12,12 +12,14 @@ It currently provides:
 - `/insights` for structured self-experiments and gap-aware recommendations
 - a cron-driven daily health coach that combines local health data, experiment context, and relevant curated news into personalized daily guidance
 
+All skills respond to natural language as well as slash commands. You can say "had salmon with rice for lunch" instead of invoking `/snap`, or ask "how did I sleep this week?" instead of `/health`. The slash commands remain available as shortcuts.
+
 The bundle is designed for OpenClaw + Telegram and installs as a managed bundle under `~/.openclaw/bundles/compound-clawskill`.
 
 ## Core Features
 
 - `/snap` turns food photos or meal descriptions into structured meal logs. The agent identifies likely ingredients and portions, asks for confirmation when confidence is low, and records an ingredient-level meal entry instead of a vague free-text note.
-- Nutrition logging is backed by deterministic enrichment code rather than fully model-invented numbers. Ingredient names are normalized to canonical forms, nutrient values are filled from local nutrition data and cache, and the stored rows record where those values came from.
+- Nutrition logging is backed by deterministic enrichment code rather than fully model-invented numbers. Ingredient names are normalized to canonical forms, nutrient values are filled from a local catalog of 50+ ingredients with full micronutrient profiles, and the stored rows record where those values came from. A weekly summary aggregates 7-day intake against RDA reference values and highlights gaps and strengths.
 - `/health` builds a reusable health profile from Apple Health exports and structured questionnaire-style inputs. That profile becomes shared context for future recommendations instead of forcing the user to restate the same baseline every time.
 - `/news` produces a curated digest focused on health, longevity, nutrition, sleep, exercise, and related research, using predefined sources instead of generic open-ended news search.
 - `/insights` is designed for structured self-experimentation. It tracks hypotheses, interventions, check-ins, and follow-up analysis, and it is intentionally allowed to say “not enough data yet” instead of pretending to know the answer.
@@ -159,6 +161,12 @@ Verify the installed bundle:
 
 ```bash
 python3 scripts/install_bundle.py --verify
+```
+
+Optionally seed sample data so you can explore immediately:
+
+```bash
+cp -r seed/* longevityOS-data/
 ```
 
 The installer:
@@ -547,12 +555,15 @@ The Apple Health importer was tested against a real Apple Health export and now 
 ## Repo Layout
 
 ```text
+skill.md            Root meta skill index (natural language routing table)
 skills/             OpenClaw-facing skill definitions
 scripts/            Deterministic Python helpers used by the skills
 cron/               Example cron job configs
+seed/               Optional fixture data for all four data stores
 longevityOS-data/   Runtime data directories
 tests/              Deterministic unit and CLI tests
 docs/               Architecture, install, and design notes
+website/            Next.js landing page
 ```
 
 [Back to top](#top)
