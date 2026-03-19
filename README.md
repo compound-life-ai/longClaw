@@ -4,7 +4,7 @@ OpenClaw skill bundle for a personal health companion.
 
 It currently provides:
 
-- `/snap` for meal logging from food photos or meal text
+- `/snap` for meal logging from food photos or meal text, using ingredient/portion inference plus deterministic nutrition enrichment
 - `/health` for Apple Health XML import and structured health profile updates
 - `/news` for a curated health/longevity digest
 - `/insights` for structured self-experiments and gap-aware recommendations
@@ -219,6 +219,19 @@ CSV columns:
 - `provided`
 - `catalog`
 - `cache`
+
+Current `/snap` flow:
+
+- the model identifies likely ingredients and rough portions from meal text or a food photo
+- the nutrition script normalizes ingredient names to canonical keys
+- the script enriches macros and micronutrients deterministically from the local nutrition catalog or cache when explicit nutrient values are not provided
+- if the user supplies trustworthy label-style values or an exact recipe, those values are preserved with `nutrient_source = provided`
+
+Current limitations:
+
+- live USDA FoodData Central lookup is not implemented yet
+- live Open Food Facts fallback is not implemented yet
+- recipe-library-first reuse is not implemented yet
 
 ### Health Profile
 
