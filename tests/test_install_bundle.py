@@ -5,6 +5,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import Mock
 
 from scripts.common.storage import load_json
 from scripts.install_bundle import (
@@ -17,6 +18,7 @@ from scripts.install_bundle import (
     ensure_runtime_dirs,
     install_bundle,
     load_or_init_config,
+    verify_install,
 )
 
 
@@ -96,6 +98,32 @@ class InstallBundleTests(unittest.TestCase):
             self.assertIn("Dry run only. No files were changed.", result.stdout)
             self.assertFalse(bundle_root(openclaw_home, BUNDLE_NAME).exists())
             self.assertFalse(config_path(openclaw_home).exists())
+
+    def test_verify_install_checks_ready_skills(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            openclaw_home = Path(tmp_dir) / ".openclaw"
+            install_bundle(openclaw_home, dry_run=False)
+
+            def fake_runner(cmd, check, capture_output, text):
+                skill = cmd[-1]
+                return subprocess.CompletedProcess(cmd, 0, stdout=f"{skill}\n✓ Ready\n", stderr="")
+
+            result = verify_install(openclaw_home, runner=fake_runner)
+            self.assertIn("skills", result)
+            self.assertIn(str(bundle_root(openclaw_home, BUNDLE_NAME) / "skills"), result["extra_dirs"])
+            self.assertIn("Ready", result["skills"]["snap"])
+
+    def test_verify_install_requires_registered_skills_dir(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            openclaw_home = Path(tmp_dir) / ".openclaw"
+            bundle_dir = bundle_root(openclaw_home, BUNDLE_NAME)
+            ensure_runtime_dirs(bundle_dir)
+            (bundle_dir / "skills").mkdir(parents=True, exist_ok=True)
+            load_json(config_path(openclaw_home), {})
+            (openclaw_home / "openclaw.json").parent.mkdir(parents=True, exist_ok=True)
+            (openclaw_home / "openclaw.json").write_text("{}", encoding="utf-8")
+            with self.assertRaises(ValueError):
+                verify_install(openclaw_home, runner=Mock())
 
 
 if __name__ == "__main__":

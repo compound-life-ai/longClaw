@@ -3,7 +3,9 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import tempfile
 import xml.etree.ElementTree as ET
+import zipfile
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -73,6 +75,27 @@ def quantity_to_km(value: float, unit: str | None) -> float:
     if unit == "m":
         return value / 1000.0
     return value
+
+
+def extract_export_xml_from_zip(zip_path: Path) -> Path:
+    target_name = "apple_health_export/export.xml"
+    with zipfile.ZipFile(zip_path) as archive:
+        members = set(archive.namelist())
+        if target_name not in members:
+            raise FileNotFoundError(f"{target_name} not found in {zip_path}")
+        temp_dir = Path(tempfile.mkdtemp(prefix="apple-health-export-"))
+        archive.extract(target_name, path=temp_dir)
+    return temp_dir / target_name
+
+
+def resolve_input_xml(input_xml: Path | None, input_zip: Path | None) -> Path:
+    if input_xml and input_zip:
+        raise ValueError("use only one of --input-xml or --input-zip")
+    if input_xml:
+        return input_xml
+    if input_zip:
+        return extract_export_xml_from_zip(input_zip)
+    raise ValueError("one of --input-xml or --input-zip is required")
 
 
 def summarize_export(xml_path: Path) -> dict[str, Any]:
@@ -207,10 +230,12 @@ def summarize_export(xml_path: Path) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Summarize Apple Health export XML.")
-    parser.add_argument("--input-xml", type=Path, required=True)
+    parser.add_argument("--input-xml", type=Path)
+    parser.add_argument("--input-zip", type=Path)
     args = parser.parse_args()
 
-    print(json.dumps(summarize_export(args.input_xml), ensure_ascii=False, indent=2, sort_keys=True))
+    xml_path = resolve_input_xml(args.input_xml, args.input_zip)
+    print(json.dumps(summarize_export(xml_path), ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 
 

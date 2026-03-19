@@ -5,9 +5,16 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import zipfile
 from pathlib import Path
 
-from scripts.health.import_apple_health import average, parse_dt, summarize_export
+from scripts.health.import_apple_health import (
+    average,
+    extract_export_xml_from_zip,
+    parse_dt,
+    resolve_input_xml,
+    summarize_export,
+)
 from scripts.health.profile_store import (
     default_profile,
     merge_import,
@@ -49,6 +56,23 @@ class HealthScriptTests(unittest.TestCase):
         self.assertEqual(parsed.year, 2026)
         self.assertEqual(average([]), 0.0)
         self.assertEqual(average([1.0, 2.0, 3.0]), 2.0)
+
+    def test_zip_helpers_extract_and_resolve_xml(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            xml_path = tmp_path / "apple_health_export" / "export.xml"
+            xml_path.parent.mkdir(parents=True, exist_ok=True)
+            xml_path.write_text(APPLE_XML, encoding="utf-8")
+            zip_path = tmp_path / "export.zip"
+            with zipfile.ZipFile(zip_path, "w") as archive:
+                archive.write(xml_path, arcname="apple_health_export/export.xml")
+
+            extracted = extract_export_xml_from_zip(zip_path)
+            self.assertTrue(extracted.exists())
+            self.assertEqual(resolve_input_xml(None, zip_path).name, "export.xml")
+            self.assertEqual(resolve_input_xml(xml_path, None), xml_path)
+            with self.assertRaises(ValueError):
+                resolve_input_xml(xml_path, zip_path)
 
     def test_apple_health_summary_extracts_basics(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -186,6 +210,33 @@ class HealthScriptTests(unittest.TestCase):
             self.assertEqual(payload["file_name"], "export.xml")
             self.assertEqual(payload["counts"]["workouts"], 2)
             self.assertEqual(payload["heart"]["vo2_max_avg"], 41.5)
+
+    def test_import_apple_health_cli_accepts_zip(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = Path(tmp_dir)
+            xml_dir = tmp_path / "apple_health_export"
+            xml_dir.mkdir(parents=True, exist_ok=True)
+            xml_path = xml_dir / "export.xml"
+            xml_path.write_text(APPLE_XML, encoding="utf-8")
+            zip_path = tmp_path / "export.zip"
+            with zipfile.ZipFile(zip_path, "w") as archive:
+                archive.write(xml_path, arcname="apple_health_export/export.xml")
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "scripts/health/import_apple_health.py",
+                    "--input-zip",
+                    str(zip_path),
+                ],
+                cwd=REPO_ROOT,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            payload = json.loads(result.stdout)
+            self.assertEqual(payload["file_name"], "export.xml")
+            self.assertEqual(payload["workouts"]["workout_count"], 2)
 
 
 if __name__ == "__main__":

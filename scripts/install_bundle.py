@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -94,6 +95,46 @@ def install_bundle(openclaw_home: Path, bundle_name: str = BUNDLE_NAME, dry_run:
     }
 
 
+def verify_install(
+    openclaw_home: Path,
+    bundle_name: str = BUNDLE_NAME,
+    runner: Any = subprocess.run,
+) -> dict[str, Any]:
+    installed_root = bundle_root(openclaw_home, bundle_name)
+    skills_dir = installed_root / "skills"
+    cfg_path = config_path(openclaw_home)
+    cfg = load_or_init_config(cfg_path)
+    extra_dirs = cfg.get("skills", {}).get("load", {}).get("extraDirs", [])
+    if str(skills_dir) not in extra_dirs:
+        raise ValueError(f"{skills_dir} is not registered in skills.load.extraDirs")
+    if not skills_dir.is_dir():
+        raise FileNotFoundError(f"missing installed skills dir: {skills_dir}")
+
+    skill_results: dict[str, str] = {}
+    try:
+        for skill in SKILLS:
+            completed = runner(
+                ["openclaw", "skills", "info", skill],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            output = completed.stdout.strip()
+            if "Ready" not in output:
+                raise RuntimeError(f"skill {skill} did not report Ready:\n{output}")
+            skill_results[skill] = output
+    except FileNotFoundError as exc:
+        raise RuntimeError("openclaw CLI not found in PATH") from exc
+
+    return {
+        "bundle_root": str(installed_root),
+        "skills_dir": str(skills_dir),
+        "config_path": str(cfg_path),
+        "extra_dirs": extra_dirs,
+        "skills": skill_results,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Install this bundle into ~/.openclaw/bundles and register extraDirs."
@@ -101,10 +142,30 @@ def main() -> int:
     parser.add_argument("--openclaw-home", type=Path, default=default_openclaw_home())
     parser.add_argument("--bundle-name", default=BUNDLE_NAME)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--verify", action="store_true")
     args = parser.parse_args()
 
+    resolved_home = args.openclaw_home.expanduser().resolve()
+    if args.verify:
+        result = verify_install(
+            openclaw_home=resolved_home,
+            bundle_name=args.bundle_name,
+        )
+        print("Bundle verification summary:")
+        print(f"- OpenClaw home: {resolved_home}")
+        print(f"- Bundle root: {result['bundle_root']}")
+        print(f"- Skills dir: {result['skills_dir']}")
+        print(f"- Config path: {result['config_path']}")
+        print("- Registered extraDirs:")
+        for item in result["extra_dirs"]:
+            print(f"  - {item}")
+        print("- Skill readiness:")
+        for skill in SKILLS:
+            print(f"  - {skill}: Ready")
+        return 0
+
     result = install_bundle(
-        openclaw_home=args.openclaw_home.expanduser().resolve(),
+        openclaw_home=resolved_home,
         bundle_name=args.bundle_name,
         dry_run=args.dry_run,
     )
@@ -119,8 +180,9 @@ def main() -> int:
     print("")
     print("Next:")
     print("1. Start a new OpenClaw session so the skill snapshot refreshes.")
-    print("2. Add the cron jobs from the installed cron/ directory using your Telegram DM chat id.")
-    print("3. Verify /snap, /health, /news, and /insights are visible.")
+    print("2. Run `python3 scripts/install_bundle.py --verify` from this repo to confirm the skills are Ready.")
+    print("3. Add the cron jobs from the installed cron/ directory using your Telegram DM chat id.")
+    print("4. Verify /snap, /health, /news, and /insights are visible and usable.")
     return 0
 
 
