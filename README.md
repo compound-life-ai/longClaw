@@ -143,6 +143,15 @@ After install:
 4. Run `/health`.
 5. Run `/insights`.
 
+## Uninstall
+
+To remove the installed bundle:
+
+1. Remove any cron jobs you created from `cron/health-brief.example.json` and `cron/news-digest.example.json`.
+2. Remove `~/.openclaw/bundles/compound-clawskill/skills` from `skills.load.extraDirs` in `~/.openclaw/openclaw.json`.
+3. Delete `~/.openclaw/bundles/compound-clawskill` to remove the installed skills, copied files, and `longevityOS-data/`.
+4. Start a fresh OpenClaw session.
+
 ## Runtime Data
 
 Runtime data is namespaced under:
@@ -177,6 +186,8 @@ CSV columns:
 - `meal_type`
 - `source`
 - `ingredient_name`
+- `normalized_name`
+- `amount_g`
 - `portion_text`
 - `calories_kcal`
 - `protein_g`
@@ -184,6 +195,7 @@ CSV columns:
 - `fat_g`
 - `fiber_g`
 - `micronutrients_json`
+- `nutrient_source`
 - `ingredient_confidence`
 - `meal_confidence`
 - `notes`
@@ -194,9 +206,19 @@ CSV columns:
 ```json
 {
   "selenium_mcg": 54,
-  "vitamin_d_iu": 540
+  "vitamin_d_mcg": 16.35
 }
 ```
+
+`normalized_name` stores the canonical ingredient key used by the deterministic lookup layer.
+
+`amount_g` stores the explicit or inferred gram amount used to scale per-100g nutrient values.
+
+`nutrient_source` currently records where the row’s nutrients came from:
+
+- `provided`
+- `catalog`
+- `cache`
 
 ### Health Profile
 

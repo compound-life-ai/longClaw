@@ -17,6 +17,13 @@ from scripts.nutrition.estimate_and_log import (
     summarize_day,
     to_float,
 )
+from scripts.nutrition.lookup import (
+    DEFAULT_CACHE_TTL_DAYS,
+    enrich_ingredient,
+    normalize_ingredient_name,
+    nutrition_cache_path,
+)
+from scripts.common.storage import write_json
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -89,6 +96,8 @@ class NutritionScriptTests(unittest.TestCase):
                 self.assertEqual(reader.fieldnames, FIELDNAMES)
                 rows = list(reader)
             self.assertEqual(rows[0]["ingredient_name"], "salmon")
+            self.assertEqual(rows[0]["normalized_name"], "salmon atlantic raw")
+            self.assertEqual(rows[0]["nutrient_source"], "provided")
 
     def test_log_payload_rejects_bad_ingredient_fields(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -97,6 +106,79 @@ class NutritionScriptTests(unittest.TestCase):
                 log_payload({"ingredients": [{"name": " ", "micronutrients": {}}]}, data_root)
             with self.assertRaises(ValueError):
                 log_payload({"ingredients": [{"name": "rice", "micronutrients": []}]}, data_root)
+
+    def test_normalize_and_enrich_ingredient_from_catalog(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            data_root = Path(tmp_dir)
+            self.assertEqual(normalize_ingredient_name("鸡蛋"), "egg whole raw")
+            enriched = enrich_ingredient({"name": "鸡蛋", "amount_g": 50}, data_root)
+            self.assertEqual(enriched["normalized_name"], "egg whole raw")
+            self.assertEqual(enriched["nutrient_source"], "catalog")
+            self.assertEqual(enriched["amount_g"], 50.0)
+            self.assertAlmostEqual(enriched["calories_kcal"], 71.5)
+            self.assertAlmostEqual(enriched["protein_g"], 6.3)
+            cache_payload = json.loads(nutrition_cache_path(data_root).read_text(encoding="utf-8"))
+            self.assertIn("egg whole raw", cache_payload["items"])
+            self.assertEqual(cache_payload["items"]["egg whole raw"]["ttl_days"], DEFAULT_CACHE_TTL_DAYS)
+
+    def test_enrich_ingredient_prefers_cache(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            data_root = Path(tmp_dir)
+            write_json(
+                nutrition_cache_path(data_root),
+                {
+                    "items": {
+                        "salmon atlantic raw": {
+                            "source": "cache",
+                            "cached_at": "2026-03-18T12:00:00+00:00",
+                            "expires_at": "2099-01-01T00:00:00+00:00",
+                            "ttl_days": DEFAULT_CACHE_TTL_DAYS,
+                            "nutrients_per_100g": {
+                                "calories_kcal": 300,
+                                "protein_g": 10,
+                                "carbs_g": 0,
+                                "fat_g": 20,
+                                "fiber_g": 0,
+                                "micronutrients": {"vitamin_d_mcg": 12},
+                            },
+                        }
+                    }
+                },
+            )
+            enriched = enrich_ingredient({"name": "salmon", "amount_g": 100}, data_root)
+            self.assertEqual(enriched["normalized_name"], "salmon atlantic raw")
+            self.assertEqual(enriched["nutrient_source"], "cache")
+            self.assertEqual(enriched["calories_kcal"], 300.0)
+            self.assertEqual(enriched["protein_g"], 10.0)
+            self.assertEqual(enriched["micronutrients"]["vitamin_d_mcg"], 12.0)
+
+    def test_log_payload_enriches_minimal_ingredients_deterministically(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            data_root = Path(tmp_dir)
+            payload = {
+                "timestamp": "2026-03-18T12:30:00-07:00",
+                "meal_type": "lunch",
+                "source": "photo",
+                "confidence": 0.8,
+                "ingredients": [
+                    {"name": "salmon", "amount_g": 150},
+                    {"name": "white rice", "amount_g": 158},
+                ],
+            }
+
+            result = log_payload(payload, data_root)
+
+            self.assertEqual(result["ingredient_count"], 2)
+            self.assertAlmostEqual(result["meal_totals"]["calories_kcal"], 518.91)
+            self.assertAlmostEqual(result["meal_totals"]["protein_g"], 34.88)
+            self.assertEqual(result["ingredients"][0]["nutrient_source"], "catalog")
+            self.assertEqual(result["ingredients"][1]["normalized_name"], "rice white cooked")
+            with (data_root / "nutrition" / "meals.csv").open(
+                "r", encoding="utf-8", newline=""
+            ) as handle:
+                rows = list(csv.DictReader(handle))
+            self.assertEqual(rows[0]["normalized_name"], "salmon atlantic raw")
+            self.assertEqual(rows[1]["nutrient_source"], "catalog")
 
     def test_cli_log_and_summary_commands(self) -> None:
         with tempfile.TemporaryDirectory() as tmp_dir:
@@ -112,13 +194,7 @@ class NutritionScriptTests(unittest.TestCase):
                         "ingredients": [
                             {
                                 "name": "oats",
-                                "portion": "1 bowl",
-                                "calories_kcal": 200,
-                                "protein_g": 8,
-                                "carbs_g": 34,
-                                "fat_g": 4,
-                                "fiber_g": 5,
-                                "micronutrients": {"iron_mg": 3.5},
+                                "amount_g": 40,
                             }
                         ],
                     }
@@ -160,6 +236,8 @@ class NutritionScriptTests(unittest.TestCase):
             log_payload_out = json.loads(log_result.stdout)
             summary_payload = json.loads(summary_result.stdout)
             self.assertTrue(log_payload_out["ok"])
+            self.assertEqual(log_payload_out["ingredients"][0]["normalized_name"], "oats")
+            self.assertEqual(log_payload_out["ingredients"][0]["nutrient_source"], "catalog")
             self.assertEqual(summary_payload["meal_count"], 1)
             self.assertEqual(summary_payload["entries"], 1)
 

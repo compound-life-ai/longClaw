@@ -15,6 +15,7 @@ if __package__ in (None, ""):
 
 from scripts.common.paths import default_data_root
 from scripts.common.storage import append_csv_rows, utc_now_iso
+from scripts.nutrition.lookup import enrich_ingredient
 
 
 FIELDNAMES = [
@@ -24,6 +25,8 @@ FIELDNAMES = [
     "meal_type",
     "source",
     "ingredient_name",
+    "normalized_name",
+    "amount_g",
     "portion_text",
     "calories_kcal",
     "protein_g",
@@ -31,6 +34,7 @@ FIELDNAMES = [
     "fat_g",
     "fiber_g",
     "micronutrients_json",
+    "nutrient_source",
     "ingredient_confidence",
     "meal_confidence",
     "notes",
@@ -121,6 +125,7 @@ def log_payload(payload: dict[str, Any], data_root: Path) -> dict[str, Any]:
     photo_ref = str(payload.get("photo_ref") or "")
 
     rows: list[dict[str, Any]] = []
+    resolved_ingredients: list[dict[str, Any]] = []
     meal_totals = {
         "calories_kcal": 0.0,
         "protein_g": 0.0,
@@ -130,10 +135,9 @@ def log_payload(payload: dict[str, Any], data_root: Path) -> dict[str, Any]:
     }
 
     for ingredient in payload["ingredients"]:
-        ingredient_name = str(ingredient.get("name") or "").strip()
-        if not ingredient_name:
-            raise ValueError("each ingredient needs a non-empty name")
-        micros = ingredient.get("micronutrients", {})
+        resolved = enrich_ingredient(ingredient, data_root)
+        ingredient_name = str(resolved["name"])
+        micros = resolved.get("micronutrients", {})
         if micros is None:
             micros = {}
         if not isinstance(micros, dict):
@@ -145,19 +149,38 @@ def log_payload(payload: dict[str, Any], data_root: Path) -> dict[str, Any]:
             "meal_type": meal_type,
             "source": source,
             "ingredient_name": ingredient_name,
-            "portion_text": str(ingredient.get("portion") or ""),
-            "calories_kcal": to_float(ingredient.get("calories_kcal")),
-            "protein_g": to_float(ingredient.get("protein_g")),
-            "carbs_g": to_float(ingredient.get("carbs_g")),
-            "fat_g": to_float(ingredient.get("fat_g")),
-            "fiber_g": to_float(ingredient.get("fiber_g")),
+            "normalized_name": str(resolved.get("normalized_name") or ""),
+            "amount_g": to_float(resolved.get("amount_g")),
+            "portion_text": str(resolved.get("portion") or ""),
+            "calories_kcal": to_float(resolved.get("calories_kcal")),
+            "protein_g": to_float(resolved.get("protein_g")),
+            "carbs_g": to_float(resolved.get("carbs_g")),
+            "fat_g": to_float(resolved.get("fat_g")),
+            "fiber_g": to_float(resolved.get("fiber_g")),
             "micronutrients_json": json.dumps(micros, ensure_ascii=False, sort_keys=True),
-            "ingredient_confidence": to_float(ingredient.get("confidence") or meal_confidence),
+            "nutrient_source": str(resolved.get("nutrient_source") or ""),
+            "ingredient_confidence": to_float(resolved.get("confidence") or meal_confidence),
             "meal_confidence": meal_confidence,
             "notes": notes,
             "photo_ref": photo_ref,
         }
         rows.append(row)
+        resolved_ingredients.append(
+            {
+                "name": ingredient_name,
+                "normalized_name": row["normalized_name"],
+                "amount_g": row["amount_g"],
+                "portion": row["portion_text"],
+                "calories_kcal": row["calories_kcal"],
+                "protein_g": row["protein_g"],
+                "carbs_g": row["carbs_g"],
+                "fat_g": row["fat_g"],
+                "fiber_g": row["fiber_g"],
+                "micronutrients": micros,
+                "nutrient_source": row["nutrient_source"],
+                "confidence": row["ingredient_confidence"],
+            }
+        )
         for key in meal_totals:
             meal_totals[key] = round(meal_totals[key] + row[key], 2)
 
@@ -172,6 +195,7 @@ def log_payload(payload: dict[str, Any], data_root: Path) -> dict[str, Any]:
         "source": source,
         "meal_totals": meal_totals,
         "ingredient_count": len(rows),
+        "ingredients": resolved_ingredients,
         "day_summary": day_summary,
     }
 
