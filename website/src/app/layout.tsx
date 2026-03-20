@@ -16,6 +16,9 @@ const jetbrains = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Longevity OS",
   description: "An OpenClaw skill bundle for a personal health companion.",
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 export default function RootLayout({
