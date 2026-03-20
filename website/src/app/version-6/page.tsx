@@ -949,7 +949,7 @@ export default function Version6() {
         <div className="max-w-5xl mx-auto px-5 flex flex-col md:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <Logo size={18} />
-            <span className="text-[11px] text-claw-text-dim font-sans">LongevityOS &middot; by Compound Life</span>
+            <span className="text-[11px] text-claw-text-dim font-sans">LongevityOS &middot; by Compound</span>
           </div>
           <span className="text-[10px] text-claw-text-dim font-mono">Open Source</span>
         </div>
