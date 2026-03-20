@@ -236,172 +236,181 @@ export default function VersionOne() {
           </div>
 
           {/* Showcase Card 1 — Weekly Nutrition Review */}
-          <div className="relative rounded-2xl border border-gray-700/50 bg-gradient-to-br from-[#1c1e26] to-[#0f111a] shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_20px_40px_-15px_rgba(0,0,0,0.7)] overflow-hidden mb-8 grid grid-cols-1 lg:grid-cols-12 items-center gap-8 p-6 lg:p-10">
-            <div className="lg:col-span-7 relative z-10 order-2 lg:order-1">
-              <div className="flex items-center gap-2 mb-5">
-                <span className="px-2.5 py-1 rounded-full bg-gradient-to-b from-purple-500/20 to-purple-500/10 border border-purple-500/30 text-purple-400 text-[10px] font-bold uppercase tracking-widest shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">Weekly Review</span>
-                <span className="text-gray-500 text-xs font-mono">Sunday 8:00 AM</span>
+          <div className="relative group mb-8">
+            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 to-purple-400 rounded-3xl blur opacity-20 group-hover:opacity-30 transition duration-1000 group-hover:duration-200" />
+            <div className="relative rounded-2xl border border-white/10 bg-[#0a0615] overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-center gap-8 p-6 lg:p-10 shadow-2xl backdrop-blur-sm">
+              <div className="lg:col-span-7 relative z-10 order-2 lg:order-1">
+                <div className="flex items-center gap-2 mb-5">
+                  <span className="px-2.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-bold uppercase tracking-widest">Weekly Review</span>
+                  <span className="text-gray-500 text-xs font-mono">Sunday 8:00 AM</span>
+                </div>
+
+                <p className="text-gray-300 text-sm leading-relaxed mb-6">
+                  Here&apos;s your weekly nutrition breakdown. Based on your profile <span className="text-purple-300 font-medium">(186cm, 82kg, muscle gain)</span>, here&apos;s how you&apos;re tracking:
+                </p>
+
+                <div className="overflow-x-auto mb-6">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-white/10 text-left">
+                        <th className="pb-3 pr-4 text-gray-500 font-medium text-xs uppercase tracking-wider">Nutrient</th>
+                        <th className="pb-3 pr-4 text-gray-500 font-medium text-xs uppercase tracking-wider">Daily Avg</th>
+                        <th className="pb-3 pr-4 text-gray-500 font-medium text-xs uppercase tracking-wider">Target</th>
+                        <th className="pb-3 text-gray-500 font-medium text-xs uppercase tracking-wider">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="text-gray-400">
+                      <tr className="border-b border-white/5">
+                        <td className="py-3 pr-4 font-medium text-gray-200">Protein</td>
+                        <td className="py-3 pr-4 font-mono text-xs">168g</td>
+                        <td className="py-3 pr-4 font-mono text-xs">160g</td>
+                        <td className="py-3"><span className="text-emerald-400 text-xs font-medium">On track</span></td>
+                      </tr>
+                      <tr className="border-b border-white/5">
+                        <td className="py-3 pr-4 font-medium text-gray-200">Carbs</td>
+                        <td className="py-3 pr-4 font-mono text-xs">220g</td>
+                        <td className="py-3 pr-4 font-mono text-xs">300g</td>
+                        <td className="py-3"><span className="text-amber-400 text-xs font-medium">Gap: -80g</span></td>
+                      </tr>
+                      <tr className="border-b border-white/5">
+                        <td className="py-3 pr-4 font-medium text-gray-200">Fat</td>
+                        <td className="py-3 pr-4 font-mono text-xs">72g</td>
+                        <td className="py-3 pr-4 font-mono text-xs">75g</td>
+                        <td className="py-3"><span className="text-emerald-400 text-xs font-medium">On track</span></td>
+                      </tr>
+                      <tr>
+                        <td className="py-3 pr-4 font-medium text-gray-200">Vitamin D</td>
+                        <td className="py-3 pr-4 font-mono text-xs">400 IU</td>
+                        <td className="py-3 pr-4 font-mono text-xs">2,000 IU</td>
+                        <td className="py-3"><span className="text-rose-400 text-xs font-medium">Low</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="bg-white/[0.02] rounded-lg p-4 text-sm text-gray-300 leading-relaxed border border-white/5">
+                  On training days, add a post-workout carb source — your favorite mantou would cover the gap perfectly. Also, take Vitamin D with breakfast fats — it&apos;s fat-soluble, so without lipids it won&apos;t absorb properly.
+                </div>
               </div>
 
-              <p className="text-gray-300 text-sm leading-relaxed mb-6">
-                Here&apos;s your weekly nutrition breakdown. Based on your profile <span className="text-purple-300 font-medium">(186cm, 82kg, muscle gain)</span>, here&apos;s how you&apos;re tracking:
-              </p>
-
-              <div className="overflow-x-auto mb-6 bg-[#0a0b0e] border border-gray-800/80 rounded-xl p-5 shadow-[inset_0_2px_10px_rgba(0,0,0,0.4)]">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-gray-800 text-left">
-                      <th className="pb-3 pr-4 text-gray-500 font-medium text-xs uppercase tracking-wider">Nutrient</th>
-                      <th className="pb-3 pr-4 text-gray-500 font-medium text-xs uppercase tracking-wider">Daily Avg</th>
-                      <th className="pb-3 pr-4 text-gray-500 font-medium text-xs uppercase tracking-wider">Target</th>
-                      <th className="pb-3 text-gray-500 font-medium text-xs uppercase tracking-wider">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-gray-400">
-                    <tr className="border-b border-gray-800/50">
-                      <td className="py-3 pr-4 font-medium text-gray-200">Protein</td>
-                      <td className="py-3 pr-4 font-mono text-xs">168g</td>
-                      <td className="py-3 pr-4 font-mono text-xs">160g</td>
-                      <td className="py-3"><span className="text-emerald-400 text-xs font-medium bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">On track</span></td>
-                    </tr>
-                    <tr className="border-b border-gray-800/50">
-                      <td className="py-3 pr-4 font-medium text-gray-200">Carbs</td>
-                      <td className="py-3 pr-4 font-mono text-xs">220g</td>
-                      <td className="py-3 pr-4 font-mono text-xs">300g</td>
-                      <td className="py-3"><span className="text-amber-400 text-xs font-medium bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">Gap: -80g</span></td>
-                    </tr>
-                    <tr className="border-b border-gray-800/50">
-                      <td className="py-3 pr-4 font-medium text-gray-200">Fat</td>
-                      <td className="py-3 pr-4 font-mono text-xs">72g</td>
-                      <td className="py-3 pr-4 font-mono text-xs">75g</td>
-                      <td className="py-3"><span className="text-emerald-400 text-xs font-medium bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">On track</span></td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 pr-4 font-medium text-gray-200">Vitamin D</td>
-                      <td className="py-3 pr-4 font-mono text-xs">400 IU</td>
-                      <td className="py-3 pr-4 font-mono text-xs">2,000 IU</td>
-                      <td className="py-3"><span className="text-rose-400 text-xs font-medium bg-rose-400/10 px-2 py-0.5 rounded border border-rose-400/20">Low</span></td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div className="lg:col-span-5 flex justify-center relative min-h-[280px] order-1 lg:order-2">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-purple-500/20 blur-[100px] pointer-events-none rounded-full" />
+                <img src="/showcase-nutrition.png" alt="" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] object-contain pointer-events-none" />
               </div>
-
-              <div className="bg-gradient-to-b from-[#16181f] to-[#0f1115] rounded-lg p-4 text-sm text-gray-300 leading-relaxed border border-gray-700/50 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-                On training days, add a post-workout carb source — your favorite mantou would cover the gap perfectly. Also, take Vitamin D with breakfast fats — it&apos;s fat-soluble, so without lipids it won&apos;t absorb properly.
-              </div>
-            </div>
-
-            <div className="lg:col-span-5 flex justify-center relative min-h-[280px] order-1 lg:order-2">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-purple-500/20 blur-[100px] pointer-events-none rounded-full" />
-              <img src="/showcase-nutrition.png" alt="" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] object-contain pointer-events-none" />
             </div>
           </div>
 
           {/* Showcase Card 2 — Pattern & Correlation Discovery */}
-          <div className="relative rounded-2xl border border-gray-700/50 bg-gradient-to-br from-[#1c1e26] to-[#0f111a] shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_20px_40px_-15px_rgba(0,0,0,0.7)] overflow-hidden mb-8 grid grid-cols-1 lg:grid-cols-12 items-center gap-8 p-6 lg:p-10">
-            <div className="lg:col-span-5 flex justify-center relative min-h-[280px]">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-amber-500/10 blur-[100px] pointer-events-none rounded-full" />
-              <img src="/showcase-patterns.png" alt="" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] object-contain pointer-events-none" />
-            </div>
-
-            <div className="lg:col-span-7 relative z-10">
-              <div className="flex items-center gap-2 mb-5">
-                <span className="px-2.5 py-1 rounded-full bg-gradient-to-b from-amber-500/20 to-amber-500/10 border border-amber-500/30 text-amber-400 text-[10px] font-bold uppercase tracking-widest shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">Pattern Detected</span>
-                <span className="text-gray-500 text-xs font-mono">Wednesday 7:15 AM</span>
+          <div className="relative group mb-8">
+            <div className="absolute -inset-1 bg-gradient-to-r from-amber-600 to-orange-500 rounded-3xl blur opacity-15 group-hover:opacity-25 transition duration-1000 group-hover:duration-200" />
+            <div className="relative rounded-2xl border border-white/10 bg-[#0a0615] overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-center gap-8 p-6 lg:p-10 shadow-2xl backdrop-blur-sm">
+              <div className="lg:col-span-5 flex justify-center relative min-h-[280px]">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-amber-500/10 blur-[100px] pointer-events-none rounded-full" />
+                <img src="/showcase-patterns.png" alt="" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] object-contain pointer-events-none" />
               </div>
 
-              <p className="text-gray-300 text-sm leading-relaxed mb-6">
-                I noticed something in your data this week. Three nights with sleep under 5 hours all followed afternoon coffee after 4 PM. Your HRV also dropped significantly after both flights.
-              </p>
+              <div className="lg:col-span-7 relative z-10">
+                <div className="flex items-center gap-2 mb-5">
+                  <span className="px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-[10px] font-bold uppercase tracking-widest">Pattern Detected</span>
+                  <span className="text-gray-500 text-xs font-mono">Wednesday 7:15 AM</span>
+                </div>
 
-              <div className="space-y-3 mb-6 bg-[#0a0b0e] border border-gray-800/80 rounded-xl p-5 shadow-[inset_0_2px_10px_rgba(0,0,0,0.4)]">
-                <div className="flex items-start gap-3 pb-4 border-b border-gray-800/50">
-                  <span className="text-lg leading-none mt-0.5">&#9749;</span>
-                  <div>
-                    <p className="text-gray-200 text-sm font-medium mb-1">Late caffeine &rarr; Poor sleep</p>
-                    <p className="text-gray-400 text-xs leading-relaxed">Coffee after 4 PM correlated with sleep &lt; 5hrs on 3 of 3 occasions this week. Deep sleep averaged 28 min vs your baseline 52 min.</p>
+                <p className="text-gray-300 text-sm leading-relaxed mb-6">
+                  I noticed something in your data this week. Three nights with sleep under 5 hours all followed afternoon coffee after 4 PM. Your HRV also dropped significantly after both flights.
+                </p>
+
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-start gap-3 bg-white/[0.02] rounded-lg p-4 border border-white/5">
+                    <span className="text-lg leading-none mt-0.5">&#9749;</span>
+                    <div>
+                      <p className="text-gray-200 text-sm font-medium mb-1">Late caffeine &rarr; Poor sleep</p>
+                      <p className="text-gray-400 text-xs leading-relaxed">Coffee after 4 PM correlated with sleep &lt; 5hrs on 3 of 3 occasions this week. Deep sleep averaged 28 min vs your baseline 52 min.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3 bg-white/[0.02] rounded-lg p-4 border border-white/5">
+                    <span className="text-lg leading-none mt-0.5">&#9992;&#65039;</span>
+                    <div>
+                      <p className="text-gray-200 text-sm font-medium mb-1">Air travel &rarr; HRV crash</p>
+                      <p className="text-gray-400 text-xs leading-relaxed">HRV dropped 23% after both flights. Deep sleep fell below 40 min for 2 nights post-travel. Recovery took ~48 hours each time.</p>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-start gap-3 pt-1">
-                  <span className="text-lg leading-none mt-0.5">&#9992;&#65039;</span>
-                  <div>
-                    <p className="text-gray-200 text-sm font-medium mb-1">Air travel &rarr; HRV crash</p>
-                    <p className="text-gray-400 text-xs leading-relaxed">HRV dropped 23% after both flights. Deep sleep fell below 40 min for 2 nights post-travel. Recovery took ~48 hours each time.</p>
-                  </div>
-                </div>
-              </div>
 
-              <div className="bg-gradient-to-b from-[#16181f] to-[#0f1115] rounded-lg p-4 text-sm text-gray-300 leading-relaxed border border-gray-700/50 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-                Want to run a caffeine metabolism experiment? We can find your personal cutoff time and optimal dose. I also have protocols for faster post-flight recovery — including light exposure timing and sleep schedule pre-adjustment.
+                <div className="bg-white/[0.02] rounded-lg p-4 text-sm text-gray-300 leading-relaxed border border-white/5">
+                  Want to run a caffeine metabolism experiment? We can find your personal cutoff time and optimal dose. I also have protocols for faster post-flight recovery — including light exposure timing and sleep schedule pre-adjustment.
+                </div>
               </div>
             </div>
           </div>
 
           {/* Showcase Card 3 — Deep Data Integration */}
-          <div className="relative rounded-2xl border border-gray-700/50 bg-gradient-to-br from-[#1c1e26] to-[#0f111a] shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_20px_40px_-15px_rgba(0,0,0,0.7)] overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-center gap-8 p-6 lg:p-10 mb-8">
-            <div className="lg:col-span-7 relative z-10 order-2 lg:order-1">
-              <div className="flex items-center gap-2 mb-5">
-                <span className="px-2.5 py-1 rounded-full bg-gradient-to-b from-cyan-500/20 to-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-[10px] font-bold uppercase tracking-widest shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">New Data Unlocked</span>
-                <span className="text-gray-500 text-xs font-mono">Oct 25, 3:42 PM</span>
+          <div className="relative group mb-8">
+            <div className="absolute -inset-1 bg-gradient-to-r from-cyan-600 to-blue-500 rounded-3xl blur opacity-20 group-hover:opacity-30 transition duration-1000 group-hover:duration-200" />
+            <div className="relative rounded-2xl border border-white/10 bg-[#0a0615] overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-center gap-8 p-6 lg:p-10 shadow-2xl backdrop-blur-sm">
+              <div className="lg:col-span-7 relative z-10 order-2 lg:order-1">
+                <div className="flex items-center gap-2 mb-5">
+                  <span className="px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[10px] font-bold uppercase tracking-widest">New Data Unlocked</span>
+                  <span className="text-gray-500 text-xs font-mono">Oct 25, 3:42 PM</span>
+                </div>
+
+                <p className="text-gray-300 text-sm leading-relaxed mb-6">
+                  Your Oct 24 blood panel filled in the missing metabolic markers <span className="text-cyan-300 font-medium">(triglycerides, Lp(a))</span>. I&apos;ve cross-referenced with your December results. Here&apos;s how you&apos;ve changed:
+                </p>
+
+                <div className="overflow-x-auto mb-6">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-white/10 text-left">
+                        <th className="pb-3 pr-4 text-gray-500 font-medium text-xs uppercase tracking-wider">Marker</th>
+                        <th className="pb-3 pr-4 text-gray-500 font-medium text-xs uppercase tracking-wider">Oct 24</th>
+                        <th className="pb-3 pr-4 text-gray-500 font-medium text-xs uppercase tracking-wider">Dec 15</th>
+                        <th className="pb-3 text-gray-500 font-medium text-xs uppercase tracking-wider">Trend</th>
+                      </tr>
+                    </thead>
+                    <tbody className="text-gray-400">
+                      <tr className="border-b border-white/5">
+                        <td className="py-3 pr-4 font-medium text-gray-200">LDL-C</td>
+                        <td className="py-3 pr-4 font-mono text-xs">112 mg/dL</td>
+                        <td className="py-3 pr-4 font-mono text-xs">98 mg/dL</td>
+                        <td className="py-3"><span className="text-emerald-400 text-xs font-medium">&darr; Improved</span></td>
+                      </tr>
+                      <tr className="border-b border-white/5">
+                        <td className="py-3 pr-4 font-medium text-gray-200">ApoB</td>
+                        <td className="py-3 pr-4 font-mono text-xs">85 mg/dL</td>
+                        <td className="py-3 pr-4 font-mono text-xs">72 mg/dL</td>
+                        <td className="py-3"><span className="text-emerald-400 text-xs font-medium">&darr; Improved</span></td>
+                      </tr>
+                      <tr className="border-b border-white/5">
+                        <td className="py-3 pr-4 font-medium text-gray-200">Triglycerides</td>
+                        <td className="py-3 pr-4 font-mono text-xs">68 mg/dL</td>
+                        <td className="py-3 pr-4 font-mono text-xs text-gray-600">&mdash;</td>
+                        <td className="py-3"><span className="text-cyan-400 text-xs font-medium">New</span></td>
+                      </tr>
+                      <tr className="border-b border-white/5">
+                        <td className="py-3 pr-4 font-medium text-gray-200">Lp(a)</td>
+                        <td className="py-3 pr-4 font-mono text-xs">12 nmol/L</td>
+                        <td className="py-3 pr-4 font-mono text-xs text-gray-600">&mdash;</td>
+                        <td className="py-3"><span className="text-cyan-400 text-xs font-medium">New</span></td>
+                      </tr>
+                      <tr>
+                        <td className="py-3 pr-4 font-medium text-gray-200">HbA1c</td>
+                        <td className="py-3 pr-4 font-mono text-xs">5.1%</td>
+                        <td className="py-3 pr-4 font-mono text-xs">4.9%</td>
+                        <td className="py-3"><span className="text-emerald-400 text-xs font-medium">&darr; Improved</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="bg-white/[0.02] rounded-lg p-4 text-sm text-gray-300 leading-relaxed border border-white/5">
+                  Your metabolic profile is excellent — your diet plan and Zone 2 training are clearly working. To push further, adjust your fat intake composition to drive ApoB below 60 mg/dL. That&apos;s the &ldquo;infant-level&rdquo; vascular purity that longevity experts like Peter Attia advocate for.
+                </div>
               </div>
 
-              <p className="text-gray-300 text-sm leading-relaxed mb-6">
-                Your Oct 24 blood panel filled in the missing metabolic markers <span className="text-cyan-300 font-medium">(triglycerides, Lp(a))</span>. I&apos;ve cross-referenced with your December results. Here&apos;s how you&apos;ve changed:
-              </p>
-
-              <div className="overflow-x-auto mb-6 bg-[#0a0b0e] border border-gray-800/80 rounded-xl p-5 shadow-[inset_0_2px_10px_rgba(0,0,0,0.4)]">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-gray-800 text-left">
-                      <th className="pb-3 pr-4 text-gray-500 font-medium text-xs uppercase tracking-wider">Marker</th>
-                      <th className="pb-3 pr-4 text-gray-500 font-medium text-xs uppercase tracking-wider">Oct 24</th>
-                      <th className="pb-3 pr-4 text-gray-500 font-medium text-xs uppercase tracking-wider">Dec 15</th>
-                      <th className="pb-3 text-gray-500 font-medium text-xs uppercase tracking-wider">Trend</th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-gray-400">
-                    <tr className="border-b border-gray-800/50">
-                      <td className="py-3 pr-4 font-medium text-gray-200">LDL-C</td>
-                      <td className="py-3 pr-4 font-mono text-xs">112 mg/dL</td>
-                      <td className="py-3 pr-4 font-mono text-xs">98 mg/dL</td>
-                      <td className="py-3"><span className="text-emerald-400 text-xs font-medium bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">&darr; Improved</span></td>
-                    </tr>
-                    <tr className="border-b border-gray-800/50">
-                      <td className="py-3 pr-4 font-medium text-gray-200">ApoB</td>
-                      <td className="py-3 pr-4 font-mono text-xs">85 mg/dL</td>
-                      <td className="py-3 pr-4 font-mono text-xs">72 mg/dL</td>
-                      <td className="py-3"><span className="text-emerald-400 text-xs font-medium bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">&darr; Improved</span></td>
-                    </tr>
-                    <tr className="border-b border-gray-800/50">
-                      <td className="py-3 pr-4 font-medium text-gray-200">Triglycerides</td>
-                      <td className="py-3 pr-4 font-mono text-xs">68 mg/dL</td>
-                      <td className="py-3 pr-4 font-mono text-xs text-gray-600">&mdash;</td>
-                      <td className="py-3"><span className="text-cyan-400 text-xs font-medium bg-cyan-400/10 px-2 py-0.5 rounded border border-cyan-400/20">New</span></td>
-                    </tr>
-                    <tr className="border-b border-gray-800/50">
-                      <td className="py-3 pr-4 font-medium text-gray-200">Lp(a)</td>
-                      <td className="py-3 pr-4 font-mono text-xs">12 nmol/L</td>
-                      <td className="py-3 pr-4 font-mono text-xs text-gray-600">&mdash;</td>
-                      <td className="py-3"><span className="text-cyan-400 text-xs font-medium bg-cyan-400/10 px-2 py-0.5 rounded border border-cyan-400/20">New</span></td>
-                    </tr>
-                    <tr>
-                      <td className="py-3 pr-4 font-medium text-gray-200">HbA1c</td>
-                      <td className="py-3 pr-4 font-mono text-xs">5.1%</td>
-                      <td className="py-3 pr-4 font-mono text-xs">4.9%</td>
-                      <td className="py-3"><span className="text-emerald-400 text-xs font-medium bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/20">&darr; Improved</span></td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div className="lg:col-span-5 flex justify-center relative min-h-[280px] order-1 lg:order-2">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-cyan-500/10 blur-[100px] pointer-events-none rounded-full" />
+                <img src="/showcase-integration.png" alt="" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] object-contain pointer-events-none" />
               </div>
-
-              <div className="bg-gradient-to-b from-[#16181f] to-[#0f1115] rounded-lg p-4 text-sm text-gray-300 leading-relaxed border border-gray-700/50 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
-                Your metabolic profile is excellent — your diet plan and Zone 2 training are clearly working. To push further, adjust your fat intake composition to drive ApoB below 60 mg/dL. That&apos;s the &ldquo;infant-level&rdquo; vascular purity that longevity experts like Peter Attia advocate for.
-              </div>
-            </div>
-
-            <div className="lg:col-span-5 flex justify-center relative min-h-[280px] order-1 lg:order-2">
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-cyan-500/10 blur-[100px] pointer-events-none rounded-full" />
-              <img src="/showcase-integration.png" alt="" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] object-contain pointer-events-none" />
             </div>
           </div>
 
