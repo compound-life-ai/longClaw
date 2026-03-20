@@ -169,44 +169,50 @@ export default function VersionOne() {
 
           {/* SurrealDB-style pillar cards — 3 staggered with 3D illustrations */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pb-8">
-            {/* Card 1 — Nutrition */}
-            <div className="relative overflow-hidden rounded-xl border border-white/5 bg-[#13111a] p-6 pb-8 min-h-[340px]">
+          {/* Card 1 — Nutrition */}
+          <div className="relative overflow-hidden rounded-xl border border-white/5 bg-[#13111a] p-6 pb-8 min-h-[340px]">
+            <div className="relative z-10">
               <p className="text-xs font-bold uppercase tracking-widest text-purple-400 mb-2">Nutrition</p>
               <h3 className="text-xl font-bold text-white mb-3">Meal Snap</h3>
-              <p className="text-sm text-gray-400 leading-relaxed max-w-[70%]">
+              <p className="text-sm text-gray-400 leading-relaxed max-w-[70%] drop-shadow-md">
                 Send a food photo or describe what you ate. Full micronutrient breakdown in seconds.
               </p>
-              <button className="mt-6 h-10 w-10 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-white/30 transition-colors">
+              <button className="mt-6 h-10 w-10 rounded-full border border-white/10 bg-[#13111a]/80 backdrop-blur-sm flex items-center justify-center text-gray-400 hover:text-white hover:border-white/30 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
               </button>
-              <img src="/card-memory.png" alt="" className="absolute -right-8 -bottom-4 w-[280px] h-[280px] object-contain pointer-events-none" />
             </div>
+            <img src="/card-memory.png" alt="" className="absolute -right-8 -bottom-4 w-[280px] h-[280px] object-contain pointer-events-none z-0 opacity-80" />
+          </div>
 
-            {/* Card 2 — Wearables */}
-            <div className="relative overflow-hidden rounded-xl border border-white/5 bg-[#13111a] p-6 pb-8 min-h-[340px]">
+          {/* Card 2 — Wearables */}
+          <div className="relative overflow-hidden rounded-xl border border-white/5 bg-[#13111a] p-6 pb-8 min-h-[340px]">
+            <div className="relative z-10">
               <p className="text-xs font-bold uppercase tracking-widest text-purple-400 mb-2">Wearables</p>
               <h3 className="text-xl font-bold text-white mb-3">Pattern Insights</h3>
-              <p className="text-sm text-gray-400 leading-relaxed max-w-[70%]">
+              <p className="text-sm text-gray-400 leading-relaxed max-w-[70%] drop-shadow-md">
                 Cross-references sleep, HRV, nutrition, and activity to surface hidden correlations.
               </p>
-              <button className="mt-6 h-10 w-10 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-white/30 transition-colors">
+              <button className="mt-6 h-10 w-10 rounded-full border border-white/10 bg-[#13111a]/80 backdrop-blur-sm flex items-center justify-center text-gray-400 hover:text-white hover:border-white/30 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
               </button>
-              <img src="/card-context.png" alt="" className="absolute -right-8 -bottom-4 w-[280px] h-[280px] object-contain pointer-events-none" />
             </div>
+            <img src="/card-context.png" alt="" className="absolute -right-8 -bottom-4 w-[280px] h-[280px] object-contain pointer-events-none z-0 opacity-80" />
+          </div>
 
-            {/* Card 3 — Coaching */}
-            <div className="relative overflow-hidden rounded-xl border border-white/5 bg-[#13111a] p-6 pb-8 min-h-[340px]">
+          {/* Card 3 — Coaching */}
+          <div className="relative overflow-hidden rounded-xl border border-white/5 bg-[#13111a] p-6 pb-8 min-h-[340px]">
+            <div className="relative z-10">
               <p className="text-xs font-bold uppercase tracking-widest text-purple-400 mb-2">Coaching</p>
               <h3 className="text-xl font-bold text-white mb-3">Daily Coach</h3>
-              <p className="text-sm text-gray-400 leading-relaxed max-w-[70%]">
+              <p className="text-sm text-gray-400 leading-relaxed max-w-[70%] drop-shadow-md">
                 Morning briefing with overnight sleep, nutrition gaps, active experiments, and longevity news.
               </p>
-              <button className="mt-6 h-10 w-10 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-white/30 transition-colors">
+              <button className="mt-6 h-10 w-10 rounded-full border border-white/10 bg-[#13111a]/80 backdrop-blur-sm flex items-center justify-center text-gray-400 hover:text-white hover:border-white/30 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
               </button>
-              <img src="/card-storage.png" alt="" className="absolute -right-8 -bottom-4 w-[280px] h-[280px] object-contain pointer-events-none" />
             </div>
+            <img src="/card-storage.png" alt="" className="absolute -right-8 -bottom-4 w-[280px] h-[280px] object-contain pointer-events-none z-0 opacity-80" />
+          </div>
           </div>
 
           {/* Purple glow strip beneath cards */}
