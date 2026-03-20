@@ -769,25 +769,25 @@ export default function Version6() {
                     className={`flex items-start gap-3 p-3.5 rounded-lg text-left transition-all duration-300 border ${
                       isActive
                         ? "bg-claw-bg-card/60 border-claw-red/20"
-                        : "border-transparent opacity-40 hover:opacity-60"
+                        : "border-claw-border-subtle hover:border-claw-border"
                     }`}
                   >
                     <div
                       className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-bold font-mono tracking-wider transition-all duration-300 ${
                         isActive
                           ? "bg-claw-red/15 text-claw-coral border border-claw-red/30"
-                          : "text-claw-text-dim"
+                          : "text-claw-text-muted border border-claw-border-subtle"
                       }`}
                     >
                       {i + 1}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">
-                        <span className={`text-[10px] font-bold font-mono tracking-widest ${isActive ? "text-claw-coral" : "text-claw-text-dim"}`}>
+                        <span className={`text-[10px] font-bold font-mono tracking-widest ${isActive ? "text-claw-coral" : "text-claw-text-muted"}`}>
                           {step.label}
                         </span>
                       </div>
-                      <p className={`text-[12px] leading-relaxed transition-colors duration-300 ${isActive ? "text-claw-text-muted" : "text-claw-text-dim"}`}>
+                      <p className={`text-[12px] leading-relaxed transition-colors duration-300 ${isActive ? "text-claw-text" : "text-claw-text-muted"}`}>
                         {step.desc}
                       </p>
                     </div>
