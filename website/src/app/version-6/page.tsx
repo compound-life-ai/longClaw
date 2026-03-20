@@ -52,81 +52,78 @@ function Dot({ color = "green" }: { color?: "green" | "red" | "amber" }) {
   return <span className={`inline-block h-1.5 w-1.5 rounded-full ${c[color]}`} />;
 }
 
-/* Animated line-by-line reveal for hero agent card */
+/* iMessage-style chat bubbles for hero agent card */
 function HeroAgentCard() {
-  const lines = [
+  const bubbles = [
     { text: "Hey \u2014 I want to flag something.", delay: 800 },
-    { text: "", delay: 0 },
-    { text: "Your resting HR has been +8 bpm for 72 hours.", delay: 2400 },
-    { text: "HRV is down 23%. Deep sleep shortened by 40 min.", delay: 3600 },
-    { text: "", delay: 0 },
-    { text: "[lit] Sustained resting HR elevation >48h is an early", delay: 5200 },
-    { text: "   immune mobilization signal before symptom onset.", delay: 6000 },
-    { text: "   (Jarczok et al., Psychoneuroendocrinology 2019)", delay: 6800 },
-    { text: "", delay: 0 },
-    { text: "[act] Action plan: rest today, supplement Vitamin C + Zinc,", delay: 8400 },
-    { text: "   skip HIIT. I\u2019ll keep monitoring.", delay: 9200 },
+    { text: "Your resting HR has been +8 bpm for 72 hours. HRV is down 23%. Deep sleep shortened by 40 min.", delay: 2800 },
+    { text: "[lit]Sustained resting HR elevation >48h is an early immune mobilization signal before symptom onset.\n(Jarczok et al., Psychoneuroendocrinology 2019)", delay: 5200 },
+    { text: "[act]Action plan: rest today, supplement Vitamin C + Zinc, skip HIIT. I\u2019ll keep monitoring.", delay: 7800 },
   ];
 
   const [visibleCount, setVisibleCount] = useState(0);
-  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
-    timersRef.current = lines.map((line, i) => {
-      if (line.delay === 0 && i > 0) return setTimeout(() => {}, 0);
-      return setTimeout(() => setVisibleCount((v) => Math.max(v, i + 1)), line.delay);
-    });
-    return () => timersRef.current.forEach(clearTimeout);
+    const timers = bubbles.map((b, i) =>
+      setTimeout(() => setVisibleCount(i + 1), b.delay)
+    );
+    return () => timers.forEach(clearTimeout);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Auto-advance spacer lines
-  useEffect(() => {
-    lines.forEach((line, i) => {
-      if (line.text === "" && i > 0 && i < visibleCount) {
-        setVisibleCount((v) => Math.max(v, i + 1));
-      }
-    });
-  }, [visibleCount, lines]);
-
   return (
-    <div className="w-full max-w-2xl">
-      <div className="rounded-xl overflow-hidden border border-claw-border bg-claw-bg-card/90 backdrop-blur-sm">
-        <div className="flex items-center gap-2 px-5 py-2.5 border-b border-claw-border-subtle">
-          <div className="w-1.5 h-1.5 rounded-full bg-claw-red animate-pulse" />
-          <span className="text-[10px] font-mono uppercase tracking-widest text-claw-coral">
-            proactive intelligence
-          </span>
-          <span className="text-[10px] font-mono text-claw-text-dim ml-auto">agent-initiated</span>
-        </div>
-        <div className="p-5 font-mono text-[12px] sm:text-[13px] leading-relaxed text-claw-text-muted min-h-[260px]">
-          <div className="space-y-0.5">
-            {lines.map((line, i) => (
-              <div
-                key={i}
-                className="transition-all duration-500"
-                style={{
-                  opacity: i < visibleCount ? 1 : 0,
-                  transform: i < visibleCount ? "translateY(0)" : "translateY(4px)",
-                }}
-              >
-                {line.text === "" ? (
-                  <div className="h-3" />
-                ) : (
-                  <div className={line.text.startsWith("[lit]") ? "text-claw-text-dim flex items-start gap-1.5" : line.text.startsWith("[act]") ? "text-claw-coral flex items-start gap-1.5" : ""}>
-                    {line.text.startsWith("[lit]") && <IconBook className="w-3.5 h-3.5 shrink-0 mt-0.5" />}
-                    {line.text.startsWith("[act]") && <IconZap className="w-3.5 h-3.5 shrink-0 mt-0.5" />}
-                    {line.text.replace(/^\[(lit|act)\] /, "")}
-                  </div>
-                )}
-              </div>
-            ))}
-            {visibleCount < lines.length && (
-              <span className="inline-block w-[2px] h-[0.85em] bg-claw-red animate-blink align-middle" />
-            )}
+    <div className="w-full max-w-2xl space-y-2.5 min-h-[280px]">
+      {bubbles.map((bubble, i) => {
+        const isLit = bubble.text.startsWith("[lit]");
+        const isAct = bubble.text.startsWith("[act]");
+        const text = bubble.text.replace(/^\[(lit|act)\]/, "");
+        const visible = i < visibleCount;
+
+        return (
+          <div
+            key={i}
+            className="flex items-end gap-2 transition-all duration-500"
+            style={{
+              opacity: visible ? 1 : 0,
+              transform: visible ? "translateY(0)" : "translateY(12px)",
+            }}
+          >
+            {/* Avatar — only on first bubble */}
+            <div className="flex-shrink-0 w-7">
+              {i === 0 && <Logo size={28} />}
+            </div>
+            {/* Bubble */}
+            <div
+              className={`relative max-w-[85%] px-4 py-3 text-[13px] sm:text-[14px] leading-relaxed font-sans whitespace-pre-line ${
+                isAct
+                  ? "bg-claw-red/15 border border-claw-red/25 text-claw-coral rounded-2xl rounded-bl-md"
+                  : isLit
+                  ? "bg-claw-bg-elevated border border-claw-border text-claw-text-dim rounded-2xl rounded-bl-md"
+                  : "bg-claw-bg-elevated border border-claw-border text-claw-text-muted rounded-2xl rounded-bl-md"
+              }`}
+            >
+              {(isLit || isAct) && (
+                <span className="inline-flex items-center gap-1 mr-1 align-middle">
+                  {isLit && <IconBook className="w-3.5 h-3.5 inline" />}
+                  {isAct && <IconZap className="w-3.5 h-3.5 inline" />}
+                </span>
+              )}
+              {text}
+            </div>
+          </div>
+        );
+      })}
+      {/* Typing indicator */}
+      {visibleCount < bubbles.length && visibleCount > 0 && (
+        <div className="flex items-end gap-2">
+          <div className="w-7" />
+          <div className="bg-claw-bg-elevated border border-claw-border rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-claw-text-dim animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-claw-text-dim animate-pulse [animation-delay:0.15s]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-claw-text-dim animate-pulse [animation-delay:0.3s]" />
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
