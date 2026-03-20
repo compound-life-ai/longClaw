@@ -326,7 +326,7 @@ export default function VersionOne() {
 
                 <div className="space-y-3 mb-6">
                   <div className="flex items-start gap-3 bg-white/[0.02] rounded-lg p-4 border border-white/5">
-                    <div className="mt-0.5 p-1.5 rounded-md bg-white/5 border border-white/10 text-gray-400">
+                    <div className="mt-0.5 text-purple-400">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
                     </div>
                     <div>
@@ -335,7 +335,7 @@ export default function VersionOne() {
                     </div>
                   </div>
                   <div className="flex items-start gap-3 bg-white/[0.02] rounded-lg p-4 border border-white/5">
-                    <div className="mt-0.5 p-1.5 rounded-md bg-white/5 border border-white/10 text-gray-400">
+                    <div className="mt-0.5 text-purple-400">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-.5-.5-2.5 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.2-1.1.7l-1.2 3.6c-.1.4.1.9.5 1.1L9 14l-3 3-3.5-.5c-.4-.1-.8.1-1 .5l-.5 1.5c-.1.3.1.7.4.8l4.6 1.9 1.9 4.6c.1.3.5.5.8.4l1.5-.5c.4-.2.6-.6.5-1l-.5-3.5 3-3 2.4 6c.2.4.7.6 1.1.5l3.6-1.2c.5-.2.8-.6.7-1.1Z"/></svg>
                     </div>
                     <div>
