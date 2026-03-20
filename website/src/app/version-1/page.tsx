@@ -1,33 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
-
-function Typewriter({ text, speed = 100 }: { text: string; speed?: number }) {
-  const [displayed, setDisplayed] = useState("");
-  const [done, setDone] = useState(false);
-
-  useEffect(() => {
-    let i = 0;
-    const interval = setInterval(() => {
-      i++;
-      setDisplayed(text.slice(0, i));
-      if (i >= text.length) {
-        clearInterval(interval);
-        setDone(true);
-      }
-    }, speed);
-    return () => clearInterval(interval);
-  }, [text, speed]);
-
-  return (
-    <>
-      {displayed}
-      <span
-        className={`inline-block w-[2px] h-[0.9em] bg-[#4A64C0] align-middle ml-0.5 ${done ? "animate-blink" : ""}`}
-        aria-hidden="true"
-      />
-    </>
-  );
-}
+import React, { useState } from "react";
 
 const installText = `1. Clone \`https://github.com/compound-life-ai/longClaw\` to a stable local path.
 2. Change into the cloned repository.

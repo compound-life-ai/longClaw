@@ -77,7 +77,7 @@ function StatusDot({ color = "green" }: { color?: "green" | "red" | "amber" }) {
 function FeatureCard({
   icon,
   title,
-  command,
+  command: _command,
   description,
   tag,
   tagColor = "default",

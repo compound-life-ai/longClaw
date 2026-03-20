@@ -45,19 +45,6 @@ function Dot({ color = "green" }: { color?: "green" | "red" | "amber" }) {
   return <span className={`inline-block h-1.5 w-1.5 rounded-full ${c[color]}`} />;
 }
 
-/* ─── Chat mock ─── */
-function ChatMock({ messages }: { messages: { role: "user" | "assistant"; text: string }[] }) {
-  return (
-    <div className="bg-claw-bg rounded-lg p-2.5 border border-claw-border-subtle text-xs space-y-1.5 font-mono">
-      {messages.map((m, i) => (
-        <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-          <div className={`rounded-lg px-3 py-1.5 max-w-[90%] ${m.role === "user" ? "bg-claw-red/15 text-claw-coral border border-claw-red/20" : "bg-claw-border/40 text-claw-text border border-claw-border"}`} dangerouslySetInnerHTML={{ __html: m.text }} />
-        </div>
-      ))}
-    </div>
-  );
-}
-
 /* ─── Copy button ─── */
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
@@ -92,29 +79,6 @@ function MetricCard({ label, value, unit, change, spark }: { label: string; valu
   );
 }
 
-/* ─── Feature showcase card (image + content) ─── */
-function ShowcaseCard({ title, description, tag, tagColor = "default", children }: {
-  title: string; description: string; tag: string; tagColor?: "default" | "green" | "amber"; children: React.ReactNode;
-}) {
-  const tc = { default: "border-claw-border text-claw-text-muted", green: "border-claw-green/30 text-claw-green", amber: "border-claw-amber/30 text-claw-amber" };
-  return (
-    <div className="group relative rounded-xl border border-claw-border bg-claw-bg-card/60 backdrop-blur-sm p-5 transition-all duration-300 hover:border-claw-red/40 hover:shadow-[0_0_30px_rgba(232,77,61,0.08)]">
-      <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-claw-red/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-      <div className="relative z-10">
-        <div className="flex justify-between items-start mb-3">
-          <h3 className="text-base font-semibold font-sans text-claw-text">{title}</h3>
-          <span className={`text-[10px] font-mono px-2 py-0.5 border rounded-full ${tc[tagColor]} flex items-center gap-1.5`}>
-            {tagColor === "green" && <Dot color="green" />}
-            {tagColor === "amber" && <Dot color="amber" />}
-            {tag}
-          </span>
-        </div>
-        <p className="text-sm text-claw-text-muted leading-relaxed mb-3">{description}</p>
-        {children}
-      </div>
-    </div>
-  );
-}
 
 /* ─── Nav ─── */
 function Nav() {
@@ -249,10 +213,10 @@ function ShowcaseTabs() {
                   Personalized Recommendations
                 </div>
                 <div className="text-xs font-sans text-claw-text leading-relaxed space-y-2">
-                  <p><span className="text-claw-green font-bold">Protein ✓</span> — 91% of target. Solid for a bulk phase. You're averaging 1.56 g/kg, close to the 1.7 g/kg sweet spot for muscle gain at your height.</p>
-                  <p><span className="text-claw-red font-bold">Carbs ✗</span> — Only 60% of target. On heavy lifting days, you need the fuel. Post-workout, grab an extra <span className="text-claw-coral">steamed bun or two</span> — easy carbs, fast glycogen replenishment.</p>
-                  <p><span className="text-claw-amber font-bold">Vitamin D ~</span> — You're hitting RDA, but your fat intake is low. Vitamin D is fat-soluble — without enough dietary fat at the same meal, absorption drops significantly. <span className="text-claw-coral">Add a drizzle of olive oil or some nuts to your breakfast</span> when you take your D3.</p>
-                  <p><span className="text-claw-red font-bold">Calcium ✗</span> — 52% of RDA. Since you're lactose intolerant: try sardines (382 mg per can), fortified oat milk, or bok choy for plant-based calcium.</p>
+                  <p><span className="text-claw-green font-bold">Protein ✓</span> &mdash; 91% of target. Solid for a bulk phase. You&apos;re averaging 1.56 g/kg, close to the 1.7 g/kg sweet spot for muscle gain at your height.</p>
+                  <p><span className="text-claw-red font-bold">Carbs ✗</span> &mdash; Only 60% of target. On heavy lifting days, you need the fuel. Post-workout, grab an extra <span className="text-claw-coral">steamed bun or two</span> &mdash; easy carbs, fast glycogen replenishment.</p>
+                  <p><span className="text-claw-amber font-bold">Vitamin D ~</span> &mdash; You&apos;re hitting RDA, but your fat intake is low. Vitamin D is fat-soluble &mdash; without enough dietary fat at the same meal, absorption drops significantly. <span className="text-claw-coral">Add a drizzle of olive oil or some nuts to your breakfast</span> when you take your D3.</p>
+                  <p><span className="text-claw-red font-bold">Calcium ✗</span> &mdash; 52% of RDA. Since you&apos;re lactose intolerant: try sardines (382 mg per can), fortified oat milk, or bok choy for plant-based calcium.</p>
                 </div>
               </div>
 
@@ -276,7 +240,7 @@ function ShowcaseTabs() {
                   <span className="text-xs font-mono text-claw-text-dim">longevity-os agent</span>
                   <span className="text-[10px] font-mono text-claw-text-dim ml-auto">Tue, Mar 18 &middot; 08:15</span>
                 </div>
-                <div className="text-sm font-sans text-claw-text font-semibold mb-2">Hey — I noticed you've been pushing yourself pretty hard lately.</div>
+                <div className="text-sm font-sans text-claw-text font-semibold mb-2">Hey &mdash; I noticed you&apos;ve been pushing yourself pretty hard lately.</div>
               </div>
 
               {/* Pattern data */}
@@ -337,10 +301,10 @@ function ShowcaseTabs() {
                   Proposed Experiment
                 </div>
                 <div className="text-xs font-sans text-claw-text leading-relaxed">
-                  <p className="mb-2">Want to find your personal caffeine metabolism cutoff and build a post-flight recovery protocol? Here's what I suggest:</p>
+                  <p className="mb-2">Want to find your personal caffeine metabolism cutoff and build a post-flight recovery protocol? Here&apos;s what I suggest:</p>
                   <div className="space-y-1 text-claw-text-muted">
-                    <div className="flex gap-2"><span className="text-claw-green shrink-0">1.</span> <span><b className="text-claw-text">Caffeine cutoff test</b> — 14 days, no caffeine after 2 PM. I'll track deep sleep and HRV delta vs. your current baseline.</span></div>
-                    <div className="flex gap-2"><span className="text-claw-green shrink-0">2.</span> <span><b className="text-claw-text">Travel recovery kit</b> — On flight days: magnesium glycinate before bed, 30-min walk on landing, no screens 1 hr before sleep. I'll compare recovery speed.</span></div>
+                    <div className="flex gap-2"><span className="text-claw-green shrink-0">1.</span> <span><b className="text-claw-text">Caffeine cutoff test</b> — 14 days, no caffeine after 2 PM. I&apos;ll track deep sleep and HRV delta vs. your current baseline.</span></div>
+                    <div className="flex gap-2"><span className="text-claw-green shrink-0">2.</span> <span><b className="text-claw-text">Travel recovery kit</b> — On flight days: magnesium glycinate before bed, 30-min walk on landing, no screens 1 hr before sleep. I&apos;ll compare recovery speed.</span></div>
                   </div>
                 </div>
                 <div className="flex gap-2 mt-3">
@@ -369,7 +333,7 @@ function ShowcaseTabs() {
                   <span className="text-xs font-mono text-claw-text-dim">longevity-os agent</span>
                   <span className="text-[10px] font-mono text-claw-text-dim ml-auto">Thu, Dec 24 &middot; 14:30</span>
                 </div>
-                <div className="text-sm font-sans text-claw-text font-semibold mb-2">New blood work detected — I've cross-analyzed with your last 2 months of training and nutrition data.</div>
+                <div className="text-sm font-sans text-claw-text font-semibold mb-2">New blood work detected &mdash; I&apos;ve cross-analyzed with your last 2 months of training and nutrition data.</div>
                 <div className="text-xs font-mono text-claw-text-muted">This fills in the metabolic markers I was missing (triglycerides, Lp(a)). Now I can give you a much deeper picture.</div>
               </div>
 
@@ -397,7 +361,7 @@ function ShowcaseTabs() {
                 </div>
                 <div className="text-xs font-sans text-claw-text leading-relaxed space-y-2">
                   <p>The results are <span className="text-claw-green font-bold">extremely encouraging</span>. Your metabolic markers are excellent — confirming that your diet protocol and Zone 2 training over the last two months are working.</p>
-                  <p><span className="text-claw-green font-bold">Triglycerides at 68</span> and <span className="text-claw-green font-bold">Lp(a) at 12</span> — both well within optimal range. These were the "missing indicators" for your metabolic profile. Now I have the full picture.</p>
+                  <p><span className="text-claw-green font-bold">Triglycerides at 68</span> and <span className="text-claw-green font-bold">Lp(a) at 12</span> — both well within optimal range. These were the &ldquo;missing indicators&rdquo; for your metabolic profile. Now I have the full picture.</p>
                   <p><span className="text-claw-amber font-bold">hsCRP dropped from 1.1 → 0.4</span> — systemic inflammation is way down. Zone 2 cardio is likely the biggest driver here.</p>
                 </div>
               </div>
@@ -406,8 +370,8 @@ function ShowcaseTabs() {
               <div className="bg-claw-bg-elevated rounded-lg border border-claw-coral/20 p-4">
                 <div className="text-xs font-mono text-claw-coral font-semibold mb-2">For the perfectionist in you</div>
                 <div className="text-xs font-sans text-claw-text leading-relaxed space-y-2">
-                  <p>Your ApoB is at 78 mg/dL — already good, but if you want to chase the gold standard that longevity experts like Peter Attia advocate: get it below 60 mg/dL. That's what he calls <span className="text-claw-coral">"infant-grade arterial purity."</span></p>
-                  <p>A small tweak to your fat profile could get you there: swap some of the saturated fat sources (cheese, red meat fat) for monounsaturated (olive oil, avocado, macadamia nuts). I'll track the impact over the next blood draw cycle.</p>
+                  <p>Your ApoB is at 78 mg/dL — already good, but if you want to chase the gold standard that longevity experts like Peter Attia advocate: get it below 60 mg/dL. That&apos;s what he calls <span className="text-claw-coral">&ldquo;infant-grade arterial purity.&rdquo;</span></p>
+                  <p>A small tweak to your fat profile could get you there: swap some of the saturated fat sources (cheese, red meat fat) for monounsaturated (olive oil, avocado, macadamia nuts). I&apos;ll track the impact over the next blood draw cycle.</p>
                 </div>
                 <div className="flex gap-2 mt-3">
                   <button className="px-3 py-1.5 rounded bg-claw-red/15 border border-claw-red/30 text-claw-coral text-[10px] font-mono">Optimize fat profile plan</button>

@@ -283,18 +283,27 @@ function BiomarkerRow({ name, oct, dec, unit, trend, status }: { name: string; o
   );
 }
 
-/* Intersection observer hook for fade-in */
+/* Glow divider — adapted from V1's "blue glow strip" with V6 palette */
+function GlowDivider() {
+  return (
+    <div className="relative z-10 w-full max-w-3xl mx-auto pointer-events-none">
+      <div className="h-[1px] bg-gradient-to-r from-transparent via-claw-red/20 to-transparent" />
+      <div className="absolute left-1/2 -translate-x-1/2 top-0 -translate-y-1/2 w-full h-24 bg-claw-red/[0.07] blur-[50px]" />
+    </div>
+  );
+}
+
+/* Intersection observer hook for fade-in (callback ref to avoid ref-during-render lint) */
 function useInView(threshold = 0.15) {
-  const ref = useRef<HTMLDivElement>(null);
+  const [node, setNode] = useState<HTMLDivElement | null>(null);
   const [inView, setInView] = useState(false);
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+    if (!node) return;
     const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setInView(true); }, { threshold });
-    obs.observe(el);
+    obs.observe(node);
     return () => obs.disconnect();
-  }, [threshold]);
-  return { ref, inView };
+  }, [node, threshold]);
+  return [setNode, inView] as const;
 }
 
 /* ─────────────────────────────────────────────
@@ -749,9 +758,9 @@ function AgentNetwork() {
    ═══════════════════════════════════════════════ */
 
 export default function Version6() {
-  const featuresVis = useInView();
-  const thinksVis = useInView();
-  const evidenceVis = useInView();
+  const [featuresRef, featuresInView] = useInView();
+  const [thinksRef, thinksInView] = useInView();
+  const [evidenceRef, evidenceInView] = useInView();
 
   const steps = [
     { label: "INGEST", desc: "Data streams in \u2014 sleep stages, heart rate, HRV, meals, supplements." },
@@ -769,7 +778,14 @@ export default function Version6() {
           <div className="flex items-center gap-2">
             <Logo size={26} />
             <span className="text-[15px] font-semibold tracking-tight font-sans">LongevityOS</span>
-            <span className="text-[10px] text-claw-text-dim ml-0.5 hidden sm:inline font-mono">by Compound</span>
+            <a
+              href="https://compound.zeabur.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[10px] text-claw-text-dim ml-0.5 hidden sm:inline font-mono hover:text-claw-text transition-colors underline-offset-2 hover:underline"
+            >
+              by Compound
+            </a>
           </div>
           <div className="flex items-center gap-5">
             <a href="#features" className="text-[12px] text-claw-text-muted hover:text-claw-text transition hidden md:block font-sans">Features</a>
@@ -828,12 +844,32 @@ export default function Version6() {
         </div>
       </section>
 
+      {/* ── BUILT FOR ── */}
+      <section className="relative z-10 pt-8 pb-10">
+        <div className="flex items-center justify-center gap-6 mb-10 w-full max-w-5xl mx-auto px-5">
+          <div className="h-[1px] bg-gradient-to-r from-transparent via-claw-border to-claw-border/60 flex-1" />
+          <p className="text-[10px] uppercase tracking-widest text-claw-text-dim shrink-0 font-mono">Built for</p>
+          <div className="h-[1px] bg-gradient-to-l from-transparent via-claw-border to-claw-border/60 flex-1" />
+        </div>
+        <div className="max-w-5xl mx-auto px-5">
+          <div className="flex items-center justify-center gap-10 sm:gap-12 flex-wrap text-claw-text-dim">
+            <span className="text-base font-bold tracking-wider font-sans">OpenClaw</span>
+            <span className="text-base font-bold tracking-wider font-sans">Telegram</span>
+            <span className="text-base font-bold tracking-wider font-sans">Apple Health</span>
+            <span className="text-base font-bold tracking-wider font-sans">Oura</span>
+            <span className="text-base font-bold tracking-wider font-sans">Whoop</span>
+          </div>
+        </div>
+      </section>
+
+      <GlowDivider />
+
       {/* ── WHAT IT DOES / SEE IT IN ACTION ── */}
       <section id="features" className="py-24 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-claw-red/[0.01] to-transparent" />
         <div
-          ref={featuresVis.ref}
-          className={`max-w-5xl mx-auto px-5 transition-all duration-1000 ${featuresVis.inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+          ref={featuresRef}
+          className={`max-w-5xl mx-auto px-5 transition-all duration-1000 ${featuresInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
         >
           <p className="text-[10px] font-mono uppercase tracking-widest text-claw-red mb-2 text-center">see it in action</p>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-center mb-3 font-sans">What It Does</h2>
@@ -847,12 +883,14 @@ export default function Version6() {
         </div>
       </section>
 
+      <GlowDivider />
+
       {/* ── HOW IT THINKS ── */}
       <section id="thinks" className="py-24 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-claw-red/[0.01] to-transparent" />
         <div
-          ref={thinksVis.ref}
-          className={`max-w-5xl mx-auto px-5 transition-all duration-1000 ${thinksVis.inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+          ref={thinksRef}
+          className={`max-w-5xl mx-auto px-5 transition-all duration-1000 ${thinksInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
         >
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-center mb-3 font-sans">How It Thinks</h2>
           <p className="text-claw-text-muted text-center mb-12 text-sm max-w-lg mx-auto font-sans">
@@ -896,11 +934,13 @@ export default function Version6() {
         </div>
       </section>
 
+      <GlowDivider />
+
       {/* ── EVIDENCE ── */}
       <section className="py-16">
         <div
-          ref={evidenceVis.ref}
-          className={`max-w-4xl mx-auto px-5 transition-all duration-1000 ${evidenceVis.inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+          ref={evidenceRef}
+          className={`max-w-4xl mx-auto px-5 transition-all duration-1000 ${evidenceInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
             {[
@@ -918,6 +958,8 @@ export default function Version6() {
           </div>
         </div>
       </section>
+
+      <GlowDivider />
 
       {/* ── FINAL CTA ── */}
       <section className="py-28 relative overflow-hidden">
