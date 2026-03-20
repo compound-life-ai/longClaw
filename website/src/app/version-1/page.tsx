@@ -116,7 +116,7 @@ export default function VersionOne() {
         <div className="mt-10 flex justify-center gap-4 flex-wrap">
           <a
             href="#install"
-            className="rounded-full bg-gradient-to-r from-[#adc9f0] to-[#c5dbf5] text-[#010118] px-8 py-3.5 text-base font-medium transition-all duration-200 hover:shadow-[0_0_30px_rgba(173,201,240,0.4)] hover:brightness-110"
+            className="rounded-full bg-gradient-to-r from-[#6b8fd4] to-[#adc9f0] text-[#010118] px-8 py-3.5 text-base font-medium transition-all duration-200 hover:shadow-[0_0_30px_rgba(173,201,240,0.5)] hover:brightness-110"
           >
             Start building
           </a>
