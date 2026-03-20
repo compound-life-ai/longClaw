@@ -862,8 +862,6 @@ export default function Version6() {
         </div>
       </section>
 
-      <GlowDivider />
-
       {/* ── WHAT IT DOES / SEE IT IN ACTION ── */}
       <section id="features" className="py-24 relative">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-claw-red/[0.01] to-transparent" />
