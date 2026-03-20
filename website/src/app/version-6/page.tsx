@@ -5,34 +5,42 @@ import React, { useState, useEffect, useRef } from "react";
    HELPER COMPONENTS
    ───────────────────────────────────────────── */
 
-/* Hexagonal node-graph logo (from V5, adapted to claw palette) */
-function HexLogo({ size = 26 }: { size?: number }) {
-  const c = size / 2;
-  const r = size * 0.32;
-  const nr = size * 0.11;
-  const cr = size * 0.099;
-  const nodes = Array.from({ length: 6 }, (_, i) => {
-    const angle = (Math.PI / 3) * i - Math.PI / 2;
-    return { x: c + r * Math.cos(angle), y: c + r * Math.sin(angle) };
-  });
-  return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} fill="none">
-      {nodes.map((n, i) => (
-        <line key={`l${i}`} x1={c} y1={c} x2={n.x} y2={n.y} stroke="rgba(232,77,61,0.08)" strokeWidth={0.5} />
-      ))}
-      {nodes.map((n, i) => (
-        <circle key={`n${i}`} cx={n.x} cy={n.y} r={nr} fill="var(--color-claw-text)" opacity={0.85} />
-      ))}
-      <circle cx={c} cy={c} r={cr} fill="url(#hg)" />
-      <defs>
-        <radialGradient id="hg">
-          <stop offset="0%" stopColor="var(--color-claw-coral)" />
-          <stop offset="100%" stopColor="var(--color-claw-red)" />
-        </radialGradient>
-      </defs>
-    </svg>
-  );
+/* Compound logo image */
+function Logo({ size = 26 }: { size?: number }) {
+  return <img src="/logo-light.svg" alt="LongevityOS" className="rounded-lg" style={{ height: size, width: size }} />;
 }
+
+/* ─── SVG Icons ─── */
+const IconChart = ({ className = "w-4 h-4" }: { className?: string }) => (
+  <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 15h12M5 15v-5m4 5V6m4 9V9" /></svg>
+);
+const IconSearch = ({ className = "w-4 h-4" }: { className?: string }) => (
+  <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="8" cy="8" r="5" /><path d="m11.5 11.5 4 4" /></svg>
+);
+const IconDna = ({ className = "w-4 h-4" }: { className?: string }) => (
+  <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M4 3c0 6 10 6 10 12M14 3c0 6-10 6-10 12M4 6h10M4 12h10" /></svg>
+);
+const IconCoffee = ({ className = "w-4 h-4" }: { className?: string }) => (
+  <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M4 7v4a4 4 0 0 0 8 0V7H4Z" /><path d="M12 8h1a2 2 0 0 1 0 4h-1" /><path d="M6 3v2M9 2v3M12 3v2" /><path d="M2 15h14" /></svg>
+);
+const IconMoon = ({ className = "w-4 h-4" }: { className?: string }) => (
+  <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M15 9.5A6.5 6.5 0 1 1 8.5 3a5.5 5.5 0 0 0 6.5 6.5Z" /></svg>
+);
+const IconBook = ({ className = "w-4 h-4" }: { className?: string }) => (
+  <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M2 4c2-1.5 4-1.5 7 0v12c-3-1.5-5-1.5-7 0V4ZM16 4c-2-1.5-4-1.5-7 0v12c3-1.5 5-1.5 7 0V4Z" /></svg>
+);
+const IconBarChart = ({ className = "w-4 h-4" }: { className?: string }) => (
+  <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}><rect x="2" y="9" width="3" height="7" rx="0.5" /><rect x="7.5" y="5" width="3" height="11" rx="0.5" /><rect x="13" y="2" width="3" height="14" rx="0.5" /></svg>
+);
+const IconBrain = ({ className = "w-4 h-4" }: { className?: string }) => (
+  <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M9 16V9M9 9C9 6 7 4 5 4S2 6 2 8c0 1.5 1 3 3 3M9 9c0-3 2-5 4-5s3 2 3 4c0 1.5-1 3-3 3" /><path d="M5 11c-2 1-3 3-1 5M13 11c2 1 3 3 1 5" /></svg>
+);
+const IconShield = ({ className = "w-4 h-4" }: { className?: string }) => (
+  <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M9 2 3 5v4c0 4 3 6.5 6 8 3-1.5 6-4 6-8V5L9 2Z" /><path d="m6.5 9 2 2 3.5-4" /></svg>
+);
+const IconZap = ({ className = "w-4 h-4" }: { className?: string }) => (
+  <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M10 2 4 10h5l-1 6 6-8H9l1-6Z" /></svg>
+);
 
 /* Status dot */
 function Dot({ color = "green" }: { color?: "green" | "red" | "amber" }) {
@@ -52,11 +60,11 @@ function HeroAgentCard() {
     { text: "Your resting HR has been +8 bpm for 72 hours.", delay: 2400 },
     { text: "HRV is down 23%. Deep sleep shortened by 40 min.", delay: 3600 },
     { text: "", delay: 0 },
-    { text: "\ud83d\udcda Sustained resting HR elevation >48h is an early", delay: 5200 },
+    { text: "[lit] Sustained resting HR elevation >48h is an early", delay: 5200 },
     { text: "   immune mobilization signal before symptom onset.", delay: 6000 },
     { text: "   (Jarczok et al., Psychoneuroendocrinology 2019)", delay: 6800 },
     { text: "", delay: 0 },
-    { text: "\u26a1 Action plan: rest today, supplement Vitamin C + Zinc,", delay: 8400 },
+    { text: "[act] Action plan: rest today, supplement Vitamin C + Zinc,", delay: 8400 },
     { text: "   skip HIIT. I\u2019ll keep monitoring.", delay: 9200 },
   ];
 
@@ -105,8 +113,10 @@ function HeroAgentCard() {
                 {line.text === "" ? (
                   <div className="h-3" />
                 ) : (
-                  <div className={line.text.startsWith("\ud83d\udcda") ? "text-claw-text-dim" : line.text.startsWith("\u26a1") ? "text-claw-coral" : ""}>
-                    {line.text}
+                  <div className={line.text.startsWith("[lit]") ? "text-claw-text-dim flex items-start gap-1.5" : line.text.startsWith("[act]") ? "text-claw-coral flex items-start gap-1.5" : ""}>
+                    {line.text.startsWith("[lit]") && <IconBook className="w-3.5 h-3.5 shrink-0 mt-0.5" />}
+                    {line.text.startsWith("[act]") && <IconZap className="w-3.5 h-3.5 shrink-0 mt-0.5" />}
+                    {line.text.replace(/^\[(lit|act)\] /, "")}
                   </div>
                 )}
               </div>
@@ -162,7 +172,7 @@ function AnimatedChat({
         >
           {msg.role === "agent" && (
             <div className="flex-shrink-0 mr-2 mt-1">
-              <HexLogo size={18} />
+              <Logo size={18} />
             </div>
           )}
           <div
@@ -245,11 +255,11 @@ function useInView(threshold = 0.15) {
 function ShowcaseTabs() {
   const [activeTab, setActiveTab] = useState(0);
   const tabs = [
-    { id: "nutrition", label: "Weekly Review", emoji: "\ud83d\udcca" },
-    { id: "patterns", label: "Pattern Detection", emoji: "\ud83d\udd0d" },
-    { id: "analysis", label: "Deep Analysis", emoji: "\ud83e\uddec" },
-    { id: "ask-milk", label: "Ask Agent", emoji: "\u2615" },
-    { id: "ask-sleep", label: "Night Chat", emoji: "\ud83c\udf19" },
+    { id: "nutrition", label: "Weekly Review", icon: <IconChart className="w-3.5 h-3.5" /> },
+    { id: "patterns", label: "Pattern Detection", icon: <IconSearch className="w-3.5 h-3.5" /> },
+    { id: "analysis", label: "Deep Analysis", icon: <IconDna className="w-3.5 h-3.5" /> },
+    { id: "ask-milk", label: "Ask Agent", icon: <IconCoffee className="w-3.5 h-3.5" /> },
+    { id: "ask-sleep", label: "Night Chat", icon: <IconMoon className="w-3.5 h-3.5" /> },
   ];
 
   return (
@@ -266,7 +276,7 @@ function ShowcaseTabs() {
                 : "text-claw-text-muted hover:text-claw-text hover:bg-claw-bg-elevated border border-transparent"
             }`}
           >
-            <span>{tab.emoji}</span>
+            <span>{tab.icon}</span>
             <span className="hidden sm:inline">{tab.label}</span>
           </button>
         ))}
@@ -285,7 +295,7 @@ function ShowcaseTabs() {
             <div className="bg-claw-bg rounded-xl border border-claw-border p-4 sm:p-5 mt-4 space-y-4">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <HexLogo size={16} />
+                  <Logo size={16} />
                   <span className="text-xs font-mono text-claw-text-dim">longevity-os agent</span>
                   <span className="text-[10px] font-mono text-claw-text-dim ml-auto">Sun, Mar 19 &middot; 09:00</span>
                 </div>
@@ -336,7 +346,7 @@ function ShowcaseTabs() {
             <div className="bg-claw-bg rounded-xl border border-claw-border p-4 sm:p-5 mt-4 space-y-4">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <HexLogo size={16} />
+                  <Logo size={16} />
                   <span className="text-xs font-mono text-claw-text-dim">longevity-os agent</span>
                   <span className="text-[10px] font-mono text-claw-text-dim ml-auto">Tue, Mar 18 &middot; 08:15</span>
                 </div>
@@ -358,7 +368,7 @@ function ShowcaseTabs() {
                             <div className={`h-8 rounded text-[9px] flex items-end justify-center pb-0.5 ${bad ? "bg-claw-red/20 text-claw-red" : "bg-claw-green/10 text-claw-green"}`}>
                               {bad ? "4.2h" : i === 1 ? "7.1h" : i === 3 ? "6.8h" : i === 5 ? "7.5h" : "7.0h"}
                             </div>
-                            {bad && <div className="text-[8px] text-claw-amber mt-0.5">\u2615 5pm</div>}
+                            {bad && <div className="text-[8px] text-claw-amber mt-0.5 flex items-center gap-0.5 justify-center"><IconCoffee className="w-2.5 h-2.5 inline" /> 5pm</div>}
                           </div>
                         );
                       })}
@@ -410,7 +420,7 @@ function ShowcaseTabs() {
             <div className="bg-claw-bg rounded-xl border border-claw-border p-4 sm:p-5 mt-4 space-y-4">
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <HexLogo size={16} />
+                  <Logo size={16} />
                   <span className="text-xs font-mono text-claw-text-dim">longevity-os agent</span>
                   <span className="text-[10px] font-mono text-claw-text-dim ml-auto">Thu, Dec 24 &middot; 14:30</span>
                 </div>
@@ -501,7 +511,7 @@ function ShowcaseTabs() {
                   },
                   {
                     role: "agent",
-                    text: "\u4eca\u5929\u65f6\u533a\u6ca1\u4e71\uff0c\u90a3\u4f30\u8ba1\u662f\u8111\u5b50\u505c\u4e0d\u4e0b\u6765\uff1f\u8bd5\u8bd5 4-7-8 \u547c\u5438\uff0c\u4e09\u8f6e\u4e0b\u6765\u526f\u4ea4\u611f\u795e\u7ecf\u4f1a\u63a5\u7ba1\u3002\u5bf9\u4e86\u4f60\u77e5\u9053\u5417\uff0c\u4eba\u7c7b\u662f\u552f\u4e00\u4f1a\u523b\u610f\u5265\u593a\u81ea\u5df1\u7761\u7720\u7684\u52a8\u7269\u3002\u5176\u4ed6\u52a8\u7269\u56f0\u4e86\u5c31\u7761\uff0c\u53ea\u6709\u4eba\u7c7b\u4f1a\u8bf4\u201c\u518d\u770b\u4e00\u96c6\u201d\u3002\u8fdb\u5316\u6ca1\u6559\u6211\u4eec\u5bf9\u4ed8 Netflix/TikTok \ud83d\ude02",
+                    text: "\u4eca\u5929\u65f6\u533a\u6ca1\u4e71\uff0c\u90a3\u4f30\u8ba1\u662f\u8111\u5b50\u505c\u4e0d\u4e0b\u6765\uff1f\u8bd5\u8bd5 4-7-8 \u547c\u5438\uff0c\u4e09\u8f6e\u4e0b\u6765\u526f\u4ea4\u611f\u795e\u7ecf\u4f1a\u63a5\u7ba1\u3002\u5bf9\u4e86\u4f60\u77e5\u9053\u5417\uff0c\u4eba\u7c7b\u662f\u552f\u4e00\u4f1a\u523b\u610f\u5265\u593a\u81ea\u5df1\u7761\u7720\u7684\u52a8\u7269\u3002\u5176\u4ed6\u52a8\u7269\u56f0\u4e86\u5c31\u7761\uff0c\u53ea\u6709\u4eba\u7c7b\u4f1a\u8bf4\u201c\u518d\u770b\u4e00\u96c6\u201d\u3002\u8fdb\u5316\u6ca1\u6559\u6211\u4eec\u5bf9\u4ed8 Netflix/TikTok",
                     delay: 2400,
                   },
                 ]}
@@ -650,7 +660,7 @@ export default function Version6() {
       <nav className="sticky top-0 z-50 border-b border-claw-border bg-claw-bg/80 backdrop-blur-xl">
         <div className="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <HexLogo size={26} />
+            <Logo size={26} />
             <span className="text-[15px] font-semibold tracking-tight font-sans">LongevityOS</span>
             <span className="text-[10px] text-claw-text-dim ml-0.5 hidden sm:inline font-mono">by Compound</span>
           </div>
@@ -679,7 +689,7 @@ export default function Version6() {
         <div className="relative z-10 max-w-4xl mx-auto px-5 flex flex-col items-center">
           {/* Logo */}
           <div className="mb-6">
-            <HexLogo size={52} />
+            <Logo size={52} />
           </div>
 
           <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-center mb-3 font-sans">
@@ -797,13 +807,13 @@ export default function Version6() {
         >
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5">
             {[
-              { emoji: "\ud83d\udcda", title: "PubMed-Cited", desc: "Every recommendation backed by evidence" },
-              { emoji: "\ud83d\udcca", title: "Statistically Rigorous", desc: "Multi-comparison correction, zero false positives" },
-              { emoji: "\ud83e\udde0", title: "Causal Inference", desc: "Bayesian analysis for N-of-1 trials" },
-              { emoji: "\ud83d\udd12", title: "100% Local", desc: "Your data never leaves your device" },
+              { icon: <IconBook className="w-5 h-5" />, title: "PubMed-Cited", desc: "Every recommendation backed by evidence" },
+              { icon: <IconBarChart className="w-5 h-5" />, title: "Statistically Rigorous", desc: "Multi-comparison correction, zero false positives" },
+              { icon: <IconBrain className="w-5 h-5" />, title: "Causal Inference", desc: "Bayesian analysis for N-of-1 trials" },
+              { icon: <IconShield className="w-5 h-5" />, title: "100% Local", desc: "Your data never leaves your device" },
             ].map((card) => (
               <div key={card.title} className="p-3.5 rounded-lg bg-claw-bg-card/50 border border-claw-border text-center hover:border-claw-red/20 transition-colors">
-                <div className="text-lg mb-1">{card.emoji}</div>
+                <div className="flex justify-center text-claw-text-muted mb-1.5">{card.icon}</div>
                 <div className="text-[11px] font-semibold text-claw-text mb-0.5 font-sans">{card.title}</div>
                 <p className="text-[9px] text-claw-text-dim leading-relaxed font-sans">{card.desc}</p>
               </div>
@@ -819,7 +829,7 @@ export default function Version6() {
         </div>
         <div className="relative z-10 max-w-3xl mx-auto px-5 text-center">
           <div className="flex justify-center mb-5">
-            <HexLogo size={40} />
+            <Logo size={40} />
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-4 font-sans">Your Body, Understood</h2>
           <p className="text-claw-text-muted text-sm mb-8 max-w-sm mx-auto font-sans">
@@ -841,7 +851,7 @@ export default function Version6() {
       <footer className="border-t border-claw-border py-8">
         <div className="max-w-5xl mx-auto px-5 flex flex-col md:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <HexLogo size={18} />
+            <Logo size={18} />
             <span className="text-[11px] text-claw-text-dim font-sans">LongevityOS &middot; by Compound Life &middot; HK</span>
           </div>
           <span className="text-[10px] text-claw-text-dim font-mono">Open Source &middot; 10 AI Agents</span>
