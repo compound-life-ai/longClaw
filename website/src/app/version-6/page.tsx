@@ -128,6 +128,48 @@ function HeroAgentCard() {
   );
 }
 
+/* Sequential bubble reveal — shows children one at a time with typing indicator */
+function BubbleSequence({ children, interval = 1800 }: { children: React.ReactNode; interval?: number }) {
+  const items = React.Children.toArray(children);
+  const [visibleCount, setVisibleCount] = useState(0);
+
+  useEffect(() => {
+    if (visibleCount >= items.length) return;
+    const timer = setTimeout(() => setVisibleCount((v) => v + 1), visibleCount === 0 ? 400 : interval);
+    return () => clearTimeout(timer);
+  }, [visibleCount, items.length, interval]);
+
+  return (
+    <div className="space-y-2.5">
+      {items.map((child, i) => (
+        <div
+          key={i}
+          className="transition-all duration-500"
+          style={{
+            opacity: i < visibleCount ? 1 : 0,
+            transform: i < visibleCount ? "translateY(0)" : "translateY(12px)",
+            maxHeight: i < visibleCount ? "2000px" : "0",
+            overflow: "hidden",
+          }}
+        >
+          {child}
+        </div>
+      ))}
+      {/* Typing indicator */}
+      {visibleCount > 0 && visibleCount < items.length && (
+        <div className="flex items-end gap-2 transition-opacity duration-300">
+          <div className="w-7" />
+          <div className="bg-claw-bg-elevated border border-claw-border rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-claw-text-dim animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-claw-text-dim animate-pulse [animation-delay:0.15s]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-claw-text-dim animate-pulse [animation-delay:0.3s]" />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* Animated chat conversation (for the 2 new conversations) */
 function AnimatedChat({
   messages,
@@ -295,22 +337,24 @@ function ShowcaseTabs() {
         {/* TAB 0: Weekly Nutrition Review */}
         {activeTab === 0 && (
           <div className="p-5 sm:p-6">
-            <div className="flex items-center gap-2 mb-1">
-              <Dot color="green" />
-              <span className="text-[10px] font-mono uppercase tracking-widest text-claw-green">agent-initiated &middot; weekly</span>
-            </div>
-            <div className="bg-claw-bg rounded-xl border border-claw-border p-4 sm:p-5 mt-4 space-y-4">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Logo size={16} />
-                  <span className="text-xs font-mono text-claw-text-dim">longevity-os agent</span>
-                  <span className="text-[10px] font-mono text-claw-text-dim ml-auto">Sun, Mar 19 &middot; 09:00</span>
+            <BubbleSequence key="tab0" interval={2000}>
+            {/* Bubble 1: Intro */}
+            <div className="flex items-end gap-2">
+              <div className="flex-shrink-0 w-7"><Logo size={28} /></div>
+              <div className="max-w-[90%] bg-claw-bg-elevated border border-claw-border rounded-2xl rounded-bl-md px-4 py-3">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <Dot color="green" />
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-claw-green">weekly review</span>
+                  <span className="text-[10px] font-mono text-claw-text-dim ml-auto">Sun, Mar 19</span>
                 </div>
-                <div className="text-sm font-sans text-claw-text font-semibold mb-0.5">Weekly Nutrition Review &mdash; Mar 13&ndash;19</div>
-                <div className="text-xs font-mono text-claw-text-muted">Profile: 186 cm / 82 kg / male / muscle gain goal</div>
+                <div className="text-[14px] font-sans text-claw-text font-semibold mb-0.5">Weekly Nutrition Review &mdash; Mar 13&ndash;19</div>
+                <div className="text-xs font-sans text-claw-text-muted">Profile: 186 cm / 82 kg / male / muscle gain goal</div>
               </div>
-
-              <div className="bg-claw-bg-elevated rounded-lg border border-claw-border p-3 sm:p-4">
+            </div>
+            {/* Bubble 2: Nutrition table */}
+            <div className="flex items-end gap-2">
+              <div className="w-7" />
+              <div className="max-w-[90%] bg-claw-bg-elevated border border-claw-border rounded-2xl rounded-bl-md px-4 py-3">
                 <div className="grid grid-cols-[100px_1fr_55px_50px_40px] items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-claw-text-dim pb-2 mb-1 border-b border-claw-border">
                   <span>Nutrient</span><span>Progress</span><span className="text-right">Actual</span><span className="text-right">RDA</span><span className="text-right">%</span>
                 </div>
@@ -324,118 +368,130 @@ function ShowcaseTabs() {
                 <NutrientBar name="Selenium" actual={85} rda={55} unit="mcg" />
                 <NutrientBar name="Omega-3" actual={1.8} rda={1.6} unit="g" />
               </div>
-
-              <div className="bg-claw-bg-elevated rounded-lg border border-claw-red/20 p-4 space-y-2.5">
-                <div className="text-xs font-mono text-claw-coral font-semibold flex items-center gap-2">
+            </div>
+            {/* Bubble 3: Recommendations */}
+            <div className="flex items-end gap-2">
+              <div className="w-7" />
+              <div className="max-w-[90%] bg-claw-red/8 border border-claw-red/20 rounded-2xl rounded-bl-md px-4 py-3">
+                <div className="text-xs font-mono text-claw-coral font-semibold flex items-center gap-2 mb-2">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2" /></svg>
                   Personalized Recommendations
                 </div>
-                <div className="text-xs font-sans text-claw-text leading-relaxed space-y-2">
+                <div className="text-[13px] font-sans text-claw-text leading-relaxed space-y-2">
                   <p><span className="text-claw-green font-bold">Protein &#10003;</span> &mdash; 91% of target. Solid for a bulk phase. 1.56 g/kg, close to the 1.7 g/kg sweet spot.</p>
                   <p><span className="text-claw-red font-bold">Carbs &#10007;</span> &mdash; Only 60%. On heavy lifting days, grab an extra <span className="text-claw-coral">steamed bun or two</span> for fast glycogen replenishment.</p>
                   <p><span className="text-claw-amber font-bold">Vitamin D ~</span> &mdash; Hitting RDA, but fat intake is low. Vitamin D is fat-soluble &mdash; <span className="text-claw-coral">add olive oil or nuts to breakfast</span> when taking D3.</p>
                   <p><span className="text-claw-red font-bold">Calcium &#10007;</span> &mdash; 52% of RDA. Since you&apos;re lactose intolerant: try sardines (382 mg/can), fortified oat milk, or bok choy.</p>
                 </div>
+                <div className="text-[10px] font-mono text-claw-text-dim mt-3">Based on 19 meals logged across 7 days &middot; next review: Mar 26</div>
               </div>
-
-              <div className="text-[10px] font-mono text-claw-text-dim">Based on 19 meals logged across 7 days &middot; next review: Mar 26</div>
             </div>
+            </BubbleSequence>
           </div>
         )}
 
         {/* TAB 1: Pattern Detection */}
         {activeTab === 1 && (
           <div className="p-5 sm:p-6">
-            <div className="flex items-center gap-2 mb-1">
-              <Dot color="amber" />
-              <span className="text-[10px] font-mono uppercase tracking-widest text-claw-amber">agent-initiated &middot; pattern alert</span>
+            <BubbleSequence key="tab1" interval={1800}>
+            {/* Bubble 1: Intro */}
+            <div className="flex items-end gap-2">
+              <div className="flex-shrink-0 w-7"><Logo size={28} /></div>
+              <div className="max-w-[90%] bg-claw-bg-elevated border border-claw-border rounded-2xl rounded-bl-md px-4 py-3">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <Dot color="amber" />
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-claw-amber">pattern alert</span>
+                  <span className="text-[10px] font-mono text-claw-text-dim ml-auto">Tue, Mar 18</span>
+                </div>
+                <div className="text-[14px] font-sans text-claw-text leading-relaxed">Hey &mdash; I noticed you&apos;ve been pushing yourself pretty hard lately.</div>
+              </div>
             </div>
-            <div className="bg-claw-bg rounded-xl border border-claw-border p-4 sm:p-5 mt-4 space-y-4">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Logo size={16} />
-                  <span className="text-xs font-mono text-claw-text-dim">longevity-os agent</span>
-                  <span className="text-[10px] font-mono text-claw-text-dim ml-auto">Tue, Mar 18 &middot; 08:15</span>
-                </div>
-                <div className="text-sm font-sans text-claw-text font-semibold mb-2">Hey &mdash; I noticed you&apos;ve been pushing yourself pretty hard lately.</div>
-              </div>
-
-              <div className="bg-claw-bg-elevated rounded-lg border border-claw-border p-4 space-y-3">
-                <div className="text-[10px] font-mono uppercase tracking-wider text-claw-text-dim mb-2">Detected patterns &mdash; last 7 days</div>
-                <div className="rounded-lg border border-claw-amber/20 bg-claw-amber/5 p-3">
-                  <div className="text-xs font-mono text-claw-amber font-semibold mb-2">Sleep + Caffeine Correlation</div>
-                  <div className="space-y-1.5 text-xs font-mono text-claw-text-muted">
-                    <div><span className="text-claw-red">3 nights</span> with sleep &lt; 5 hours &mdash; all had caffeine after 4:00 PM</div>
-                    <div className="grid grid-cols-7 gap-1 mt-2">
-                      {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d, i) => {
-                        const bad = [0, 2, 4].includes(i);
-                        return (
-                          <div key={d} className="text-center">
-                            <div className="text-[9px] text-claw-text-dim mb-1">{d}</div>
-                            <div className={`h-8 rounded text-[9px] flex items-end justify-center pb-0.5 ${bad ? "bg-claw-red/20 text-claw-red" : "bg-claw-green/10 text-claw-green"}`}>
-                              {bad ? "4.2h" : i === 1 ? "7.1h" : i === 3 ? "6.8h" : i === 5 ? "7.5h" : "7.0h"}
-                            </div>
-                            {bad && <div className="text-[8px] text-claw-amber mt-0.5 flex items-center gap-0.5 justify-center"><IconCoffee className="w-2.5 h-2.5 inline" /> 5pm</div>}
+            {/* Bubble 2: Caffeine pattern */}
+            <div className="flex items-end gap-2">
+              <div className="w-7" />
+              <div className="max-w-[90%] bg-claw-bg-elevated border border-claw-border rounded-2xl rounded-bl-md px-4 py-3">
+                <div className="text-xs font-mono text-claw-amber font-semibold mb-2">Sleep + Caffeine Correlation</div>
+                <div className="space-y-1.5 text-xs font-mono text-claw-text-muted">
+                  <div><span className="text-claw-red">3 nights</span> with sleep &lt; 5 hours &mdash; all had caffeine after 4:00 PM</div>
+                  <div className="grid grid-cols-7 gap-1 mt-2">
+                    {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((d, i) => {
+                      const bad = [0, 2, 4].includes(i);
+                      return (
+                        <div key={d} className="text-center">
+                          <div className="text-[9px] text-claw-text-dim mb-1">{d}</div>
+                          <div className={`h-8 rounded text-[9px] flex items-end justify-center pb-0.5 ${bad ? "bg-claw-red/20 text-claw-red" : "bg-claw-green/10 text-claw-green"}`}>
+                            {bad ? "4.2h" : i === 1 ? "7.1h" : i === 3 ? "6.8h" : i === 5 ? "7.5h" : "7.0h"}
                           </div>
-                        );
-                      })}
-                    </div>
+                          {bad && <div className="text-[8px] text-claw-amber mt-0.5 flex items-center gap-0.5 justify-center"><IconCoffee className="w-2.5 h-2.5 inline" /> 5pm</div>}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
-                <div className="rounded-lg border border-claw-red/20 bg-claw-red/5 p-3">
-                  <div className="text-xs font-mono text-claw-coral font-semibold mb-2">Travel Impact on Recovery</div>
-                  <div className="space-y-1.5 text-xs font-mono text-claw-text-muted">
-                    <div><span className="text-claw-red">2 flights</span> this week &mdash; HRV dropped significantly, deep sleep &lt; 40 min on both nights</div>
-                    <div className="grid grid-cols-2 gap-3 mt-2">
-                      <div className="bg-claw-bg rounded p-2 border border-claw-border">
-                        <div className="text-[9px] text-claw-text-dim">Post-flight HRV</div>
-                        <div className="text-lg font-bold text-claw-red">32 ms</div>
-                        <div className="text-[9px] text-claw-text-dim">vs. 52 ms baseline (\u2193 38%)</div>
-                      </div>
-                      <div className="bg-claw-bg rounded p-2 border border-claw-border">
-                        <div className="text-[9px] text-claw-text-dim">Post-flight deep sleep</div>
-                        <div className="text-lg font-bold text-claw-red">35 min</div>
-                        <div className="text-[9px] text-claw-text-dim">vs. 1h 20m baseline (\u2193 56%)</div>
-                      </div>
+              </div>
+            </div>
+            {/* Bubble 3: Travel pattern */}
+            <div className="flex items-end gap-2">
+              <div className="w-7" />
+              <div className="max-w-[90%] bg-claw-bg-elevated border border-claw-border rounded-2xl rounded-bl-md px-4 py-3">
+                <div className="text-xs font-mono text-claw-coral font-semibold mb-2">Travel Impact on Recovery</div>
+                <div className="space-y-1.5 text-xs font-mono text-claw-text-muted">
+                  <div><span className="text-claw-red">2 flights</span> this week &mdash; HRV dropped significantly, deep sleep &lt; 40 min on both nights</div>
+                  <div className="grid grid-cols-2 gap-3 mt-2">
+                    <div className="bg-claw-bg rounded p-2 border border-claw-border-subtle">
+                      <div className="text-[9px] text-claw-text-dim">Post-flight HRV</div>
+                      <div className="text-lg font-bold text-claw-red">32 ms</div>
+                      <div className="text-[9px] text-claw-text-dim">vs. 52 ms baseline (\u2193 38%)</div>
+                    </div>
+                    <div className="bg-claw-bg rounded p-2 border border-claw-border-subtle">
+                      <div className="text-[9px] text-claw-text-dim">Post-flight deep sleep</div>
+                      <div className="text-lg font-bold text-claw-red">35 min</div>
+                      <div className="text-[9px] text-claw-text-dim">vs. 1h 20m baseline (\u2193 56%)</div>
                     </div>
                   </div>
                 </div>
               </div>
-
-              <div className="bg-claw-bg-elevated rounded-lg border border-claw-green/20 p-4">
+            </div>
+            {/* Bubble 4: Experiment proposal */}
+            <div className="flex items-end gap-2">
+              <div className="w-7" />
+              <div className="max-w-[90%] bg-claw-green/5 border border-claw-green/20 rounded-2xl rounded-bl-md px-4 py-3">
                 <div className="text-xs font-mono text-claw-green font-semibold mb-2">Proposed Experiment</div>
-                <div className="text-xs font-sans text-claw-text leading-relaxed space-y-1">
+                <div className="text-[13px] font-sans text-claw-text leading-relaxed space-y-1">
                   <div className="flex gap-2"><span className="text-claw-green shrink-0">1.</span> <span><b className="text-claw-text">Caffeine cutoff test</b> &mdash; 14 days, no caffeine after 2 PM.</span></div>
                   <div className="flex gap-2"><span className="text-claw-green shrink-0">2.</span> <span><b className="text-claw-text">Travel recovery kit</b> &mdash; magnesium glycinate, 30-min walk on landing, no screens 1 hr before sleep.</span></div>
                 </div>
                 <div className="flex gap-2 mt-3">
-                  <button className="px-3 py-1.5 rounded bg-claw-green/15 border border-claw-green/30 text-claw-green text-[10px] font-mono">Start both experiments</button>
-                  <button className="px-3 py-1.5 rounded bg-claw-bg border border-claw-border text-claw-text-muted text-[10px] font-mono">Just caffeine cutoff</button>
+                  <button className="px-3 py-1.5 rounded-full bg-claw-green/15 border border-claw-green/30 text-claw-green text-[10px] font-mono">Start both experiments</button>
+                  <button className="px-3 py-1.5 rounded-full bg-claw-bg border border-claw-border text-claw-text-muted text-[10px] font-mono">Just caffeine cutoff</button>
                 </div>
               </div>
             </div>
+            </BubbleSequence>
           </div>
         )}
 
         {/* TAB 2: Deep Analysis */}
         {activeTab === 2 && (
           <div className="p-5 sm:p-6">
-            <div className="flex items-center gap-2 mb-1">
-              <Dot color="green" />
-              <span className="text-[10px] font-mono uppercase tracking-widest text-claw-green">agent-initiated &middot; new data integrated</span>
-            </div>
-            <div className="bg-claw-bg rounded-xl border border-claw-border p-4 sm:p-5 mt-4 space-y-4">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Logo size={16} />
-                  <span className="text-xs font-mono text-claw-text-dim">longevity-os agent</span>
-                  <span className="text-[10px] font-mono text-claw-text-dim ml-auto">Thu, Dec 24 &middot; 14:30</span>
+            <BubbleSequence key="tab2" interval={2000}>
+            {/* Bubble 1: Intro */}
+            <div className="flex items-end gap-2">
+              <div className="flex-shrink-0 w-7"><Logo size={28} /></div>
+              <div className="max-w-[90%] bg-claw-bg-elevated border border-claw-border rounded-2xl rounded-bl-md px-4 py-3">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <Dot color="green" />
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-claw-green">new data integrated</span>
+                  <span className="text-[10px] font-mono text-claw-text-dim ml-auto">Thu, Dec 24</span>
                 </div>
-                <div className="text-sm font-sans text-claw-text font-semibold mb-1">New blood work detected &mdash; cross-analyzed with 2 months of training and nutrition data.</div>
-                <div className="text-xs font-mono text-claw-text-muted">Triglycerides and Lp(a) now fill in the missing metabolic markers.</div>
+                <div className="text-[14px] font-sans text-claw-text font-semibold mb-0.5">New blood work detected &mdash; cross-analyzed with 2 months of training and nutrition data.</div>
+                <div className="text-xs font-sans text-claw-text-muted">Triglycerides and Lp(a) now fill in the missing metabolic markers.</div>
               </div>
-
-              <div className="bg-claw-bg-elevated rounded-lg border border-claw-border p-4">
+            </div>
+            {/* Bubble 2: Biomarker table */}
+            <div className="flex items-end gap-2">
+              <div className="w-7" />
+              <div className="max-w-[90%] bg-claw-bg-elevated border border-claw-border rounded-2xl rounded-bl-md px-4 py-3">
                 <div className="text-[10px] font-mono uppercase tracking-wider text-claw-text-dim mb-3">Biomarker Comparison &mdash; Oct vs Dec</div>
                 <div className="grid grid-cols-[1fr_65px_65px_30px_65px] items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-claw-text-dim pb-2 mb-1 border-b border-claw-border">
                   <span>Marker</span><span className="text-right">Oct</span><span className="text-right">Dec</span><span className="text-center">\u0394</span><span className="text-center">Status</span>
@@ -449,27 +505,33 @@ function ShowcaseTabs() {
                 <BiomarkerRow name="hsCRP" oct="1.1" dec="0.4" unit="mg/L" trend="down" status="optimal" />
                 <BiomarkerRow name="Vitamin D" oct="32" dec="48" unit="ng/mL" trend="up" status="optimal" />
               </div>
-
-              <div className="bg-claw-bg-elevated rounded-lg border border-claw-green/20 p-4 space-y-2">
-                <div className="text-xs font-mono text-claw-green font-semibold">Analysis</div>
-                <div className="text-xs font-sans text-claw-text leading-relaxed space-y-2">
+            </div>
+            {/* Bubble 3: Analysis */}
+            <div className="flex items-end gap-2">
+              <div className="w-7" />
+              <div className="max-w-[90%] bg-claw-bg-elevated border border-claw-border rounded-2xl rounded-bl-md px-4 py-3">
+                <div className="text-[13px] font-sans text-claw-text leading-relaxed space-y-2">
                   <p>Results are <span className="text-claw-green font-bold">extremely encouraging</span>. Your diet protocol and Zone 2 training are clearly working.</p>
                   <p><span className="text-claw-green font-bold">Triglycerides at 68</span> and <span className="text-claw-green font-bold">Lp(a) at 12</span> &mdash; both well within optimal range.</p>
                   <p><span className="text-claw-amber font-bold">hsCRP 1.1 \u2192 0.4</span> &mdash; systemic inflammation is way down. Zone 2 cardio is the biggest driver.</p>
                 </div>
               </div>
-
-              <div className="bg-claw-bg-elevated rounded-lg border border-claw-coral/20 p-4">
+            </div>
+            {/* Bubble 4: Perfectionist recommendation */}
+            <div className="flex items-end gap-2">
+              <div className="w-7" />
+              <div className="max-w-[90%] bg-claw-red/8 border border-claw-coral/20 rounded-2xl rounded-bl-md px-4 py-3">
                 <div className="text-xs font-mono text-claw-coral font-semibold mb-2">For the perfectionist in you</div>
-                <div className="text-xs font-sans text-claw-text leading-relaxed">
+                <div className="text-[13px] font-sans text-claw-text leading-relaxed">
                   <p>ApoB at 78 mg/dL &mdash; already good, but Peter Attia&apos;s gold standard is below 60 mg/dL: <span className="text-claw-coral">&ldquo;infant-grade arterial purity.&rdquo;</span> Swap some saturated fat (cheese, red meat) for monounsaturated (olive oil, avocado, macadamia). I&apos;ll track the impact.</p>
                 </div>
                 <div className="flex gap-2 mt-3">
-                  <button className="px-3 py-1.5 rounded bg-claw-red/15 border border-claw-red/30 text-claw-coral text-[10px] font-mono">Optimize fat profile plan</button>
-                  <button className="px-3 py-1.5 rounded bg-claw-bg border border-claw-border text-claw-text-muted text-[10px] font-mono">Schedule next blood draw</button>
+                  <button className="px-3 py-1.5 rounded-full bg-claw-red/15 border border-claw-red/30 text-claw-coral text-[10px] font-mono">Optimize fat profile plan</button>
+                  <button className="px-3 py-1.5 rounded-full bg-claw-bg border border-claw-border text-claw-text-muted text-[10px] font-mono">Schedule next blood draw</button>
                 </div>
               </div>
             </div>
+            </BubbleSequence>
           </div>
         )}
 
@@ -486,12 +548,12 @@ function ShowcaseTabs() {
                 messages={[
                   {
                     role: "user",
-                    text: "\u4f60\u8bf4\u6211\u4eca\u5929\u559d\u5496\u5561 \u914d\u725b\u5976\u8fd8\u662f\u71d5\u9ea6\u5976\u5462\uff1f",
+                    text: "Do you think I should have my coffee with regular milk or oat milk today?",
                     delay: 600,
                   },
                   {
                     role: "agent",
-                    text: "\u4f60\u7684\u4e13\u5c5e\u8425\u517b\u5e08\u548c\u4ee3\u8c22\u5e08\u8bc4\u4f30\u8fc7\u4e86\uff0c\u9009\u725b\u5976\uff01\u86cb\u767d\u8d28\u548c\u8102\u80aa\u6bd4\u71d5\u9ea6\u5976\u9ad8\uff0cGI\u66f4\u4f4e\uff0c\u5bf9\u4f60\u6700\u8fd1\u7684 postprandial glucose spike \u7684\u7f13\u51b2\u66f4\u597d\u3002\u71d5\u9ea6\u5976\u5927\u90e8\u5206\u54c1\u724c\u542b\u6dfb\u52a0\u7cd6\uff0c\u4f60\u770b\u5230 CGM \u6570\u5b57\u4f1a\u7126\u8651\u7684\uff01\u9664\u975e\u4f60\u4eca\u5929\u60f3\u8981\u90a3\u4e2a creamy \u53e3\u611f\u6216\u8005\u4e73\u7cd6\u4e0d\u8010\u5728\u95f9\u813e\u6c14\uff0c\u9009\u725b\u5976\u3002",
+                    text: "Your nutrition and metabolism coaches both reviewed this - go with regular milk. It has more protein and fat than oat milk, a lower glycemic impact, and should better blunt the post-meal glucose spikes you've been seeing. Most oat milk brands also contain added sugar, which could make your CGM readings jump and stress you out. Unless you're specifically craving that creamy texture or your lactose intolerance is acting up, pick regular milk.",
                     delay: 2400,
                   },
                 ]}
@@ -513,12 +575,12 @@ function ShowcaseTabs() {
                 messages={[
                   {
                     role: "user",
-                    text: "\u7cdf\u7cd5 \u597d\u50cf\u7761\u4e0d\u7740",
+                    text: "Uh oh, I don't think I can fall asleep.",
                     delay: 600,
                   },
                   {
                     role: "agent",
-                    text: "\u4eca\u5929\u65f6\u533a\u6ca1\u4e71\uff0c\u90a3\u4f30\u8ba1\u662f\u8111\u5b50\u505c\u4e0d\u4e0b\u6765\uff1f\u8bd5\u8bd5 4-7-8 \u547c\u5438\uff0c\u4e09\u8f6e\u4e0b\u6765\u526f\u4ea4\u611f\u795e\u7ecf\u4f1a\u63a5\u7ba1\u3002\u5bf9\u4e86\u4f60\u77e5\u9053\u5417\uff0c\u4eba\u7c7b\u662f\u552f\u4e00\u4f1a\u523b\u610f\u5265\u593a\u81ea\u5df1\u7761\u7720\u7684\u52a8\u7269\u3002\u5176\u4ed6\u52a8\u7269\u56f0\u4e86\u5c31\u7761\uff0c\u53ea\u6709\u4eba\u7c7b\u4f1a\u8bf4\u201c\u518d\u770b\u4e00\u96c6\u201d\u3002\u8fdb\u5316\u6ca1\u6559\u6211\u4eec\u5bf9\u4ed8 Netflix/TikTok",
+                    text: "Your timezone wasn't disrupted today, so your mind is probably just running too fast. Try 4-7-8 breathing - after three rounds, your parasympathetic system should start taking over. Fun fact: humans are the only animals that intentionally deprive themselves of sleep. Other animals sleep when they're tired; only humans say, 'just one more episode.' Evolution never prepared us for Netflix and TikTok.",
                     delay: 2400,
                   },
                 ]}
@@ -652,7 +714,6 @@ export default function Version6() {
   const thinksVis = useInView();
   const evidenceVis = useInView();
 
-  const [activeStep, setActiveStep] = useState(4);
   const steps = [
     { label: "INGEST", desc: "Data streams in \u2014 sleep stages, heart rate, HRV, meals, supplements." },
     { label: "DETECT", desc: "Pulse Reader flags: resting HR +8bpm \u00d7 6 days. Diet Physician: Vitamin C critically low." },
@@ -768,37 +829,27 @@ export default function Version6() {
             {/* Pipeline Steps */}
             <div className="flex flex-col gap-2">
               {steps.map((step, i) => {
-                const isActive = i === activeStep;
                 return (
-                  <button
+                  <div
                     key={step.label}
-                    onClick={() => setActiveStep(i)}
-                    className={`flex items-start gap-3 p-3.5 rounded-lg text-left transition-all duration-300 border ${
-                      isActive
-                        ? "bg-claw-bg-card/60 border-claw-red/20"
-                        : "border-claw-border-subtle hover:border-claw-border"
-                    }`}
+                    className="flex items-start gap-3 p-3.5 rounded-lg text-left transition-all duration-300 border bg-claw-bg-card/60 border-claw-red/20"
                   >
                     <div
-                      className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-bold font-mono tracking-wider transition-all duration-300 ${
-                        isActive
-                          ? "bg-claw-red/15 text-claw-coral border border-claw-red/30"
-                          : "text-claw-text-muted border border-claw-border-subtle"
-                      }`}
+                      className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-[10px] font-bold font-mono tracking-wider transition-all duration-300 bg-claw-red/15 text-claw-coral border border-claw-red/30"
                     >
                       {i + 1}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5">
-                        <span className={`text-[10px] font-bold font-mono tracking-widest ${isActive ? "text-claw-coral" : "text-claw-text-muted"}`}>
+                        <span className="text-[10px] font-bold font-mono tracking-widest text-claw-coral">
                           {step.label}
                         </span>
                       </div>
-                      <p className={`text-[12px] leading-relaxed transition-colors duration-300 ${isActive ? "text-claw-text" : "text-claw-text-muted"}`}>
+                      <p className="text-[12px] leading-relaxed transition-colors duration-300 text-claw-text">
                         {step.desc}
                       </p>
                     </div>
-                  </button>
+                  </div>
                 );
               })}
             </div>
