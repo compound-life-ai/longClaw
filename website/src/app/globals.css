@@ -27,6 +27,12 @@
   animation: glow-pulse 3s ease-in-out infinite;
 }
 
+@utility scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
 @theme inline {
   --color-claw-red: #E84D3D;
   --color-claw-red-dim: #B83A2D;

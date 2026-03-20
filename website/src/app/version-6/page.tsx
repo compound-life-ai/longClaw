@@ -255,7 +255,7 @@ function NutrientBar({ name, actual, rda, unit }: { name: string; actual: number
   const statusIcon = pct >= 90 ? "\u2713" : pct >= 60 ? "~" : "\u2717";
   const statusColor = pct >= 90 ? "text-claw-green" : pct >= 60 ? "text-claw-amber" : "text-claw-red";
   return (
-    <div className="grid grid-cols-[100px_1fr_55px_50px_40px] items-center gap-2 text-xs font-sans py-1.5 border-b border-claw-border-subtle last:border-0">
+    <div className="grid grid-cols-[80px_1fr_50px_45px_40px] sm:grid-cols-[100px_1fr_55px_50px_40px] items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-sans py-1.5 border-b border-claw-border-subtle last:border-0">
       <span className="text-claw-text">{name}</span>
       <div className="h-1.5 rounded-full bg-claw-bg-elevated overflow-hidden">
         <div className={`h-full rounded-full ${color} transition-all duration-700`} style={{ width: `${Math.min(pct, 100)}%` }} />
@@ -273,7 +273,7 @@ function BiomarkerRow({ name, oct, dec, unit, trend, status }: { name: string; o
   const trendColor = status === "optimal" ? "text-claw-green" : status === "good" ? "text-claw-amber" : "text-claw-red";
   const statusBg = status === "optimal" ? "bg-claw-green/15 text-claw-green border-claw-green/20" : status === "good" ? "bg-claw-amber/15 text-claw-amber border-claw-amber/20" : "bg-claw-red/15 text-claw-red border-claw-red/20";
   return (
-    <div className="grid grid-cols-[1fr_65px_65px_30px_65px] items-center gap-2 text-xs font-sans py-2 border-b border-claw-border-subtle last:border-0">
+    <div className="grid grid-cols-[1fr_55px_55px_25px_55px] sm:grid-cols-[1fr_65px_65px_30px_65px] items-center gap-1.5 sm:gap-2 text-[11px] sm:text-xs font-sans py-2 border-b border-claw-border-subtle last:border-0">
       <span className="text-claw-text">{name}</span>
       <span className="text-claw-text-dim text-right">{oct} {unit}</span>
       <span className="text-claw-text text-right font-semibold">{dec} {unit}</span>
@@ -323,19 +323,19 @@ function ShowcaseTabs() {
   return (
     <div>
       {/* Tab bar */}
-      <div className="grid grid-cols-5 gap-1 p-1 rounded-lg bg-claw-bg-card border border-claw-border mb-6">
+      <div className="flex sm:grid sm:grid-cols-5 overflow-x-auto sm:overflow-visible gap-1 p-1 rounded-lg bg-claw-bg-card border border-claw-border mb-6 scrollbar-none">
         {tabs.map((tab, i) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(i)}
-            className={`w-full flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-md text-xs font-sans transition-all duration-200 ${
+            className={`flex-shrink-0 sm:w-full flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-md text-xs font-sans transition-all duration-200 ${
               i === activeTab
                 ? "bg-claw-red/15 text-claw-coral border border-claw-red/30"
                 : "text-claw-text-muted hover:text-claw-text hover:bg-claw-bg-elevated border border-transparent"
             }`}
           >
             <span>{tab.icon}</span>
-            <span className="truncate">{tab.label}</span>
+            <span className="hidden sm:inline">{tab.label}</span>
           </button>
         ))}
       </div>
@@ -364,7 +364,7 @@ function ShowcaseTabs() {
             <div className="flex items-end gap-2">
               <div className="w-7" />
               <div className="max-w-[90%] bg-claw-bg-elevated border border-claw-border rounded-2xl rounded-bl-md px-4 py-3">
-                <div className="grid grid-cols-[100px_1fr_55px_50px_40px] items-center gap-2 text-[10px] font-sans uppercase tracking-wider text-claw-text-dim pb-2 mb-1 border-b border-claw-border">
+                <div className="grid grid-cols-[80px_1fr_50px_45px_40px] sm:grid-cols-[100px_1fr_55px_50px_40px] items-center gap-1.5 sm:gap-2 text-[10px] font-sans uppercase tracking-wider text-claw-text-dim pb-2 mb-1 border-b border-claw-border">
                   <span>Nutrient</span><span>Progress</span><span className="text-right">Actual</span><span className="text-right">RDA</span><span className="text-right">%</span>
                 </div>
                 <NutrientBar name="Protein" actual={128} rda={140} unit="g" />
@@ -528,7 +528,7 @@ function ShowcaseTabs() {
               <div className="w-7" />
               <div className="max-w-[90%] bg-claw-bg-elevated border border-claw-border rounded-2xl rounded-bl-md px-4 py-3">
                 <div className="text-[10px] font-sans uppercase tracking-wider text-claw-text-dim mb-3">Biomarker Comparison &mdash; Oct vs Dec</div>
-                <div className="grid grid-cols-[1fr_65px_65px_30px_65px] items-center gap-2 text-[10px] font-sans uppercase tracking-wider text-claw-text-dim pb-2 mb-1 border-b border-claw-border">
+                <div className="grid grid-cols-[1fr_55px_55px_25px_55px] sm:grid-cols-[1fr_65px_65px_30px_65px] items-center gap-1.5 sm:gap-2 text-[10px] font-sans uppercase tracking-wider text-claw-text-dim pb-2 mb-1 border-b border-claw-border">
                   <span>Marker</span><span className="text-right">Oct</span><span className="text-right">Dec</span><span className="text-center">\u0394</span><span className="text-center">Status</span>
                 </div>
                 <BiomarkerRow name="LDL-C" oct="118" dec="95" unit="mg/dL" trend="down" status="good" />
@@ -980,15 +980,11 @@ export default function Version6() {
           <p className="text-claw-text-muted text-sm mb-8 max-w-sm mx-auto font-sans">
             LongevityOS is the intelligence layer of Compound 150 &mdash; The Longevity Fellowship.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <div className="flex justify-center">
             <button className="px-8 py-3 rounded-full bg-claw-red text-white text-sm font-semibold hover:bg-claw-coral transition hover:-translate-y-0.5 shadow-lg shadow-claw-red/[0.15] font-sans">
               Join the Waitlist
             </button>
-            <button className="px-8 py-3 rounded-full border border-claw-border text-claw-text-muted text-sm font-medium hover:text-claw-text hover:border-claw-text-dim transition font-sans">
-              View on GitHub
-            </button>
           </div>
-          <p className="text-[9px] text-claw-text-dim mt-5 tracking-widest font-sans uppercase">Open Source &middot; APAC Focused &middot; 2026</p>
         </div>
       </section>
 
