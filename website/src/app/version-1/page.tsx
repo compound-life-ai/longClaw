@@ -22,7 +22,7 @@ function Typewriter({ text, speed = 100 }: { text: string; speed?: number }) {
     <>
       {displayed}
       <span
-        className={`inline-block w-[2px] h-[0.9em] bg-[#adc9f0] align-middle ml-0.5 ${done ? "animate-blink" : ""}`}
+        className={`inline-block w-[2px] h-[0.9em] bg-[#5A7BC0] align-middle ml-0.5 ${done ? "animate-blink" : ""}`}
         aria-hidden="true"
       />
     </>
@@ -48,11 +48,11 @@ function CopyButton() {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       }}
-      className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0c0c2a] hover:bg-[#181845] text-gray-400 hover:text-white text-xs font-mono rounded border border-[#adc9f0]/20 transition-all duration-200"
+      className="flex items-center gap-1.5 px-3 py-1.5 bg-[#0c0c2a] hover:bg-[#181845] text-gray-400 hover:text-white text-xs font-mono rounded border border-[#4564AC]/20 transition-all duration-200"
     >
       {copied ? (
         <>
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#adc9f0]"><polyline points="20 6 9 17 4 12"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#7B9AD4]"><polyline points="20 6 9 17 4 12"/></svg>
           copied
         </>
       ) : (
@@ -97,7 +97,7 @@ export default function VersionOne() {
         </div>
         <a
           href="#install"
-          className="rounded-full bg-gradient-to-r from-[#212177] to-[#3535a0] text-white px-5 py-2 text-sm font-medium transition-all duration-200 hover:shadow-[0_0_24px_rgba(173,201,240,0.3)] hover:from-[#3535a0] hover:to-[#4848b5]"
+          className="rounded-full bg-gradient-to-r from-[#3a5599] to-[#4564AC] text-white px-5 py-2 text-sm font-medium transition-all duration-200 hover:shadow-[0_0_24px_rgba(69,100,172,0.4)] hover:from-[#4564AC] hover:to-[#5A7BC0]"
         >
           Get started
         </a>
@@ -116,7 +116,7 @@ export default function VersionOne() {
         <div className="mt-10 flex justify-center gap-4 flex-wrap">
           <a
             href="#install"
-            className="rounded-full bg-gradient-to-r from-[#6b8fd4] to-[#adc9f0] text-[#010118] px-8 py-3.5 text-base font-medium transition-all duration-200 hover:shadow-[0_0_30px_rgba(173,201,240,0.5)] hover:brightness-110"
+            className="rounded-full bg-gradient-to-r from-[#4564AC] to-[#7B9AD4] text-white px-8 py-3.5 text-base font-medium transition-all duration-200 hover:shadow-[0_0_30px_rgba(69,100,172,0.5)] hover:brightness-110"
           >
             Start building
           </a>
@@ -155,13 +155,13 @@ export default function VersionOne() {
         <div
           className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-[1000px] h-[600px] opacity-20 blur-3xl"
           style={{
-            background: "radial-gradient(ellipse at center, rgba(173,201,240,0.3) 0%, transparent 70%)",
+            background: "radial-gradient(ellipse at center, rgba(69,100,172,0.3) 0%, transparent 70%)",
           }}
         />
 
         <div className="max-w-6xl mx-auto relative">
           <div className="text-center mb-16">
-            <p className="text-sm font-mono uppercase tracking-widest text-[#adc9f0] mb-3">Capabilities</p>
+            <p className="text-sm font-mono uppercase tracking-widest text-[#7B9AD4] mb-3">Capabilities</p>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Talk naturally. Get quantified.
             </h2>
@@ -175,7 +175,7 @@ export default function VersionOne() {
           {/* Card 1 — Nutrition */}
           <div className="relative overflow-hidden rounded-xl border border-white/5 bg-[#080822] p-6 pb-8 min-h-[340px]">
             <div className="relative z-10">
-              <p className="text-xs font-bold uppercase tracking-widest text-[#adc9f0] mb-2">Nutrition</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-[#7B9AD4] mb-2">Nutrition</p>
               <h3 className="text-xl font-bold text-white mb-3">Meal Snap</h3>
               <p className="text-sm text-gray-400 leading-relaxed max-w-[70%] drop-shadow-md">
                 Send a food photo or describe what you ate. Full micronutrient breakdown in seconds.
@@ -190,7 +190,7 @@ export default function VersionOne() {
           {/* Card 2 — Wearables */}
           <div className="relative overflow-hidden rounded-xl border border-white/5 bg-[#080822] p-6 pb-8 min-h-[340px]">
             <div className="relative z-10">
-              <p className="text-xs font-bold uppercase tracking-widest text-[#adc9f0] mb-2">Wearables</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-[#7B9AD4] mb-2">Wearables</p>
               <h3 className="text-xl font-bold text-white mb-3">Pattern Insights</h3>
               <p className="text-sm text-gray-400 leading-relaxed max-w-[70%] drop-shadow-md">
                 Cross-references sleep, HRV, nutrition, and activity to surface hidden correlations.
@@ -205,7 +205,7 @@ export default function VersionOne() {
           {/* Card 3 — Coaching */}
           <div className="relative overflow-hidden rounded-xl border border-white/5 bg-[#080822] p-6 pb-8 min-h-[340px]">
             <div className="relative z-10">
-              <p className="text-xs font-bold uppercase tracking-widest text-[#adc9f0] mb-2">Coaching</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-[#7B9AD4] mb-2">Coaching</p>
               <h3 className="text-xl font-bold text-white mb-3">Daily Coach</h3>
               <p className="text-sm text-gray-400 leading-relaxed max-w-[70%] drop-shadow-md">
                 Morning briefing with overnight sleep, nutrition gaps, active experiments, and longevity news.
@@ -219,8 +219,8 @@ export default function VersionOne() {
           </div>
 
           {/* Blue glow strip beneath cards */}
-          <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[1px] bg-gradient-to-r from-transparent via-[#adc9f0]/30 to-transparent" />
-          <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-24 -translate-y-1/2 bg-[#adc9f0]/15 blur-[50px] -z-10" />
+          <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[1px] bg-gradient-to-r from-transparent via-[#4564AC]/30 to-transparent" />
+          <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-24 -translate-y-1/2 bg-[#5A7BC0]/15 blur-[50px] -z-10" />
         </div>
       </section>
 
@@ -229,13 +229,13 @@ export default function VersionOne() {
         <div
           className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-1/3 w-[1200px] h-[800px] opacity-15 blur-3xl"
           style={{
-            background: "radial-gradient(ellipse at center, rgba(173,201,240,0.3) 0%, transparent 70%)",
+            background: "radial-gradient(ellipse at center, rgba(69,100,172,0.3) 0%, transparent 70%)",
           }}
         />
 
         <div className="max-w-6xl mx-auto relative">
           <div className="text-center mb-16">
-            <p className="text-sm font-mono uppercase tracking-widest text-[#adc9f0] mb-3">Proactive Intelligence</p>
+            <p className="text-sm font-mono uppercase tracking-widest text-[#7B9AD4] mb-3">Proactive Intelligence</p>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Your agent thinks ahead
             </h2>
@@ -250,8 +250,8 @@ export default function VersionOne() {
               <div className="lg:col-span-7 relative z-10 order-2 lg:order-1">
                 <div className="flex items-center gap-3 mb-3 ml-1">
                   <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#adc9f0] shadow-[0_0_8px_rgba(173,201,240,0.8)]" />
-                    <span className="text-[#adc9f0] text-xs font-mono uppercase tracking-widest">Weekly Review</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#5A7BC0] shadow-[0_0_8px_rgba(69,100,172,0.8)]" />
+                    <span className="text-[#7B9AD4] text-xs font-mono uppercase tracking-widest">Weekly Review</span>
                   </div>
                   <span className="text-gray-600 font-mono text-xs">/</span>
                   <span className="text-gray-500 text-xs font-mono">Sunday 8:00 AM</span>
@@ -308,7 +308,7 @@ export default function VersionOne() {
               </div>
 
               <div className="lg:col-span-5 flex justify-center relative min-h-[280px] order-1 lg:order-2">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-[#adc9f0]/15 blur-[100px] pointer-events-none rounded-full" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-[#5A7BC0]/15 blur-[100px] pointer-events-none rounded-full" />
                 <img src="/showcase-nutrition-compound.png" alt="" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] object-contain pointer-events-none" />
               </div>
             </div>
@@ -318,15 +318,15 @@ export default function VersionOne() {
           <div className="relative mb-8">
             <div className="relative rounded-xl border border-white/5 bg-[#04041a] overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-center gap-8 p-6 lg:p-10 shadow-2xl backdrop-blur-sm">
               <div className="lg:col-span-5 flex justify-center relative min-h-[280px]">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-[#adc9f0]/8 blur-[100px] pointer-events-none rounded-full" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-[#5A7BC0]/8 blur-[100px] pointer-events-none rounded-full" />
                 <img src="/showcase-patterns-compound.png" alt="" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] object-contain pointer-events-none" />
               </div>
 
               <div className="lg:col-span-7 relative z-10">
                 <div className="flex items-center gap-3 mb-3 ml-1">
                   <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#adc9f0] shadow-[0_0_8px_rgba(173,201,240,0.8)]" />
-                    <span className="text-[#adc9f0] text-xs font-mono uppercase tracking-widest">Pattern Detected</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#5A7BC0] shadow-[0_0_8px_rgba(69,100,172,0.8)]" />
+                    <span className="text-[#7B9AD4] text-xs font-mono uppercase tracking-widest">Pattern Detected</span>
                   </div>
                   <span className="text-gray-600 font-mono text-xs">/</span>
                   <span className="text-gray-500 text-xs font-mono">Wednesday 7:15 AM</span>
@@ -339,7 +339,7 @@ export default function VersionOne() {
 
                   <div className="space-y-3 mb-6">
                     <div className="flex items-start gap-3 bg-white/[0.02] rounded-lg p-4 border border-white/5">
-                      <div className="mt-0.5 text-[#adc9f0]">
+                      <div className="mt-0.5 text-[#7B9AD4]">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg>
                       </div>
                       <div>
@@ -348,7 +348,7 @@ export default function VersionOne() {
                       </div>
                     </div>
                     <div className="flex items-start gap-3 bg-white/[0.02] rounded-lg p-4 border border-white/5">
-                      <div className="mt-0.5 text-[#adc9f0]">
+                      <div className="mt-0.5 text-[#7B9AD4]">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-.5-.5-2.5 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.2-1.1.7l-1.2 3.6c-.1.4.1.9.5 1.1L9 14l-3 3-3.5-.5c-.4-.1-.8.1-1 .5l-.5 1.5c-.1.3.1.7.4.8l4.6 1.9 1.9 4.6c.1.3.5.5.8.4l1.5-.5c.4-.2.6-.6.5-1l-.5-3.5 3-3 2.4 6c.2.4.7.6 1.1.5l3.6-1.2c.5-.2.8-.6.7-1.1Z"/></svg>
                       </div>
                       <div>
@@ -372,8 +372,8 @@ export default function VersionOne() {
               <div className="lg:col-span-7 relative z-10 order-2 lg:order-1">
                 <div className="flex items-center gap-3 mb-3 ml-1">
                   <div className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#adc9f0] shadow-[0_0_8px_rgba(173,201,240,0.8)]" />
-                    <span className="text-[#adc9f0] text-xs font-mono uppercase tracking-widest">New Data Unlocked</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#5A7BC0] shadow-[0_0_8px_rgba(69,100,172,0.8)]" />
+                    <span className="text-[#7B9AD4] text-xs font-mono uppercase tracking-widest">New Data Unlocked</span>
                   </div>
                   <span className="text-gray-600 font-mono text-xs">/</span>
                   <span className="text-gray-500 text-xs font-mono">Oct 25, 3:42 PM</span>
@@ -436,15 +436,15 @@ export default function VersionOne() {
               </div>
 
               <div className="lg:col-span-5 flex justify-center relative min-h-[280px] order-1 lg:order-2">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-[#adc9f0]/8 blur-[100px] pointer-events-none rounded-full" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-[#5A7BC0]/8 blur-[100px] pointer-events-none rounded-full" />
                 <img src="/showcase-integration-compound.png" alt="" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] object-contain pointer-events-none" />
               </div>
             </div>
           </div>
 
           {/* Blue glow strip beneath showcase cards */}
-          <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[1px] bg-gradient-to-r from-transparent via-[#adc9f0]/30 to-transparent" />
-          <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-24 -translate-y-1/2 bg-[#adc9f0]/15 blur-[50px] -z-10" />
+          <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[1px] bg-gradient-to-r from-transparent via-[#4564AC]/30 to-transparent" />
+          <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-24 -translate-y-1/2 bg-[#5A7BC0]/15 blur-[50px] -z-10" />
         </div>
       </section>
 
@@ -454,14 +454,14 @@ export default function VersionOne() {
         <div
           className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-0 w-[800px] h-[400px] opacity-15 blur-3xl"
           style={{
-            background: "radial-gradient(ellipse at center, rgba(173,201,240,0.4) 0%, transparent 70%)",
+            background: "radial-gradient(ellipse at center, rgba(69,100,172,0.4) 0%, transparent 70%)",
           }}
         />
 
         <div className="max-w-6xl mx-auto relative">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center pb-8">
             <div>
-              <p className="text-sm font-mono uppercase tracking-widest text-[#adc9f0] mb-3">Get Started</p>
+              <p className="text-sm font-mono uppercase tracking-widest text-[#7B9AD4] mb-3">Get Started</p>
               <h2 className="text-3xl md:text-5xl font-bold mb-6">
                 Install in one prompt
               </h2>
@@ -493,8 +493,8 @@ export default function VersionOne() {
           </div>
 
           {/* Blue glow strip beneath install section */}
-          <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[1px] bg-gradient-to-r from-transparent via-[#adc9f0]/30 to-transparent" />
-          <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-24 -translate-y-1/2 bg-[#adc9f0]/15 blur-[50px] -z-10" />
+          <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[1px] bg-gradient-to-r from-transparent via-[#4564AC]/30 to-transparent" />
+          <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-24 -translate-y-1/2 bg-[#5A7BC0]/15 blur-[50px] -z-10" />
         </div>
       </section>
 
@@ -506,7 +506,7 @@ export default function VersionOne() {
             <div className="relative group order-2 lg:order-1">
               <div className="relative bg-[#04041a] border border-white/5 rounded-xl p-6 lg:p-8 font-mono text-sm overflow-x-auto shadow-2xl backdrop-blur-sm">
                 <div className="flex items-center gap-2 mb-6 pb-4 border-b border-white/5">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#adc9f0]"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#7B9AD4]"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
                   <span className="text-gray-300">longevityOS-data/</span>
                 </div>
                 <pre className="text-gray-300 leading-relaxed text-xs sm:text-sm">
@@ -524,7 +524,7 @@ export default function VersionOne() {
             </div>
 
             <div className="order-1 lg:order-2">
-              <p className="text-sm font-mono uppercase tracking-widest text-[#adc9f0] mb-3">Architecture</p>
+              <p className="text-sm font-mono uppercase tracking-widest text-[#7B9AD4] mb-3">Architecture</p>
               <h2 className="text-3xl md:text-5xl font-bold mb-6">
                 Local-first.<br />No cloud required.
               </h2>
@@ -533,13 +533,13 @@ export default function VersionOne() {
               </p>
               <ul className="space-y-4">
                 <li className="flex items-center gap-3 text-gray-300">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#adc9f0] shadow-[0_0_10px_rgba(173,201,240,0.8)]" /> Portable CSV & JSON formats
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#5A7BC0] shadow-[0_0_10px_rgba(69,100,172,0.8)]" /> Portable CSV & JSON formats
                 </li>
                 <li className="flex items-center gap-3 text-gray-300">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#adc9f0] shadow-[0_0_10px_rgba(173,201,240,0.8)]" /> Works completely offline
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#5A7BC0] shadow-[0_0_10px_rgba(69,100,172,0.8)]" /> Works completely offline
                 </li>
                 <li className="flex items-center gap-3 text-gray-300">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#adc9f0] shadow-[0_0_10px_rgba(173,201,240,0.8)]" /> Easily scriptable with Python/Bash
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#5A7BC0] shadow-[0_0_10px_rgba(69,100,172,0.8)]" /> Easily scriptable with Python/Bash
                 </li>
               </ul>
             </div>
@@ -547,8 +547,8 @@ export default function VersionOne() {
           </div>
 
           {/* Blue glow strip beneath local-first section */}
-          <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[1px] bg-gradient-to-r from-transparent via-[#adc9f0]/30 to-transparent" />
-          <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-24 -translate-y-1/2 bg-[#adc9f0]/15 blur-[50px] -z-10" />
+          <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[1px] bg-gradient-to-r from-transparent via-[#4564AC]/30 to-transparent" />
+          <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-24 -translate-y-1/2 bg-[#5A7BC0]/15 blur-[50px] -z-10" />
         </div>
       </section>
 
