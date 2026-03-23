@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Managed Bundle Setup Deep Dive</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f8fb;
+      --panel: #ffffff;
+      --panel-2: #eef3ff;
+      --ink: #172033;
+      --muted: #5c667a;
+      --line: #d9dfeb;
+      --blue: #2f6df6;
+      --blue-soft: #dfe8ff;
+      --jade: #0f8b6d;
+      --jade-soft: #daf3eb;
+      --amber: #a06207;
+      --amber-soft: #fff0cd;
+      --rose: #b63b5a;
+      --rose-soft: #ffe1e7;
+      --shadow: 0 18px 48px rgba(28, 43, 74, 0.08);
+      --radius: 18px;
+      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+      --sans: "IBM Plex Sans", "Avenir Next", "Segoe UI", sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1118;
+        --panel: #121826;
+        --panel-2: #182137;
+        --ink: #eef3ff;
+        --muted: #a8b5cd;
+        --line: #29324a;
+        --blue: #7ea5ff;
+        --blue-soft: #1b2950;
+        --jade: #58d5ae;
+        --jade-soft: #102b26;
+        --amber: #f0be62;
+        --amber-soft: #3c2b0f;
+        --rose: #ff8ea8;
+        --rose-soft: #42202a;
+        --shadow: none;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background: radial-gradient(circle at top left, rgba(47, 109, 246, 0.08), transparent 30%),
+        radial-gradient(circle at top right, rgba(15, 139, 109, 0.08), transparent 28%),
+        var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .wrap {
+      width: min(1120px, calc(100vw - 40px));
+      margin: 0 auto;
+      padding: 40px 0 72px;
+    }
+
+    .hero,
+    .section,
+    .toc {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 32px;
+      display: grid;
+      gap: 22px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--panel-2);
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      font-size: clamp(2.3rem, 5vw, 4rem);
+      max-width: 11ch;
+    }
+
+    h2 {
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      margin-bottom: 18px;
+    }
+
+    h3 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .lede {
+      max-width: 72ch;
+      font-size: 1.08rem;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .meta-chip {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.42);
+      min-width: 180px;
+    }
+
+    .meta-chip strong,
+    .stat strong {
+      display: block;
+      color: var(--ink);
+      font-size: 0.94rem;
+      margin-bottom: 4px;
+    }
+
+    .meta-chip span,
+    .stat span {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 14px;
+    }
+
+    .stat {
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(47, 109, 246, 0.06), rgba(47, 109, 246, 0.01));
+    }
+
+    .toc {
+      margin-top: 18px;
+      padding: 22px 24px;
+    }
+
+    .toc ol {
+      margin: 14px 0 0;
+      padding-left: 20px;
+      color: var(--muted);
+      display: grid;
+      gap: 10px;
+    }
+
+    .section {
+      margin-top: 24px;
+      padding: 30px;
+      display: grid;
+      gap: 22px;
+    }
+
+    .section-head {
+      display: grid;
+      gap: 10px;
+      max-width: 76ch;
+    }
+
+    .section-kicker {
+      color: var(--blue);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    figure {
+      margin: 0;
+      padding: 18px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(47, 109, 246, 0.04), rgba(47, 109, 246, 0.01));
+      overflow: hidden;
+    }
+
+    figcaption {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .two-up {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .callout-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .callout {
+      padding: 18px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .callout.good {
+      background: linear-gradient(180deg, rgba(15, 139, 109, 0.08), transparent);
+    }
+
+    .callout.warn {
+      background: linear-gradient(180deg, rgba(160, 98, 7, 0.09), transparent);
+    }
+
+    .callout.risk {
+      background: linear-gradient(180deg, rgba(182, 59, 90, 0.08), transparent);
+    }
+
+    .callout ul,
+    .section ul {
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+    }
+
+    th,
+    td {
+      padding: 14px 16px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.95rem;
+    }
+
+    th {
+      color: var(--ink);
+      background: rgba(47, 109, 246, 0.06);
+      font-size: 0.86rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: 0.92em;
+      background: rgba(127, 143, 171, 0.12);
+      padding: 1px 6px;
+      border-radius: 6px;
+      color: var(--ink);
+    }
+
+    .mono-block {
+      font-family: var(--mono);
+      font-size: 0.88rem;
+      white-space: pre-wrap;
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(127, 143, 171, 0.1);
+      color: var(--ink);
+    }
+
+    .footer {
+      margin-top: 24px;
+      padding: 20px 4px 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .wrap {
+        width: auto;
+        padding: 0;
+      }
+
+      .hero,
+      .section,
+      .toc {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <div class="eyebrow">Technical Deep Dive</div>
+      <div>
+        <h1>Managed bundle setup now matches the way OpenClaw actually runs.</h1>
+      </div>
+      <p class="lede">
+        This artifact explains why the setup PR exists, what was wrong about the old seed-data workflow,
+        and why the fix is intentionally narrow. The short version: the docs seeded the repo checkout,
+        but installed skills read the managed bundle under <code>~/.openclaw/bundles/compound-clawskill</code>.
+        The PR closes that gap, makes seeded installs explicit, and restores a green full test run.
+      </p>
+      <div class="meta">
+        <div class="meta-chip">
+          <strong>Generated</strong>
+          <span>2026-03-23 23:29 CST</span>
+        </div>
+        <div class="meta-chip">
+          <strong>Scope</strong>
+          <span>Installer, docs, test stability, no runtime schema change</span>
+        </div>
+        <div class="meta-chip">
+          <strong>Branch / PR</strong>
+          <span><code>chore/smooth-bundle-setup-flow</code> · <a href="https://github.com/compound-life-ai/longClaw/pull/1">PR #1</a></span>
+        </div>
+        <div class="meta-chip">
+          <strong>Commit</strong>
+          <span><code>4d92671</code></span>
+        </div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat">
+          <strong>Primary fault</strong>
+          <span>Repo-local seed instructions diverged from bundle-local runtime reads</span>
+        </div>
+        <div class="stat">
+          <strong>User-facing effect</strong>
+          <span>Seeded data could exist in the clone while installed skills still saw empty state</span>
+        </div>
+        <div class="stat">
+          <strong>Safety move</strong>
+          <span><code>--seed-data</code> refuses to write into a non-empty installed data root</span>
+        </div>
+        <div class="stat">
+          <strong>Verification</strong>
+          <span><code>python3 -m unittest</code> and <code>install_bundle.py --verify</code> both pass</span>
+        </div>
+      </div>
+    </section>
+
+    <nav class="toc" aria-label="Table of contents">
+      <strong>Contents</strong>
+      <ol>
+        <li><a href="#current-state">Current State</a></li>
+        <li><a href="#intent-gap">Intent and Gap</a></li>
+        <li><a href="#direction">Direction</a></li>
+        <li><a href="#evidence">Evidence and Verification</a></li>
+      </ol>
+    </nav>
+
+    <section class="section" id="current-state">
+      <div class="section-head">
+        <div class="section-kicker">Current State</div>
+        <h2>The managed bundle is the real runtime boundary.</h2>
+        <p>
+          The repository checkout and the installed OpenClaw bundle are not the same thing after install.
+          The installer copies skills, scripts, cron files, and docs into a managed bundle directory, registers
+          that bundle in <code>openclaw.json</code>, and then the running skills execute relative to that installed path.
+        </p>
+      </div>
+
+      <figure>
+        <svg viewBox="0 0 940 420" role="img" aria-label="Current state topology for repo install, managed bundle, config registration, and runtime data flow">
+          <defs>
+            <marker id="arrow-a" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+              <path d="M0 0L10 5L0 10Z" fill="var(--blue)"></path>
+            </marker>
+          </defs>
+          <rect x="24" y="28" width="240" height="164" rx="18" fill="var(--panel-2)" stroke="var(--line)" />
+          <text x="48" y="66" fill="var(--ink)" font-size="24" font-weight="700">Repo checkout</text>
+          <text x="48" y="102" fill="var(--muted)" font-size="16">README</text>
+          <text x="48" y="128" fill="var(--muted)" font-size="16">seed/</text>
+          <text x="48" y="154" fill="var(--muted)" font-size="16">skills/</text>
+          <text x="48" y="180" fill="var(--muted)" font-size="16">scripts/install_bundle.py</text>
+
+          <rect x="330" y="84" width="280" height="106" rx="18" fill="var(--blue-soft)" stroke="var(--blue)" />
+          <text x="356" y="122" fill="var(--blue)" font-size="24" font-weight="700">Installer</text>
+          <text x="356" y="154" fill="var(--ink)" font-size="16">Copies bundle files</text>
+          <text x="356" y="178" fill="var(--ink)" font-size="16">Initializes runtime dirs</text>
+
+          <rect x="678" y="28" width="238" height="164" rx="18" fill="var(--panel)" stroke="var(--line)" />
+          <text x="704" y="66" fill="var(--ink)" font-size="24" font-weight="700">Managed bundle</text>
+          <text x="704" y="102" fill="var(--muted)" font-size="16">~/.openclaw/bundles</text>
+          <text x="704" y="128" fill="var(--muted)" font-size="16">compound-clawskill/skills</text>
+          <text x="704" y="154" fill="var(--muted)" font-size="16">compound-clawskill/scripts</text>
+          <text x="704" y="180" fill="var(--muted)" font-size="16">compound-clawskill/longevityOS-data</text>
+
+          <rect x="80" y="254" width="240" height="118" rx="18" fill="var(--panel)" stroke="var(--line)" />
+          <text x="104" y="294" fill="var(--ink)" font-size="24" font-weight="700">OpenClaw config</text>
+          <text x="104" y="324" fill="var(--muted)" font-size="16">openclaw.json</text>
+          <text x="104" y="348" fill="var(--muted)" font-size="16">skills.load.extraDirs[]</text>
+
+          <rect x="388" y="252" width="208" height="118" rx="18" fill="var(--jade-soft)" stroke="var(--jade)" />
+          <text x="414" y="292" fill="var(--jade)" font-size="24" font-weight="700">Installed skills</text>
+          <text x="414" y="322" fill="var(--ink)" font-size="16">snap</text>
+          <text x="462" y="322" fill="var(--ink)" font-size="16">health</text>
+          <text x="527" y="322" fill="var(--ink)" font-size="16">news</text>
+          <text x="414" y="348" fill="var(--ink)" font-size="16">insights</text>
+          <text x="489" y="348" fill="var(--ink)" font-size="16">daily-coach</text>
+
+          <rect x="672" y="246" width="250" height="132" rx="18" fill="var(--amber-soft)" stroke="var(--amber)" />
+          <text x="698" y="286" fill="var(--amber)" font-size="24" font-weight="700">Bundle data root</text>
+          <text x="698" y="316" fill="var(--ink)" font-size="16">nutrition</text>
+          <text x="784" y="316" fill="var(--ink)" font-size="16">health</text>
+          <text x="698" y="342" fill="var(--ink)" font-size="16">insights</text>
+          <text x="784" y="342" fill="var(--ink)" font-size="16">news</text>
+          <text x="698" y="366" fill="var(--muted)" font-size="15">runtime reads happen here</text>
+
+          <path d="M264 110H318" fill="none" stroke="var(--blue)" stroke-width="4" marker-end="url(#arrow-a)" />
+          <path d="M610 110H666" fill="none" stroke="var(--blue)" stroke-width="4" marker-end="url(#arrow-a)" />
+          <path d="M466 194V236" fill="none" stroke="var(--blue)" stroke-width="4" marker-end="url(#arrow-a)" />
+          <path d="M290 286H372" fill="none" stroke="var(--blue)" stroke-width="4" marker-end="url(#arrow-a)" />
+          <path d="M598 310H656" fill="none" stroke="var(--blue)" stroke-width="4" marker-end="url(#arrow-a)" />
+        </svg>
+        <figcaption>
+          The installer is the bridge between the repo and the actual runtime system. Once the bundle is installed,
+          the skills execute out of <code>~/.openclaw/bundles/compound-clawskill</code> and read data from that bundle-local
+          <code>longevityOS-data</code> tree, not from the repo checkout.
+        </figcaption>
+      </figure>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Runtime surface</th>
+              <th>Owner</th>
+              <th>Why it matters in this review</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>scripts/install_bundle.py</code></td>
+              <td>Repo checkout</td>
+              <td>Defines how the bundle is copied, where runtime directories are created, and how <code>openclaw.json</code> is updated.</td>
+            </tr>
+            <tr>
+              <td><code>~/.openclaw/bundles/compound-clawskill</code></td>
+              <td>Managed install</td>
+              <td>This is the actual runtime boundary for installed skills. Any onboarding path that writes elsewhere can mislead the user.</td>
+            </tr>
+            <tr>
+              <td><code>openclaw.json.skills.load.extraDirs[]</code></td>
+              <td>OpenClaw config</td>
+              <td>Registers the installed skills directory so OpenClaw can discover the bundle.</td>
+            </tr>
+            <tr>
+              <td><code>skills/*/SKILL.md</code> with <code>{baseDir}</code></td>
+              <td>Installed skill runtime</td>
+              <td>These commands resolve <code>{baseDir}/../../longevityOS-data</code>, which points into the installed bundle.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="intent-gap">
+      <div class="section-head">
+        <div class="section-kicker">Intent and Gap</div>
+        <h2>The old docs described a path that could make the install look seeded when it was not.</h2>
+        <p>
+          The problem was not that seed files were missing. The problem was that the docs told the user to seed
+          the repo checkout, while the installed skills read the managed bundle. That split creates a false-success
+          state: data exists somewhere, but not where the running bundle looks.
+        </p>
+      </div>
+
+      <div class="two-up">
+        <figure>
+          <svg viewBox="0 0 520 330" role="img" aria-label="Before workflow showing repo-local seed path diverging from installed bundle runtime">
+            <defs>
+              <marker id="arrow-b" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                <path d="M0 0L10 5L0 10Z" fill="var(--rose)"></path>
+              </marker>
+            </defs>
+            <text x="24" y="34" fill="var(--rose)" font-size="24" font-weight="700">Before</text>
+            <rect x="24" y="62" width="200" height="92" rx="16" fill="var(--panel)" stroke="var(--line)"></rect>
+            <text x="46" y="98" fill="var(--ink)" font-size="20" font-weight="700">Repo checkout</text>
+            <text x="46" y="126" fill="var(--muted)" font-size="15">manual seed command</text>
+            <text x="46" y="146" fill="var(--muted)" font-size="15">writes here</text>
+
+            <rect x="292" y="62" width="204" height="92" rx="16" fill="var(--rose-soft)" stroke="var(--rose)"></rect>
+            <text x="314" y="98" fill="var(--rose)" font-size="20" font-weight="700">Managed bundle</text>
+            <text x="314" y="126" fill="var(--ink)" font-size="15">installed skills run here</text>
+            <text x="314" y="146" fill="var(--ink)" font-size="15">runtime data lives here</text>
+
+            <path d="M224 108H278" fill="none" stroke="var(--rose)" stroke-width="4" stroke-dasharray="8 8" marker-end="url(#arrow-b)"></path>
+
+            <rect x="24" y="212" width="472" height="90" rx="16" fill="var(--panel)" stroke="var(--line)"></rect>
+            <text x="44" y="248" fill="var(--ink)" font-size="18" font-weight="700">False-success state</text>
+            <text x="44" y="274" fill="var(--muted)" font-size="15">Seed data exists in the clone, but installed skills can still see an empty bundle data root.</text>
+          </svg>
+          <figcaption>
+            The old onboarding guidance allowed repo data and runtime data to diverge. That is the setup bug this PR is really fixing.
+          </figcaption>
+        </figure>
+
+        <figure>
+          <svg viewBox="0 0 520 330" role="img" aria-label="After workflow showing seeded install writing directly into the managed bundle">
+            <defs>
+              <marker id="arrow-c" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                <path d="M0 0L10 5L0 10Z" fill="var(--jade)"></path>
+              </marker>
+            </defs>
+            <text x="24" y="34" fill="var(--jade)" font-size="24" font-weight="700">After</text>
+            <rect x="24" y="62" width="200" height="92" rx="16" fill="var(--panel)" stroke="var(--line)"></rect>
+            <text x="46" y="98" fill="var(--ink)" font-size="20" font-weight="700">Installer</text>
+            <text x="46" y="126" fill="var(--muted)" font-size="15"><code>--seed-data</code></text>
+            <text x="46" y="146" fill="var(--muted)" font-size="15">owns the write path</text>
+
+            <rect x="292" y="62" width="204" height="92" rx="16" fill="var(--jade-soft)" stroke="var(--jade)"></rect>
+            <text x="314" y="98" fill="var(--jade)" font-size="20" font-weight="700">Managed bundle</text>
+            <text x="314" y="126" fill="var(--ink)" font-size="15">fixtures land in bundle</text>
+            <text x="314" y="146" fill="var(--ink)" font-size="15">runtime reads the same tree</text>
+
+            <path d="M224 108H278" fill="none" stroke="var(--jade)" stroke-width="4" marker-end="url(#arrow-c)"></path>
+
+            <rect x="24" y="212" width="472" height="90" rx="16" fill="var(--panel)" stroke="var(--line)"></rect>
+            <text x="44" y="248" fill="var(--ink)" font-size="18" font-weight="700">Safety rule</text>
+            <text x="44" y="274" fill="var(--muted)" font-size="15">The seeded install refuses to run if the installed data root is non-empty, so it will not silently mix fixtures with real user data.</text>
+          </svg>
+          <figcaption>
+            The new path is intentionally narrow: the installer writes fixtures into the same managed bundle that the installed skills already read from.
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Question</th>
+              <th>Old answer</th>
+              <th>New answer</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Where does exploration data go?</td>
+              <td>Implicitly into repo-local <code>longevityOS-data</code></td>
+              <td>Explicitly into <code>~/.openclaw/bundles/compound-clawskill/longevityOS-data</code></td>
+            </tr>
+            <tr>
+              <td>Who owns the seed path?</td>
+              <td>User copies files by hand</td>
+              <td>Installer owns the path via <code>python3 scripts/install_bundle.py --seed-data</code></td>
+            </tr>
+            <tr>
+              <td>What happens if real data already exists?</td>
+              <td>No guard in the docs path</td>
+              <td>Seeded install fails loudly on a non-empty installed data root</td>
+            </tr>
+            <tr>
+              <td>What changed in runtime schemas?</td>
+              <td>Not applicable</td>
+              <td>No nutrition, health, insights, or news schema change</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="direction">
+      <div class="section-head">
+        <div class="section-kicker">Direction</div>
+        <h2>The fix stays inside setup, avoids runtime churn, and leaves future cron automation as a separate decision.</h2>
+        <p>
+          This PR is deliberately scoped. It fixes the install path, clarifies the contract, and restores green tests.
+          It does not change nutrition logging, health profile structure, or the runtime behavior of the user-facing skills.
+        </p>
+      </div>
+
+      <figure>
+        <svg viewBox="0 0 940 290" role="img" aria-label="Direction board showing immediate changes, explicit non-goals, and future optional follow-up">
+          <rect x="20" y="24" width="280" height="232" rx="18" fill="var(--blue-soft)" stroke="var(--blue)"></rect>
+          <text x="44" y="62" fill="var(--blue)" font-size="24" font-weight="700">In this PR</text>
+          <text x="44" y="100" fill="var(--ink)" font-size="16">Add seeded install flag</text>
+          <text x="44" y="126" fill="var(--ink)" font-size="16">Print data root and seed status</text>
+          <text x="44" y="152" fill="var(--ink)" font-size="16">Update install and seed docs</text>
+          <text x="44" y="178" fill="var(--ink)" font-size="16">Replace brittle repo-name test</text>
+          <text x="44" y="204" fill="var(--ink)" font-size="16">Add seeded install tests</text>
+
+          <rect x="330" y="24" width="280" height="232" rx="18" fill="var(--amber-soft)" stroke="var(--amber)"></rect>
+          <text x="354" y="62" fill="var(--amber)" font-size="24" font-weight="700">Not in scope</text>
+          <text x="354" y="100" fill="var(--ink)" font-size="16">No meal or profile schema changes</text>
+          <text x="354" y="126" fill="var(--ink)" font-size="16">No user-facing skill behavior changes</text>
+          <text x="354" y="152" fill="var(--ink)" font-size="16">No cron automation in this pass</text>
+          <text x="354" y="178" fill="var(--ink)" font-size="16">No migration or retention changes</text>
+
+          <rect x="640" y="24" width="280" height="232" rx="18" fill="var(--jade-soft)" stroke="var(--jade)"></rect>
+          <text x="664" y="62" fill="var(--jade)" font-size="24" font-weight="700">Possible follow-up</text>
+          <text x="664" y="100" fill="var(--ink)" font-size="16">Cron bootstrap helper</text>
+          <text x="664" y="126" fill="var(--ink)" font-size="16">Chat id and timezone templating</text>
+          <text x="664" y="152" fill="var(--ink)" font-size="16">One-command cron install</text>
+          <text x="664" y="178" fill="var(--ink)" font-size="16">Only if setup pain repeats</text>
+        </svg>
+        <figcaption>
+          The change is intentionally setup-only. That keeps the blast radius low while still fixing the most confusing onboarding path.
+        </figcaption>
+      </figure>
+
+      <div class="callout-grid">
+        <div class="callout good">
+          <h3>What improves immediately</h3>
+          <ul>
+            <li>Seeded installs and runtime reads now target the same tree.</li>
+            <li>Users get an explicit command instead of a path they have to infer.</li>
+            <li>Contributors see a green full suite in the normal checkout.</li>
+          </ul>
+        </div>
+        <div class="callout warn">
+          <h3>What still stays manual</h3>
+          <ul>
+            <li>Cron JSON still needs a Telegram DM chat id.</li>
+            <li>Cron JSON still needs a local timezone review.</li>
+            <li>That work is intentionally held for a separate decision.</li>
+          </ul>
+        </div>
+        <div class="callout risk">
+          <h3>Why this stays safe</h3>
+          <ul>
+            <li>The seeded path fails on a non-empty installed data root.</li>
+            <li>No user data files are migrated or reshaped.</li>
+            <li>Verification still uses the live OpenClaw CLI readiness check.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="evidence">
+      <div class="section-head">
+        <div class="section-kicker">Evidence and Verification</div>
+        <h2>The setup story is now backed by matching docs, guarded installer behavior, and green verification.</h2>
+        <p>
+          The reviewer should not have to inspect every file to trust the change. The commands below are the concrete
+          checks that support the PR narrative.
+        </p>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Check</th>
+              <th>Concrete evidence</th>
+              <th>Why it matters</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Old failure mode</td>
+              <td><code>AssertionError: 'compound-longclaw' != 'compound-clawskill'</code></td>
+              <td>Shows the repo-name assumption was real and broke the full suite in the default checkout.</td>
+            </tr>
+            <tr>
+              <td>Installer behavior</td>
+              <td><code>python3 scripts/install_bundle.py --seed-data</code></td>
+              <td>Moves fixture loading under installer control and points it at the actual managed bundle data root.</td>
+            </tr>
+            <tr>
+              <td>Full test run</td>
+              <td><code>python3 -m unittest</code> → <code>Ran 62 tests ... OK</code></td>
+              <td>Confirms the repo-level regression is fixed and installer coverage is green.</td>
+            </tr>
+            <tr>
+              <td>Runtime verification</td>
+              <td><code>python3 scripts/install_bundle.py --verify</code> → all five skills <code>Ready</code></td>
+              <td>Confirms the local OpenClaw install still works after the setup changes.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="two-up">
+        <div class="mono-block">python3 -m unittest
+Ran 62 tests in 0.807s
+OK</div>
+        <div class="mono-block">python3 scripts/install_bundle.py --verify
+- snap: Ready
+- health: Ready
+- news: Ready
+- insights: Ready
+- daily-coach: Ready</div>
+      </div>
+    </section>
+
+    <div class="footer">
+      Source context: branch <code>chore/smooth-bundle-setup-flow</code>, PR #1, commit <code>4d92671</code>.
+      This artifact is meant to complement the PR description, not replace it.
+    </div>
+  </main>
+</body>
+</html>
