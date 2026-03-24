@@ -51,7 +51,7 @@ Install summary:
 Bundle map:
 
 - `snap`: meal logging from food photos or meal text, with ingredient-level decomposition and deterministic nutrition enrichment
-- `health`: Apple Health XML import plus structured questionnaire-style health profile updates
+- `health`: Whoop data import plus structured questionnaire-style health profile updates
 - `news`: curated daily digest for health, longevity, nutrition, sleep, exercise, and aging topics
 - `insights`: structured self-experiments, check-ins, analysis, and gap-aware recommendations
 - `daily-coach`: cron-oriented daily health coaching message built from nutrition, health, experiment, and curated news context
@@ -61,7 +61,7 @@ What to inspect for details:
 - `README.md` for installation, verification, cron setup, and bundle-level architecture
 - `docs/install.md` for the direct install workflow
 - `skills/snap/SKILL.md` for meal logging behavior and payload shape
-- `skills/health/SKILL.md` for Apple Health import and questionnaire flows
+- `skills/health/SKILL.md` for Whoop import and questionnaire flows
 - `skills/news/SKILL.md` for curated digest behavior
 - `skills/insights/SKILL.md` for experiment creation, check-ins, and analysis
 - `skills/daily-coach/SKILL.md` for the scheduled coaching workflow

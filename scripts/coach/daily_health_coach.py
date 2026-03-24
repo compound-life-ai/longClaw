@@ -38,7 +38,7 @@ FOCUS_TO_ACTION = {
     "meal logging consistency": "Log meals consistently today so future insights have a usable baseline.",
     "baseline data collection": "Fill in the missing health baseline data before making strong changes.",
     "sleep consistency": "Protect sleep timing tonight and keep stimulants earlier in the day.",
-    "daily movement consistency": "Add a light walk or easy movement block today to improve consistency.",
+    "recovery attention": "Recovery is low — consider lighter intensity today and prioritize sleep tonight.",
     "protein distribution": "Spread protein across meals today instead of concentrating it late.",
     "experiment consistency": "Keep the active experiment simple and consistent today so the signal stays interpretable.",
     "experiment observation quality": "Record a clean experiment check-in after the target behavior or at the end of the day.",
@@ -85,20 +85,20 @@ def _collect_focus_areas(
     missing_data: list[str],
 ) -> list[str]:
     focus_areas: list[str] = []
-    apple_health = profile.get("apple_health", {}) if isinstance(profile, dict) else {}
+    whoop = profile.get("whoop", {}) if isinstance(profile, dict) else {}
     sleep_avg = (
-        apple_health.get("sleep", {}).get("daily_sleep_hours_avg")
-        if isinstance(apple_health, dict)
+        whoop.get("sleep", {}).get("daily_sleep_hours_avg")
+        if isinstance(whoop, dict)
         else None
     )
-    steps_avg = (
-        apple_health.get("activity", {}).get("daily_steps_avg")
-        if isinstance(apple_health, dict)
+    recovery_score = (
+        whoop.get("recovery", {}).get("recovery_score_avg")
+        if isinstance(whoop, dict)
         else None
     )
 
     baseline_missing = any(
-        "meals" in item.lower() or "questionnaire" in item.lower() or "apple health" in item.lower()
+        "meals" in item.lower() or "questionnaire" in item.lower() or "whoop" in item.lower()
         for item in missing_data
     )
 
@@ -112,8 +112,8 @@ def _collect_focus_areas(
         focus_areas.append("baseline data collection")
     if sleep_avg and float(sleep_avg) < 7:
         focus_areas.append("sleep consistency")
-    if steps_avg and float(steps_avg) < 7000:
-        focus_areas.append("daily movement consistency")
+    if recovery_score and float(recovery_score) < 50:
+        focus_areas.append("recovery attention")
     if yesterday_nutrition.get("protein_g", 0) and float(yesterday_nutrition["protein_g"]) < 90:
         focus_areas.append("protein distribution")
 
@@ -230,12 +230,12 @@ def build_daily_coach_context(
     )
 
     questionnaire = profile.get("questionnaire", {}) if isinstance(profile, dict) else {}
-    apple_health = profile.get("apple_health", {}) if isinstance(profile, dict) else {}
+    whoop = profile.get("whoop", {}) if isinstance(profile, dict) else {}
 
     return {
         "generated_at": utc_now_iso(),
         "today_date": today.isoformat(),
-        "ready": bool(meal_days or questionnaire or apple_health or active_experiment),
+        "ready": bool(meal_days or questionnaire or whoop or active_experiment),
         "insufficient_data": bool(missing_data),
         "missing_data": missing_data,
         "checkin_needed": checkin_needed,
@@ -243,9 +243,9 @@ def build_daily_coach_context(
             "meal_days_logged": meal_days,
             "yesterday_date": yesterday,
             "yesterday_nutrition": yesterday_nutrition,
-            "health_profile_available": bool(questionnaire or apple_health),
+            "health_profile_available": bool(questionnaire or whoop),
             "questionnaire_available": bool(questionnaire),
-            "apple_health_available": bool(apple_health),
+            "whoop_available": bool(whoop),
         },
         "active_experiment": {
             "id": active_experiment.get("id") if active_experiment else None,

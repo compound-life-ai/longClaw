@@ -156,8 +156,8 @@ def gap_report(data_root: Path) -> dict[str, Any]:
         missing.append("Log at least 3 days of meals before asking for diet-linked insights.")
     if not profile.get("questionnaire"):
         missing.append("Complete the structured /health questionnaire.")
-    if not profile.get("apple_health"):
-        missing.append("Import an Apple Health XML export for sleep/activity context.")
+    if not profile.get("whoop"):
+        missing.append("Connect Whoop to import sleep/recovery/strain context.")
 
     if active_experiment_id:
         analysis = analyze_experiment(data_root, active_experiment_id)
@@ -168,7 +168,7 @@ def gap_report(data_root: Path) -> dict[str, Any]:
         "ready": not missing,
         "missing_data": missing,
         "meal_days_logged": meal_days,
-        "has_health_profile": bool(profile.get("questionnaire") or profile.get("apple_health")),
+        "has_health_profile": bool(profile.get("questionnaire") or profile.get("whoop")),
         "active_experiment_id": active_experiment_id,
     }
 
