@@ -1,6 +1,10 @@
 <a id="top"></a>
 
+> **Best experience:** We recommend using the latest frontier model (GPT-5.4, Opus 4.6) for the best experience. For more information, refer to [docs.openclaw.ai](https://docs.openclaw.ai). This guide assumes you already have a working OpenClaw installation and are aware of the risks of using OpenClaw.
+
 # compound-clawskill
+
+---
 
 OpenClaw skill bundle for a personal health companion.
 
