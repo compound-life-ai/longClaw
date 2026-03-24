@@ -107,9 +107,9 @@ class DailyCoachTests(unittest.TestCase):
                 data_root / "health" / "profile.json",
                 {
                     "questionnaire": {"goal": "sleep"},
-                    "apple_health": {
+                    "whoop": {
                         "sleep": {"daily_sleep_hours_avg": 6.2},
-                        "activity": {"daily_steps_avg": 6400},
+                        "recovery": {"recovery_score_avg": 42.0},
                     },
                 },
             )
@@ -176,7 +176,7 @@ class DailyCoachTests(unittest.TestCase):
             data_root = Path(tmp_dir)
             write_json(
                 data_root / "health" / "profile.json",
-                {"questionnaire": {"goal": "energy"}, "apple_health": {"activity": {"daily_steps_avg": 8000}}},
+                {"questionnaire": {"goal": "energy"}, "whoop": {"recovery": {"recovery_score_avg": 72.0}}},
             )
             experiment = create_experiment(
                 data_root,

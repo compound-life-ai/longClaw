@@ -94,7 +94,7 @@ class InsightsScriptTests(unittest.TestCase):
             )
             write_json(
                 data_root / "health" / "profile.json",
-                {"questionnaire": {"goal": "sleep"}, "apple_health": {"source": "apple_health_export_xml"}},
+                {"questionnaire": {"goal": "sleep"}, "whoop": {"source": "whoop_api_v2"}},
             )
             self.assertEqual(count_meal_days(data_root), 3)
             report = gap_report(data_root)

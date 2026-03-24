@@ -99,7 +99,8 @@ class SeedIngestionTests(unittest.TestCase):
             (self.data_root / sub).mkdir(parents=True, exist_ok=True)
             src = SEED_DIR / sub
             for item in src.iterdir():
-                shutil.copy2(item, self.data_root / sub / item.name)
+                if item.is_file():
+                    shutil.copy2(item, self.data_root / sub / item.name)
 
     def tearDown(self) -> None:
         shutil.rmtree(self.tmp_dir)
@@ -121,7 +122,7 @@ class SeedIngestionTests(unittest.TestCase):
         profile = load_json(profile_path(self.data_root), default_profile())
         self.assertTrue(profile["goals"])
         self.assertTrue(profile["questionnaire"])
-        self.assertTrue(profile["apple_health"])
+        self.assertTrue(profile["whoop"])
         self.assertTrue(profile["imports"])
 
     def test_gap_report_is_ready_with_seeded_data(self) -> None:

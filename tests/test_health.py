@@ -5,15 +5,18 @@ import subprocess
 import sys
 import tempfile
 import unittest
-import zipfile
 from pathlib import Path
 
-from scripts.health.import_apple_health import (
+from scripts.health.import_whoop import (
     average,
-    extract_export_xml_from_zip,
-    parse_dt,
-    resolve_input_xml,
-    summarize_export,
+    build_summary,
+    build_summary_from_fixtures,
+    ms_to_hours,
+    normalize_body,
+    normalize_cycles,
+    normalize_recovery,
+    normalize_sleep,
+    normalize_workouts,
 )
 from scripts.health.profile_store import (
     default_profile,
@@ -25,78 +28,99 @@ from scripts.health.profile_store import (
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+FIXTURE_DIR = REPO_ROOT / "tests" / "fixtures" / "whoop"
 
 
-APPLE_XML = """<?xml version="1.0" encoding="UTF-8"?>
-<HealthData>
-  <Record type="HKQuantityTypeIdentifierStepCount" sourceName="Apple Watch" unit="count" value="8000" startDate="2026-03-17 09:00:00 -0700" endDate="2026-03-17 10:00:00 -0700" />
-  <Record type="HKQuantityTypeIdentifierStepCount" sourceName="Apple Watch" unit="count" value="4000" startDate="2026-03-18 09:00:00 -0700" endDate="2026-03-18 10:00:00 -0700" />
-  <Record type="HKQuantityTypeIdentifierActiveEnergyBurned" sourceName="Apple Watch" unit="kcal" value="520" startDate="2026-03-17 09:00:00 -0700" endDate="2026-03-17 10:00:00 -0700" />
-  <Record type="HKQuantityTypeIdentifierBasalEnergyBurned" sourceName="Apple Watch" unit="kcal" value="1600" startDate="2026-03-17 00:00:00 -0700" endDate="2026-03-17 23:59:59 -0700" />
-  <Record type="HKQuantityTypeIdentifierAppleExerciseTime" sourceName="Apple Watch" unit="min" value="45" startDate="2026-03-17 09:00:00 -0700" endDate="2026-03-17 10:00:00 -0700" />
-  <Record type="HKQuantityTypeIdentifierDistanceWalkingRunning" sourceName="Apple Watch" unit="m" value="6200" startDate="2026-03-17 09:00:00 -0700" endDate="2026-03-17 10:00:00 -0700" />
-  <Record type="HKQuantityTypeIdentifierDistanceCycling" sourceName="Apple Watch" unit="m" value="14000" startDate="2026-03-17 11:00:00 -0700" endDate="2026-03-17 12:00:00 -0700" />
-  <Record type="HKCategoryTypeIdentifierSleepAnalysis" sourceName="Apple Watch" value="HKCategoryValueSleepAnalysisAsleep" startDate="2026-03-17 23:00:00 -0700" endDate="2026-03-18 06:30:00 -0700" />
-  <Record type="HKQuantityTypeIdentifierRestingHeartRate" sourceName="Apple Watch" unit="count/min" value="58" startDate="2026-03-18 08:00:00 -0700" endDate="2026-03-18 08:00:00 -0700" />
-  <Record type="HKQuantityTypeIdentifierHeartRate" sourceName="Apple Watch" unit="count/min" value="101" startDate="2026-03-18 08:10:00 -0700" endDate="2026-03-18 08:10:00 -0700" />
-  <Record type="HKQuantityTypeIdentifierWalkingHeartRateAverage" sourceName="Apple Watch" unit="count/min" value="92" startDate="2026-03-18 08:30:00 -0700" endDate="2026-03-18 08:30:00 -0700" />
-  <Record type="HKQuantityTypeIdentifierHeartRateVariabilitySDNN" sourceName="Apple Watch" unit="ms" value="52" startDate="2026-03-18 06:45:00 -0700" endDate="2026-03-18 06:45:00 -0700" />
-  <Record type="HKQuantityTypeIdentifierVO2Max" sourceName="Apple Watch" unit="mL/min·kg" value="41.5" startDate="2026-03-18 09:00:00 -0700" endDate="2026-03-18 09:00:00 -0700" />
-  <Record type="HKQuantityTypeIdentifierOxygenSaturation" sourceName="Apple Watch" unit="%" value="0.98" startDate="2026-03-18 07:00:00 -0700" endDate="2026-03-18 07:00:00 -0700" />
-  <Record type="HKQuantityTypeIdentifierRespiratoryRate" sourceName="Apple Watch" unit="count/min" value="14.2" startDate="2026-03-18 07:30:00 -0700" endDate="2026-03-18 07:30:00 -0700" />
-  <Workout workoutActivityType="HKWorkoutActivityTypeRunning" duration="45" durationUnit="min" startDate="2026-03-18 07:00:00 -0700" endDate="2026-03-18 07:45:00 -0700" />
-  <Workout workoutActivityType="HKWorkoutActivityTypeWalking" duration="1.5" durationUnit="h" startDate="2026-03-18 12:00:00 -0700" endDate="2026-03-18 13:30:00 -0700" />
-</HealthData>
-"""
+def load_fixture(name: str) -> dict:
+    return json.loads((FIXTURE_DIR / f"{name}.json").read_text(encoding="utf-8"))
 
 
-class HealthScriptTests(unittest.TestCase):
-    def test_parse_dt_and_average_helpers(self) -> None:
-        parsed = parse_dt("2026-03-18 08:00:00 -0700")
-        self.assertEqual(parsed.year, 2026)
+class WhoopNormalizationTests(unittest.TestCase):
+    def test_average_helpers(self) -> None:
         self.assertEqual(average([]), 0.0)
         self.assertEqual(average([1.0, 2.0, 3.0]), 2.0)
+        self.assertEqual(ms_to_hours(3_600_000), 1.0)
+        self.assertEqual(ms_to_hours(0), 0.0)
 
-    def test_zip_helpers_extract_and_resolve_xml(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            tmp_path = Path(tmp_dir)
-            xml_path = tmp_path / "apple_health_export" / "export.xml"
-            xml_path.parent.mkdir(parents=True, exist_ok=True)
-            xml_path.write_text(APPLE_XML, encoding="utf-8")
-            zip_path = tmp_path / "export.zip"
-            with zipfile.ZipFile(zip_path, "w") as archive:
-                archive.write(xml_path, arcname="apple_health_export/export.xml")
+    def test_normalize_recovery_from_fixture(self) -> None:
+        records = load_fixture("recovery")["records"]
+        result = normalize_recovery(records)
+        self.assertEqual(result["days"], 4)
+        self.assertGreater(result["recovery_score_avg"], 0)
+        self.assertGreater(result["resting_heart_rate_avg"], 0)
+        self.assertGreater(result["hrv_rmssd_avg"], 0)
+        self.assertGreater(result["spo2_avg"], 0)
+        self.assertGreater(result["skin_temp_celsius_avg"], 0)
 
-            extracted = extract_export_xml_from_zip(zip_path)
-            self.assertTrue(extracted.exists())
-            self.assertEqual(resolve_input_xml(None, zip_path).name, "export.xml")
-            self.assertEqual(resolve_input_xml(xml_path, None), xml_path)
-            with self.assertRaises(ValueError):
-                resolve_input_xml(xml_path, zip_path)
+    def test_normalize_sleep_from_fixture(self) -> None:
+        records = load_fixture("sleep")["records"]
+        result = normalize_sleep(records)
+        self.assertEqual(result["days"], 4)
+        self.assertGreater(result["daily_sleep_hours_avg"], 5.0)
+        self.assertGreater(result["light_sleep_hours_avg"], 0)
+        self.assertGreater(result["sws_hours_avg"], 0)
+        self.assertGreater(result["rem_hours_avg"], 0)
+        self.assertGreater(result["sleep_efficiency_avg"], 80.0)
+        self.assertGreater(result["respiratory_rate_avg"], 10.0)
 
-    def test_apple_health_summary_extracts_basics(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            xml_path = Path(tmp_dir) / "export.xml"
-            xml_path.write_text(APPLE_XML, encoding="utf-8")
-            summary = summarize_export(xml_path)
-            self.assertEqual(summary["counts"]["days_with_steps"], 2)
-            self.assertGreater(summary["sleep"]["daily_sleep_hours_avg"], 7.0)
-            self.assertEqual(summary["heart"]["resting_heart_rate_avg"], 58.0)
-            self.assertEqual(summary["heart"]["heart_rate_avg"], 101.0)
-            self.assertEqual(summary["heart"]["walking_heart_rate_avg"], 92.0)
-            self.assertEqual(summary["heart"]["heart_rate_variability_sdnn_avg"], 52.0)
-            self.assertEqual(summary["heart"]["vo2_max_avg"], 41.5)
-            self.assertEqual(summary["heart"]["oxygen_saturation_avg"], 0.98)
-            self.assertEqual(summary["heart"]["respiratory_rate_avg"], 14.2)
-            self.assertEqual(summary["activity"]["daily_active_energy_kcal_avg"], 520.0)
-            self.assertEqual(summary["activity"]["daily_basal_energy_kcal_avg"], 1600.0)
-            self.assertEqual(summary["activity"]["daily_exercise_minutes_avg"], 45.0)
-            self.assertEqual(summary["activity"]["daily_walking_running_distance_avg_km"], 6.2)
-            self.assertEqual(summary["activity"]["daily_cycling_distance_avg_km"], 14.0)
-            self.assertEqual(summary["workouts"]["workout_count"], 2)
-            self.assertEqual(summary["workouts"]["average_workout_minutes"], 67.5)
-            self.assertEqual(summary["workouts"]["by_type"]["HKWorkoutActivityTypeRunning"], 1)
-            self.assertEqual(summary["workouts"]["by_type"]["HKWorkoutActivityTypeWalking"], 1)
+    def test_normalize_cycles_from_fixture(self) -> None:
+        records = load_fixture("cycles")["records"]
+        result = normalize_cycles(records)
+        self.assertEqual(result["days"], 5)
+        self.assertGreater(result["day_strain_avg"], 0)
+        self.assertGreater(result["kilojoules_avg"], 0)
+        self.assertGreater(result["average_heart_rate_avg"], 0)
+
+    def test_normalize_workouts_from_fixture(self) -> None:
+        records = load_fixture("workouts")["records"]
+        result = normalize_workouts(records)
+        self.assertEqual(result["workout_count"], 1)
+        self.assertIn("assault-bike", result["by_sport"])
+        self.assertGreater(result["average_strain"], 0)
+
+    def test_normalize_body_from_fixture(self) -> None:
+        data = load_fixture("body")
+        result = normalize_body(data)
+        self.assertEqual(result["height_m"], 1.76)
+        self.assertEqual(result["weight_kg"], 66.0)
+        self.assertEqual(result["max_heart_rate"], 188)
+
+    def test_normalize_empty_records_returns_defaults(self) -> None:
+        self.assertEqual(normalize_recovery([]), {})
+        self.assertEqual(normalize_sleep([]), {})
+        self.assertEqual(normalize_cycles([]), {})
+        self.assertEqual(normalize_workouts([]), {"workout_count": 0, "by_sport": {}})
+
+    def test_unscored_records_are_skipped(self) -> None:
+        records = [{"score_state": "PENDING", "score": None}]
+        self.assertEqual(normalize_recovery(records), {})
+        self.assertEqual(normalize_sleep(records), {})
+        self.assertEqual(normalize_cycles(records), {})
+
+    def test_build_summary_from_fixtures(self) -> None:
+        summary = build_summary_from_fixtures(FIXTURE_DIR)
+        self.assertEqual(summary["source"], "whoop_api_v2")
+        self.assertIn("recovery", summary)
+        self.assertIn("sleep", summary)
+        self.assertIn("strain", summary)
+        self.assertIn("workouts", summary)
+        self.assertIn("body", summary)
+        self.assertIn("imported_at", summary)
+
+
+class ProfileStoreTests(unittest.TestCase):
+    def test_default_profile_has_whoop_key(self) -> None:
+        profile = default_profile()
+        self.assertIn("whoop", profile)
+        self.assertNotIn("apple_health", profile)
+
+    def test_merge_import_writes_whoop_data(self) -> None:
+        profile = default_profile()
+        summary = build_summary_from_fixtures(FIXTURE_DIR)
+        profile = merge_import(profile, summary)
+        self.assertEqual(profile["whoop"]["source"], "whoop_api_v2")
+        self.assertGreater(profile["whoop"]["recovery"]["recovery_score_avg"], 0)
+        self.assertTrue(profile["imports"])
 
     def test_profile_merges_questionnaire_and_import(self) -> None:
         profile = default_profile()
@@ -110,7 +134,7 @@ class HealthScriptTests(unittest.TestCase):
                 "diet_notes": "more protein",
             },
         )
-        profile = merge_import(profile, {"source": "apple_health_export_xml", "file_name": "export.xml"})
+        profile = merge_import(profile, {"source": "whoop_api_v2"})
         self.assertEqual(profile["goals"], ["better sleep"])
         self.assertEqual(profile["constraints"], ["no late caffeine"])
         self.assertEqual(profile["preferences"]["language"], "bilingual")
@@ -137,9 +161,9 @@ class HealthScriptTests(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            import_path = data_root / "apple.json"
+            import_path = data_root / "whoop.json"
             import_path.write_text(
-                json.dumps({"source": "apple_health_export_xml", "file_name": "export.xml"}),
+                json.dumps({"source": "whoop_api_v2"}),
                 encoding="utf-8",
             )
 
@@ -188,55 +212,30 @@ class HealthScriptTests(unittest.TestCase):
             )
             payload = json.loads(show_result.stdout)
             self.assertEqual(payload["goals"], ["better recovery"])
-            self.assertEqual(payload["imports"][0]["file_name"], "export.xml")
+            self.assertEqual(payload["imports"][0]["source"], "whoop_api_v2")
 
-    def test_import_apple_health_cli_outputs_summary(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            xml_path = Path(tmp_dir) / "export.xml"
-            xml_path.write_text(APPLE_XML, encoding="utf-8")
-            result = subprocess.run(
-                [
-                    sys.executable,
-                    "scripts/health/import_apple_health.py",
-                    "--input-xml",
-                    str(xml_path),
-                ],
-                cwd=REPO_ROOT,
-                check=True,
-                capture_output=True,
-                text=True,
-            )
-            payload = json.loads(result.stdout)
-            self.assertEqual(payload["file_name"], "export.xml")
-            self.assertEqual(payload["counts"]["workouts"], 2)
-            self.assertEqual(payload["heart"]["vo2_max_avg"], 41.5)
 
-    def test_import_apple_health_cli_accepts_zip(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            tmp_path = Path(tmp_dir)
-            xml_dir = tmp_path / "apple_health_export"
-            xml_dir.mkdir(parents=True, exist_ok=True)
-            xml_path = xml_dir / "export.xml"
-            xml_path.write_text(APPLE_XML, encoding="utf-8")
-            zip_path = tmp_path / "export.zip"
-            with zipfile.ZipFile(zip_path, "w") as archive:
-                archive.write(xml_path, arcname="apple_health_export/export.xml")
-
-            result = subprocess.run(
-                [
-                    sys.executable,
-                    "scripts/health/import_apple_health.py",
-                    "--input-zip",
-                    str(zip_path),
-                ],
-                cwd=REPO_ROOT,
-                check=True,
-                capture_output=True,
-                text=True,
-            )
-            payload = json.loads(result.stdout)
-            self.assertEqual(payload["file_name"], "export.xml")
-            self.assertEqual(payload["workouts"]["workout_count"], 2)
+class ImportWhoopCLITests(unittest.TestCase):
+    def test_cli_with_fixtures(self) -> None:
+        result = subprocess.run(
+            [
+                sys.executable,
+                "scripts/health/import_whoop.py",
+                "--fixture-dir",
+                str(FIXTURE_DIR),
+            ],
+            cwd=REPO_ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        payload = json.loads(result.stdout)
+        self.assertEqual(payload["source"], "whoop_api_v2")
+        self.assertGreater(payload["recovery"]["recovery_score_avg"], 0)
+        self.assertGreater(payload["sleep"]["daily_sleep_hours_avg"], 0)
+        self.assertGreater(payload["strain"]["day_strain_avg"], 0)
+        self.assertEqual(payload["workouts"]["workout_count"], 1)
+        self.assertEqual(payload["body"]["height_m"], 1.76)
 
 
 if __name__ == "__main__":
