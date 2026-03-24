@@ -22,6 +22,21 @@ All skills respond to natural language. Say "had salmon with rice for lunch" ins
   │
   ├─ "/health" ──────────────────> import_whoop.py ───┐
   │   (Whoop connect or sync)        (token refresh)  │
+  │                                                    │
+  │   Whoop API v2 endpoints:                          │
+  │   ├─ /v2/recovery ─── recovery score, resting HR,  │
+  │   │                    HRV (RMSSD), SpO2, skin temp│
+  │   ├─ /v2/activity/sleep ── stage breakdown (light, │
+  │   │                    deep/SWS, REM, awake),      │
+  │   │                    efficiency, performance,    │
+  │   │                    consistency, respiratory    │
+  │   │                    rate, disturbances          │
+  │   ├─ /v2/cycle ─────── day strain (0-21), kJ,     │
+  │   │                    avg/max heart rate          │
+  │   ├─ /v2/activity/workout ── sport type, strain,   │
+  │   │                    HR zones, distance, duration│
+  │   └─ /v2/user/measurement/body ── height, weight,  │
+  │                        max heart rate              │
   │                                                    ▼
   ├─ questionnaire answers ──────> profile_store.py ──> profile.json
   │
