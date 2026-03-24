@@ -18,57 +18,59 @@
     "training_notes": "Strength training Mon/Wed/Fri, easy run Tue/Thu, long ride Sat. Rest Sunday.",
     "diet_notes": "Aiming for higher protein. Tend to under-eat at lunch and overcompensate at dinner."
   },
-  "apple_health": {
+  "whoop": {
     "imported_at": "2026-03-15T10:00:00+00:00",
-    "source": "apple_health_export_xml",
-    "file_name": "export.xml",
-    "counts": {
-      "records": 2450000,
-      "workouts": 380,
-      "days_with_steps": 1200,
-      "days_with_sleep": 950
-    },
-    "activity": {
-      "daily_steps_avg": 8950,
-      "daily_active_energy_kcal_avg": 420.0,
-      "daily_basal_energy_kcal_avg": 1710.0,
-      "daily_exercise_minutes_avg": 38.5,
-      "daily_walking_running_distance_avg_km": 6.3,
-      "daily_cycling_distance_avg_km": 3.8,
-      "step_days": 1200
+    "source": "whoop_api_v2",
+    "recovery": {
+      "days": 30,
+      "recovery_score_avg": 58.4,
+      "resting_heart_rate_avg": 56.0,
+      "hrv_rmssd_avg": 48.3,
+      "spo2_avg": 96.8,
+      "skin_temp_celsius_avg": 33.2
     },
     "sleep": {
+      "days": 30,
       "daily_sleep_hours_avg": 6.48,
-      "sleep_days": 950,
-      "daily_sleep_hours_values": [6.1, 5.8, 7.2, 6.9, 6.5]
-    },
-    "heart": {
-      "resting_heart_rate_avg": 58.4,
-      "heart_rate_avg": 88.7,
-      "walking_heart_rate_avg": 96.2,
-      "heart_rate_variability_sdnn_avg": 48.3,
-      "oxygen_saturation_avg": 0.97,
+      "light_sleep_hours_avg": 3.2,
+      "sws_hours_avg": 1.5,
+      "rem_hours_avg": 1.6,
+      "sleep_efficiency_avg": 89.5,
+      "sleep_performance_avg": 78.0,
+      "sleep_consistency_avg": 65.0,
       "respiratory_rate_avg": 15.2,
-      "vo2_max_avg": 47.8,
-      "sample_count": 580000
+      "disturbance_count_avg": 12.0
+    },
+    "strain": {
+      "days": 30,
+      "day_strain_avg": 10.2,
+      "kilojoules_avg": 8400.0,
+      "average_heart_rate_avg": 72.0,
+      "max_heart_rate_avg": 155.0
     },
     "workouts": {
-      "workout_count": 380,
+      "workout_count": 22,
       "average_workout_minutes": 42.6,
-      "by_type": {
-        "HKWorkoutActivityTypeRunning": 95,
-        "HKWorkoutActivityTypeCycling": 82,
-        "HKWorkoutActivityTypeTraditionalStrengthTraining": 145,
-        "HKWorkoutActivityTypeYoga": 30,
-        "HKWorkoutActivityTypeHiking": 28
+      "average_strain": 12.8,
+      "average_heart_rate_avg": 138.0,
+      "by_sport": {
+        "cycling": 8,
+        "functional-fitness": 2,
+        "hiking": 3,
+        "running": 5,
+        "strength-trainer": 4
       }
+    },
+    "body": {
+      "height_m": 1.76,
+      "weight_kg": 66.0,
+      "max_heart_rate": 188
     }
   },
   "imports": [
     {
-      "source": "apple_health_export_xml",
-      "imported_at": "2026-03-15T10:00:00+00:00",
-      "file_name": "export.xml"
+      "source": "whoop_api_v2",
+      "imported_at": "2026-03-15T10:00:00+00:00"
     }
   ]
 }

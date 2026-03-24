@@ -24,7 +24,7 @@ def default_profile() -> dict[str, Any]:
         "constraints": [],
         "preferences": {},
         "questionnaire": {},
-        "apple_health": {},
+        "whoop": {},
         "imports": [],
     }
 
@@ -45,7 +45,7 @@ def merge_questionnaire(profile: dict[str, Any], answers: dict[str, Any]) -> dic
 
 
 def merge_import(profile: dict[str, Any], import_summary: dict[str, Any]) -> dict[str, Any]:
-    profile["apple_health"] = import_summary
+    profile["whoop"] = import_summary
     profile.setdefault("imports", [])
     profile["imports"].append(
         {

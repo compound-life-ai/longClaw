@@ -1,1 +1,1 @@
-"""Health profile and Apple Health import helpers."""
+"""Health profile and Whoop import helpers."""
