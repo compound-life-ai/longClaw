@@ -154,7 +154,21 @@ Every morning, the daily coach cron gathers context from all data stores and dis
 
 ## Install
 
+Tell your OpenClaw agent:
+
+```
+Install the compound-clawskill bundle from https://github.com/compound-life-ai/longClaw
+```
+
+Start a **fresh OpenClaw session** after install — skills are snapshotted at session start.
+
+<details>
+<summary>Manual install</summary>
+
 ```bash
+git clone https://github.com/compound-life-ai/longClaw
+cd longClaw
+
 # preview
 python3 scripts/install_bundle.py --dry-run
 
@@ -164,14 +178,13 @@ python3 scripts/install_bundle.py
 # verify
 python3 scripts/install_bundle.py --verify
 
-# optional: seed sample data into the installed bundle
+# optional: seed sample data
 python3 scripts/install_bundle.py --seed-data
 ```
-
-Start a **fresh OpenClaw session** after install — skills are snapshotted at session start.
+</details>
 
 <details>
-<summary>Copy-paste install instructions for an OpenClaw agent</summary>
+<summary>Full install instructions for an OpenClaw agent</summary>
 
 ```text
 1. Clone `https://github.com/compound-life-ai/longClaw` to a stable local path.
