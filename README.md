@@ -142,34 +142,9 @@ Every morning, the daily coach cron gathers context from all data stores and dis
 
 ### Dispatch Flow
 
-```mermaid
-flowchart TB
-    Cron["⏰ Cron (7:10am)"] --> Gather["Gather Context<br/>daily_health_coach.py<br/>weekly_summary.py"]
-
-    Gather --> Dispatch["Read agents/*.md<br/>+ spawn 10 subagents"]
-
-    Dispatch --> IP["🏥 Imperial Physician<br/><i>Overall #1 priority</i>"]
-    Dispatch --> DP["🍚 Diet Physician<br/><i>Macros, micros, food suggestions</i>"]
-    Dispatch --> MM["🏃 Movement Master<br/><i>Strain-adjusted training</i>"]
-    Dispatch --> PR["💓 Pulse Reader<br/><i>RHR, HRV, SpO2 trends</i>"]
-    Dispatch --> FT["🧪 Formula Tester<br/><i>Cross-domain patterns</i>"]
-    Dispatch --> HB["🌿 Herbalist<br/><i>Supplement considerations</i>"]
-    Dispatch --> TM["📋 Trial Monitor<br/><i>Experiment compliance</i>"]
-    Dispatch --> CM["⚖️ Court Magistrate<br/><i>New trial candidates</i>"]
-    Dispatch --> MC["🛡️ Medical Censor<br/><i>Safety flags</i>"]
-    Dispatch --> CS["📜 Court Scribe<br/><i>Relevant research</i>"]
-
-    IP --> TG["📱 Telegram<br/>(10 separate bubbles)"]
-    DP --> TG
-    MM --> TG
-    PR --> TG
-    FT --> TG
-    HB --> TG
-    TM --> TG
-    CM --> TG
-    MC --> TG
-    CS --> TG
-```
+<p align="center">
+  <img src="docs/images/dispatch-flow-diagram.png" alt="Daily Coach Subagent Dispatch Flow" width="100%" />
+</p>
 
 ### Example Output
 
