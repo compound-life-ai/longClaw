@@ -2,7 +2,10 @@
 
 # compound-clawskill
 
-OpenClaw skill bundle for a personal health companion.
+A personal agentic longevity system.
+Cross-analyzes your sleep, nutrition, biomarkers, activities, and more. Finds hidden patterns. Proposes actionable insights. Validates scientific evidence. Designs self-experiments.
+
+Personal Health Agent by Compound · Works with Claude Code & OpenClaw
 
 - `/snap` — meal logging with ingredient-level nutrition enrichment
 - `/health` — Whoop data import + structured health profile
