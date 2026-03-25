@@ -198,7 +198,7 @@ export default definePluginEntry({
     api.registerTool({
       name: "coaching_context",
       description:
-        "Generate personalized daily coaching context by analyzing nutrition, health, experiment, and news data",
+        "Generate personalized (daily) coaching context by analyzing nutrition, health, experiment, and news data to give user personalized recommendations",
       parameters: Type.Object({
         today_date: Type.Optional(Type.String({ description: "Override today's date (YYYY-MM-DD)" })),
         news_limit: Type.Optional(Type.Number({ description: "Max news items to include", default: 2 })),
