@@ -1203,21 +1203,6 @@ export default function Version6() {
 
       <GlowDivider />
 
-      {/* ── REAL CONVERSATIONS ── */}
-      <section className="py-24 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-claw-red/[0.01] to-transparent" />
-        <div className="max-w-5xl mx-auto px-5 relative z-10">
-          <p className="text-[10px] font-sans uppercase tracking-widest text-claw-red mb-2 text-center">real output</p>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-center mb-3 font-sans">Real Conversations</h2>
-          <p className="text-claw-text-muted text-center mb-12 text-sm max-w-md mx-auto font-sans">
-            Not mockups &mdash; actual agent output delivered to Telegram every day.
-          </p>
-          <MockupCarousel />
-        </div>
-      </section>
-
-      <GlowDivider />
-
       {/* ── FINAL CTA ── */}
       <section className="py-28 relative overflow-hidden">
         <div className="absolute inset-0">
