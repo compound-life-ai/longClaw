@@ -237,8 +237,6 @@ function BubbleSequence({ children, interval = 1800 }: { children: React.ReactNo
           style={{
             opacity: i < visibleCount ? 1 : 0,
             transform: i < visibleCount ? "translateY(0)" : "translateY(12px)",
-            maxHeight: i < visibleCount ? "2000px" : "0",
-            overflow: "hidden",
           }}
         >
           {child}
@@ -1170,7 +1168,7 @@ export default function Version6() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-claw-red/[0.01] to-transparent" />
         <div className="max-w-5xl mx-auto px-5 relative z-10">
           <p className="text-[10px] font-sans uppercase tracking-widest text-claw-red mb-2 text-center">your team</p>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-center mb-3 font-sans">Meet Your Agents</h2>
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-center mb-3 font-sans">Your Personal Health Specialists</h2>
           <p className="text-claw-text-muted text-center mb-12 text-sm max-w-md mx-auto font-sans">
             10 specialists with independent reasoning. Each one watches a different dimension of your health.
           </p>
