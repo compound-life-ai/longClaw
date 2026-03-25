@@ -89,11 +89,11 @@ Spawn all selected agents in parallel.
 
 ## Step 4: Collect and respond
 
-Wait for all spawned agents to complete. Collect their responses and present them to the user as a unified answer:
+Wait for all spawned agents to complete. Present the specialist responses **verbatim** — do NOT rephrase, summarize, or strip the role tags.
 
-- If only 1 agent was spawned: present its response directly
-- If 2-3 agents were spawned: present each response as a separate section, preserving the agent's emoji prefix (e.g. `[Pulse Reader]`)
-- After the specialist responses, add a brief 1-sentence synthesis if the agents' advice needs to be reconciled or prioritized
+- Every response MUST keep the `[Role Emoji]` prefix (e.g. `[Pulse Reader 💓]`). This tells the user which specialist is speaking.
+- If 2-3 agents were spawned: present each response as a separate section.
+- Do NOT add your own commentary before or around the specialist responses. If the agents' advice needs to be reconciled, add a brief 1-sentence synthesis AFTER all specialist responses.
 
 ## Rules
 
