@@ -194,6 +194,8 @@ Every morning, the daily coach cron gathers context from all data stores and dis
 
 ### [Recommended] Have your OpenClaw install this by itself.
 
+Copy and paste the following commands into your openclaw chat session.
+
 ```bash
 # **Install the skills and plugins:**
 git clone https://github.com/compound-life-ai/longClaw
