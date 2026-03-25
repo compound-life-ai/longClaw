@@ -161,10 +161,13 @@ Tell your OpenClaw agent:
 3. Run `python3 scripts/install_bundle.py`.
 4. Run `python3 scripts/install_bundle.py --verify`.
 5. Confirm that `~/.openclaw/openclaw.json` includes the installed bundle `skills/` path inside `skills.load.extraDirs`.
-6. Tell the user to start a new OpenClaw session.
-7. Tell the user to verify that `/snap`, `/health`, `/news`, and `/insights` are available.
-8. If needed, configure cron templates from `cron/` with their Telegram DM chat id.
-9. Ask if they'd like to seed sample data: `python3 scripts/install_bundle.py --seed-data`.
+6. Ensure `~/.openclaw/openclaw.json` has subagent limits for the 10-agent daily coach:
+   agents.defaults.subagents.maxChildrenPerAgent = 10
+   agents.defaults.subagents.maxConcurrent = 10
+7. Tell the user to start a new OpenClaw session.
+8. Tell the user to verify that `/snap`, `/health`, `/news`, and `/insights` are available.
+9. If needed, configure cron templates from `cron/` with their Telegram DM chat id.
+10. Ask if they'd like to seed sample data: `python3 scripts/install_bundle.py --seed-data`.
 ```
 
 Start a **fresh OpenClaw session** after install — skills are snapshotted at session start.
@@ -211,21 +214,6 @@ Replace `__TELEGRAM_DM_CHAT_ID__` in the templates, then:
 openclaw cron add --from-file cron/health-brief.example.json
 openclaw cron add --from-file cron/news-digest.example.json
 openclaw cron add --from-file cron/daily-health-coach.example.json
-```
-
-For the 10-subagent daily coach, add to `~/.openclaw/openclaw.json`:
-
-```json5
-{
-  agents: {
-    defaults: {
-      subagents: {
-        maxChildrenPerAgent: 10,
-        maxConcurrent: 10,
-      },
-    },
-  },
-}
 ```
 
 ## Development

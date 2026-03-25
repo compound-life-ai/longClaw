@@ -86,17 +86,4 @@ After all 10 have announced, if `checkin_needed` is true, send one final message
 
 ## OpenClaw config requirements
 
-For 10 parallel subagents, ensure:
-
-```json5
-{
-  agents: {
-    defaults: {
-      subagents: {
-        maxChildrenPerAgent: 10,  // default is 5, need 10
-        maxConcurrent: 10,        // default is 8, bump to 10
-      },
-    },
-  },
-}
-```
+The install script (step 6) configures `agents.defaults.subagents.maxChildrenPerAgent` and `maxConcurrent` to 10 in `~/.openclaw/openclaw.json`. Without this, only 5 of the 10 specialists will spawn.
