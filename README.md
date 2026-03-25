@@ -192,12 +192,23 @@ Every morning, the daily coach cron gathers context from all data stores and dis
 
 ## Install / Uninstall
 
-### Install
+### [Recommended] Have your OpenClaw install this by itself.
 
+** Install the skills and plugins **
 ```bash
 git clone https://github.com/compound-life-ai/longClaw
 cd longClaw
 openclaw plugins install -l .
+```
+
+** Setup the daily cron jobs **
+
+Replace `__TELEGRAM_DM_CHAT_ID__` in the templates, then:
+
+```bash
+openclaw cron add --from-file cron/health-brief.example.json
+openclaw cron add --from-file cron/news-digest.example.json
+openclaw cron add --from-file cron/daily-health-coach.example.json
 ```
 
 Verify the plugin loaded correctly:
@@ -238,16 +249,6 @@ To also remove cron jobs:
 openclaw cron remove health-brief
 openclaw cron remove news-digest
 openclaw cron remove daily-health-coach
-```
-
-## Cron Setup
-
-Replace `__TELEGRAM_DM_CHAT_ID__` in the templates, then:
-
-```bash
-openclaw cron add --from-file cron/health-brief.example.json
-openclaw cron add --from-file cron/news-digest.example.json
-openclaw cron add --from-file cron/daily-health-coach.example.json
 ```
 
 ## Plugin & SDK
