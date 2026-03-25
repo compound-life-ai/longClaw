@@ -144,11 +144,42 @@ Every morning, the daily coach cron gathers context from all data stores and dis
 
 ![Daily Coach Subagent Dispatch Flow](docs/images/dispatch-flow-diagram.png)
 
-### Example Usecase
+### Showcases
 
+<details>
+<summary>🏥 Daily Coach — 10 specialists review your data every morning</summary>
 <p align="center">
-  <img src="docs/images/telegram-mockup.png" alt="Daily Coach Telegram Output" width="390" />
+  <img src="docs/images/telegram-mockup.png" alt="Daily Coach" width="390" />
 </p>
+</details>
+
+<details>
+<summary>🍚 Weekly Nutrition Review — macros, micros, and personalized food suggestions</summary>
+<p align="center">
+  <img src="docs/images/mockup-nutrition.png" alt="Nutrition Review" width="390" />
+</p>
+</details>
+
+<details>
+<summary>🔍 Pattern Detection — caffeine, sleep, and travel correlations</summary>
+<p align="center">
+  <img src="docs/images/mockup-patterns.png" alt="Pattern Detection" width="390" />
+</p>
+</details>
+
+<details>
+<summary>🧪 Blood Work Analysis — biomarker trends and optimization advice</summary>
+<p align="center">
+  <img src="docs/images/mockup-bloodwork.png" alt="Blood Work Analysis" width="390" />
+</p>
+</details>
+
+<details>
+<summary>🌙 Always On — late night chat, empathetic and human</summary>
+<p align="center">
+  <img src="docs/images/mockup-sleep.png" alt="Late Night Chat" width="390" />
+</p>
+</details>
 
 ## Install / Uninstall
 
