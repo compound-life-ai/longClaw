@@ -1,0 +1,18 @@
+{
+  "id": "compound-clawskill",
+  "name": "LongClaw",
+  "description": "Personal health companion with meal logging, Whoop integration, self-experiments, and daily coaching",
+  "version": "1.0.0",
+  "skills": [
+    "skills/snap",
+    "skills/health",
+    "skills/news",
+    "skills/insights",
+    "skills/daily-coach"
+  ],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}
