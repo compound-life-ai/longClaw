@@ -194,35 +194,28 @@ Every morning, the daily coach cron gathers context from all data stores and dis
 
 ### [Recommended] Have your OpenClaw install this by itself.
 
-** Install the skills and plugins **
 ```bash
+# **Install the skills and plugins:**
 git clone https://github.com/compound-life-ai/longClaw
 cd longClaw
 openclaw plugins install -l .
-```
 
-** Setup the daily cron jobs **
+# **Setup the daily cron jobs:**
 
-Replace `__TELEGRAM_DM_CHAT_ID__` in the templates, then:
+# Replace `__TELEGRAM_DM_CHAT_ID__` in the templates, then:
 
-```bash
 openclaw cron add --from-file cron/health-brief.example.json
 openclaw cron add --from-file cron/news-digest.example.json
 openclaw cron add --from-file cron/daily-health-coach.example.json
-```
 
-Verify the plugin loaded correctly:
+# Verify the plugin loaded correctly:
 
-```bash
 openclaw plugins doctor
 openclaw plugins inspect compound-clawskill
-```
 
-Start a **fresh OpenClaw session** after install — skills are snapshotted at session start.
+# Start a **fresh OpenClaw session** after install — skills are snapshotted at session start.
 
-For the 10-subagent daily coach, add to `~/.openclaw/openclaw.json`:
-
-```json5
+# For the 10-subagent daily coach, add to `~/.openclaw/openclaw.json`:
 {
   agents: {
     defaults: {
