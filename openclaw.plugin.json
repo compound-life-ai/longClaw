@@ -8,7 +8,8 @@
     "skills/health",
     "skills/news",
     "skills/insights",
-    "skills/daily-coach"
+    "skills/daily-coach",
+    "skills/health-qa"
   ],
   "configSchema": {
     "type": "object",

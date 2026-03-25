@@ -9,6 +9,7 @@ OpenClaw skill bundle for a personal health companion.
 - `/news` — curated health/longevity digest
 - `/insights` — structured self-experiments with gap-aware recommendations
 - `daily-coach` — cron-driven personalized daily coaching via 10 specialist subagents
+- `health-qa` — interactive health Q&A that routes questions to relevant specialist subagents
 
 All skills respond to natural language. Say "had salmon with rice for lunch" instead of `/snap`, or "how did I sleep?" instead of `/health`.
 
@@ -31,6 +32,7 @@ flowchart TB
         News["/news"]
         Insights["/insights"]
         Coach["daily-coach<br/>(cron 7:10am)"]
+        HealthQA["health-qa<br/>(interactive)"]
     end
 
     subgraph Tools["Tool Layer (index.ts)"]
@@ -84,6 +86,10 @@ flowchart TB
     EX --> Checkins
 
     Coach --> TCoach --> DHC
+    HealthQA --> TNutrition
+    HealthQA --> THealth
+    HealthQA --> TExperiments
+    HealthQA --> TNews
     DHC --> Meals
     DHC --> Profile
     DHC --> Experiments

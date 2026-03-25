@@ -83,6 +83,9 @@ The agent should understand user intent from natural conversation and route to t
 - "why have I been sleeping poorly?" → route to `insights` (pattern discovery)
 - "any longevity news today?" → route to `news` (digest)
 - "how's my nutrition looking this week?" → route to `snap` (weekly summary)
+- "how's my HRV?" → route to `health-qa` (specialist Q&A)
+- "should I train today?" → route to `health-qa` (specialist Q&A)
+- "am I eating enough protein?" → route to `health-qa` (specialist Q&A)
 
 Slash commands (`/snap`, `/health`, `/news`, `/insights`) are supported as legacy shortcuts, but the primary interaction mode is natural language.
 
@@ -136,3 +139,4 @@ If the user declines, proceed normally — the skills will start with an empty d
 - `skills/news/SKILL.md` for curated digest behavior
 - `skills/insights/SKILL.md` for experiment creation, check-ins, and analysis
 - `skills/daily-coach/SKILL.md` for the scheduled coaching workflow
+- `skills/health-qa/SKILL.md` for interactive health Q&A via specialist agents
