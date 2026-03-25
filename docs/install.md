@@ -137,7 +137,7 @@ If you prefer manual extraction, extract `apple_health_export/export.xml` from t
 ## Real-World Smoke Test
 
 1. Start a fresh OpenClaw session.
-2. Run `/news`.
+2. Run `/news` and optionally `/news sleep` to verify personalized topic overrides.
 3. Test `/snap` with a food photo.
 4. Run `/health`.
 5. Run `/insights`.

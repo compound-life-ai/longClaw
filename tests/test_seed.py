@@ -90,6 +90,17 @@ class SeedFixtureValidityTests(unittest.TestCase):
             self.assertIn("url", item)
             self.assertIn("score", item)
 
+    def test_news_topic_history_json_has_expected_shape(self) -> None:
+        data = json.loads((SEED_DIR / "news" / "topic_history.json").read_text(encoding="utf-8"))
+        self.assertIsInstance(data, list)
+        self.assertGreater(len(data), 0)
+        for item in data:
+            self.assertIn("topic", item)
+            self.assertIn("first_seen_at", item)
+            self.assertIn("last_seen_at", item)
+            self.assertIn("count", item)
+            self.assertIn("source", item)
+
 
 class SeedIngestionTests(unittest.TestCase):
     def setUp(self) -> None:

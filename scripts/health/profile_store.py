@@ -22,7 +22,7 @@ def default_profile() -> dict[str, Any]:
         "updated_at": None,
         "goals": [],
         "constraints": [],
-        "preferences": {},
+        "preferences": {"news_topics": []},
         "questionnaire": {},
         "apple_health": {},
         "imports": [],
@@ -37,6 +37,9 @@ def merge_questionnaire(profile: dict[str, Any], answers: dict[str, Any]) -> dic
         if key in answers and isinstance(answers[key], dict):
             profile.setdefault(key, {})
             profile[key].update(answers[key])
+    preferences = profile.setdefault("preferences", {})
+    if not isinstance(preferences.get("news_topics"), list):
+        preferences["news_topics"] = []
     for key in ("sleep_notes", "training_notes", "diet_notes"):
         if key in answers:
             profile["questionnaire"][key] = answers[key]

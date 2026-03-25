@@ -11,6 +11,7 @@ Fixture files that mirror `longevityOS-data/` for development and testing.
 | `insights/experiments.json` | 1 active + 1 completed experiment |
 | `insights/checkins.json` | 9 check-ins across both experiments |
 | `news/cache.json` | 6 sample news items from the 3 configured sources |
+| `news/topic_history.json` | prior normalized news interests for personalized `/news` ranking |
 
 ## Usage
 
@@ -28,4 +29,5 @@ rm longevityOS-data/health/profile.json
 rm longevityOS-data/insights/experiments.json
 rm longevityOS-data/insights/checkins.json
 rm longevityOS-data/news/cache.json
+rm longevityOS-data/news/topic_history.json
 ```

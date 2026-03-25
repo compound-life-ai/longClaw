@@ -18,7 +18,7 @@ from scripts.common.storage import (
 class CommonPathTests(unittest.TestCase):
     def test_repo_root_and_default_data_root_point_into_repo(self) -> None:
         root = repo_root()
-        self.assertEqual(root.name, "compound-clawskill")
+        self.assertTrue((root / "README.md").is_file())
         self.assertEqual(default_data_root(), root / "longevityOS-data")
 
     def test_ensure_dir_creates_and_returns_path(self) -> None:

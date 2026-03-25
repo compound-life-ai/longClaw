@@ -8,7 +8,7 @@ It currently provides:
 
 - `/snap` for meal logging from food photos or meal text, using ingredient/portion inference plus deterministic nutrition enrichment
 - `/health` for Apple Health XML import and structured health profile updates
-- `/news` for a curated health/longevity digest
+- `/news` for a personalized health/longevity digest with hybrid search backfill
 - `/insights` for structured self-experiments and gap-aware recommendations
 - a cron-driven daily health coach that combines local health data, experiment context, and relevant curated news into personalized daily guidance
 
@@ -21,7 +21,7 @@ The bundle is designed for OpenClaw + Telegram and installs as a managed bundle 
 - `/snap` turns food photos or meal descriptions into structured meal logs. The agent identifies likely ingredients and portions, asks for confirmation when confidence is low, and records an ingredient-level meal entry instead of a vague free-text note.
 - Nutrition logging is backed by deterministic enrichment code rather than fully model-invented numbers. Ingredient names are normalized to canonical forms, nutrient values are filled from a local catalog of 50+ ingredients with full micronutrient profiles, and the stored rows record where those values came from. A weekly summary aggregates 7-day intake against RDA reference values and highlights gaps and strengths.
 - `/health` builds a reusable health profile from Apple Health exports and structured questionnaire-style inputs. That profile becomes shared context for future recommendations instead of forcing the user to restate the same baseline every time.
-- `/news` produces a curated digest focused on health, longevity, nutrition, sleep, exercise, and related research, using predefined sources instead of generic open-ended news search.
+- `/news` produces a personalized digest focused on health, longevity, nutrition, sleep, exercise, and related research. It re-ranks curated sources against profile and experiment context, then uses targeted live search only when the local digest is stale or topic coverage is weak.
 - `/insights` is designed for structured self-experimentation. It tracks hypotheses, interventions, check-ins, and follow-up analysis, and it is intentionally allowed to say “not enough data yet” instead of pretending to know the answer.
 - Morning automation is supported through separate cron-driven health brief, news digest, and daily coach messages, so the system can proactively summarize, curate, and coach instead of waiting for the user to ask each time.
 - Everything is local-first. Runtime state lives under `longevityOS-data/`, which keeps meal logs, health profile data, experiment state, and cached news separate from unrelated OpenClaw workspace data.
@@ -399,7 +399,8 @@ Top-level shape:
   "goals": ["better sleep"],
   "constraints": ["no late caffeine"],
   "preferences": {
-    "language": "bilingual"
+    "language": "bilingual",
+    "news_topics": ["sleep", "protein", "metabolic health"]
   },
   "questionnaire": {
     "sleep_notes": "wake up once",
@@ -549,6 +550,20 @@ Shape:
     }
   ]
 }
+```
+
+`/news` also stores structured topic memory at `longevityOS-data/news/topic_history.json`:
+
+```json
+[
+  {
+    "topic": "sleep",
+    "first_seen_at": "2026-03-01T05:22:15+00:00",
+    "last_seen_at": "2026-03-19T05:22:15+00:00",
+    "count": 3,
+    "source": "user-query"
+  }
+]
 ```
 
 [Back to top](#top)

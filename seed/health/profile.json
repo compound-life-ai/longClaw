@@ -11,7 +11,12 @@
   ],
   "preferences": {
     "language": "en",
-    "units": "metric"
+    "units": "metric",
+    "news_topics": [
+      "sleep",
+      "protein",
+      "metabolic health"
+    ]
   },
   "questionnaire": {
     "sleep_notes": "Average 6.5h, wake once around 3am most nights. Better on days with morning exercise.",
@@ -40,7 +45,13 @@
     "sleep": {
       "daily_sleep_hours_avg": 6.48,
       "sleep_days": 950,
-      "daily_sleep_hours_values": [6.1, 5.8, 7.2, 6.9, 6.5]
+      "daily_sleep_hours_values": [
+        6.1,
+        5.8,
+        7.2,
+        6.9,
+        6.5
+      ]
     },
     "heart": {
       "resting_heart_rate_avg": 58.4,

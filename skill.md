@@ -52,7 +52,7 @@ Bundle map:
 
 - `snap`: meal logging from food photos or meal text, with ingredient-level decomposition and deterministic nutrition enrichment
 - `health`: Apple Health XML import plus structured questionnaire-style health profile updates
-- `news`: curated daily digest for health, longevity, nutrition, sleep, exercise, and aging topics
+- `news`: personalized daily digest for health, longevity, nutrition, sleep, exercise, and aging topics, with curated feeds plus targeted live search when needed
 - `insights`: structured self-experiments, check-ins, analysis, and gap-aware recommendations
 - `daily-coach`: cron-oriented daily health coaching message built from nutrition, health, experiment, and curated news context
 
