@@ -1,6 +1,95 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 
+const INSTALL_PROMPT = `Clone https://github.com/compound-life-ai/longClaw and run python3 scripts/install_bundle.py to install. Then verify with python3 scripts/install_bundle.py --verify.`;
+
+const InstallModalContext = React.createContext<{ open: () => void }>({ open: () => {} });
+
+function InstallModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) setCopied(false);
+  }, [isOpen]);
+
+  if (!isOpen) return null;
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(INSTALL_PROMPT);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[999] flex items-center justify-center" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div
+        className="relative bg-claw-bg border border-claw-border rounded-2xl shadow-2xl max-w-lg w-full mx-4 p-6 font-sans"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close */}
+        <button onClick={onClose} className="absolute top-4 right-4 text-claw-text-dim hover:text-claw-text transition">
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+
+        {/* Header */}
+        <h3 className="text-lg font-bold tracking-tight mb-1">Install LongevityOS</h3>
+        <p className="text-sm text-claw-text-muted mb-5">Copy this prompt and paste it into your OpenClaw or agent session.</p>
+
+        {/* Prompt block */}
+        <div className="relative group">
+          <pre className="bg-claw-card border border-claw-border rounded-xl p-4 pr-12 text-[13px] text-claw-text leading-relaxed whitespace-pre-wrap break-words select-all">
+            {INSTALL_PROMPT}
+          </pre>
+          <button
+            onClick={handleCopy}
+            className="absolute top-3 right-3 p-1.5 rounded-lg bg-claw-bg/80 border border-claw-border text-claw-text-muted hover:text-claw-text hover:border-claw-text-muted transition"
+            title="Copy to clipboard"
+          >
+            {copied ? (
+              <svg className="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+            ) : (
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+            )}
+          </button>
+        </div>
+
+        {/* Big copy button */}
+        <button
+          onClick={handleCopy}
+          className="mt-4 w-full py-2.5 rounded-full bg-claw-red text-white text-sm font-semibold hover:bg-claw-coral transition flex items-center justify-center gap-2"
+        >
+          {copied ? "Copied!" : "Copy Prompt"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function InstallButton({ size = "lg" }: { size?: "sm" | "lg" }) {
+  const { open } = React.useContext(InstallModalContext);
+
+  if (size === "sm") {
+    return (
+      <button
+        onClick={open}
+        className="px-4 py-1.5 rounded-full bg-claw-red text-white text-[12px] font-semibold hover:bg-claw-coral transition font-sans"
+      >
+        Install Now
+      </button>
+    );
+  }
+
+  return (
+    <button
+      onClick={open}
+      className="px-8 py-3 rounded-full bg-claw-red text-white text-sm font-semibold hover:bg-claw-coral transition hover:-translate-y-0.5 shadow-lg shadow-claw-red/[0.15] font-sans"
+    >
+      Install Now
+    </button>
+  );
+}
+
 /* ─────────────────────────────────────────────
    HELPER COMPONENTS
    ───────────────────────────────────────────── */
@@ -781,6 +870,8 @@ export default function Version6() {
   const [featuresRef, featuresInView] = useInView();
   const [thinksRef, thinksInView] = useInView();
   const [evidenceRef, evidenceInView] = useInView();
+  const [installModalOpen, setInstallModalOpen] = useState(false);
+  const installModalCtx = React.useMemo(() => ({ open: () => setInstallModalOpen(true) }), []);
 
   const steps = [
     { label: "INGEST", desc: "Data streams in \u2014 sleep stages, heart rate, HRV, meals, supplements." },
@@ -791,6 +882,8 @@ export default function Version6() {
   ];
 
   return (
+    <InstallModalContext.Provider value={installModalCtx}>
+    <InstallModal isOpen={installModalOpen} onClose={() => setInstallModalOpen(false)} />
     <main className="flex flex-col min-h-screen bg-claw-bg text-claw-text relative overflow-hidden">
       {/* ── NAV ── */}
       <nav className="sticky top-0 z-50 border-b border-claw-border bg-claw-bg/80 backdrop-blur-xl">
@@ -811,9 +904,7 @@ export default function Version6() {
             <a href="#features" className="text-[12px] text-claw-text-muted hover:text-claw-text transition hidden md:block font-sans">Features</a>
             <a href="#showcase" className="text-[12px] text-claw-text-muted hover:text-claw-text transition hidden md:block font-sans">See It In Action</a>
             <a href="#thinks" className="text-[12px] text-claw-text-muted hover:text-claw-text transition hidden md:block font-sans">How It Thinks</a>
-            <button className="px-4 py-1.5 rounded-full bg-claw-red text-white text-[12px] font-semibold hover:bg-claw-coral transition font-sans">
-              Join Waitlist
-            </button>
+            <InstallButton size="sm" />
           </div>
         </div>
       </nav>
@@ -859,10 +950,8 @@ export default function Version6() {
           </div>
 
           {/* CTAs */}
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <button className="px-8 py-3 rounded-full bg-claw-red text-white text-sm font-semibold hover:bg-claw-coral transition hover:-translate-y-0.5 shadow-lg shadow-claw-red/[0.15] font-sans">
-              Join the Waitlist
-            </button>
+          <div className="flex flex-col items-center gap-4">
+            <InstallButton />
             <div className="flex items-center gap-2">
               <span className="text-[11px] text-claw-text-dim font-sans">Personal Health Agent Team</span>
               <span className="text-claw-text-dim">&middot;</span>
@@ -1001,9 +1090,7 @@ export default function Version6() {
             LongevityOS is the intelligence layer of Compound 150 &mdash; The Longevity Fellowship.
           </p>
           <div className="flex justify-center">
-            <button className="px-8 py-3 rounded-full bg-claw-red text-white text-sm font-semibold hover:bg-claw-coral transition hover:-translate-y-0.5 shadow-lg shadow-claw-red/[0.15] font-sans">
-              Join the Waitlist
-            </button>
+            <InstallButton />
           </div>
         </div>
       </section>
@@ -1029,5 +1116,6 @@ export default function Version6() {
         </div>
       </footer>
     </main>
+    </InstallModalContext.Provider>
   );
 }
