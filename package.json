@@ -1,5 +1,5 @@
 {
-  "name": "compound-longClaw",
+  "name": "compound-clawskill",
   "version": "1.0.0",
   "description": "OpenClaw plugin: personal health companion with meal logging, Whoop integration, self-experiments, and daily coaching",
   "type": "module",
@@ -7,7 +7,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/compound-life-ai/longClaw"
+    "url": "https://github.com/compound-life-ai/Turri"
+  },
+  "dependencies": {
+    "@sinclair/typebox": "0.34.48"
   },
   "devDependencies": {
     "openclaw": "*"

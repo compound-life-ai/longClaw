@@ -3,8 +3,9 @@
 This bundle is an OpenClaw native plugin. Install it by linking the cloned repository:
 
 ```bash
-git clone https://github.com/compound-life-ai/longClaw
-cd longClaw
+git clone https://github.com/compound-life-ai/Turri
+cd Turri
+npm install
 openclaw plugins install -l .
 ```
 
@@ -14,6 +15,8 @@ openclaw plugins install -l .
 openclaw plugins doctor
 openclaw plugins inspect compound-clawskill
 ```
+
+If `openclaw plugins doctor` warns that `plugins.allow is empty`, that is a separate trust warning for non-bundled plugins. It does not indicate an installation failure.
 
 Verify OpenClaw sees the skills:
 
