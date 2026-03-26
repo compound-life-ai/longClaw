@@ -1,10 +1,10 @@
 ---
 name: compound-clawskill
-description: Meta-skill for the Longevity OS bundle that routes natural language health conversations to the right capability — nutrition logging, health profile, pattern discovery, experiments, news, or daily coaching.
+description: Meta-skill for the Turri bundle that routes natural language health conversations to the right capability — nutrition logging, health profile, pattern discovery, experiments, news, or daily coaching.
 user-invocable: true
 ---
 
-# Compound Clawskill
+# Turri
 
 Use this skill when:
 
@@ -120,13 +120,13 @@ If the user declines, proceed normally — the skills will start with an empty d
 
 ## Repository links
 
-- repo root: `https://github.com/compound-life-ai/longClaw/tree/main`
-- skills directory: `https://github.com/compound-life-ai/longClaw/tree/main/skills`
-- install guide entry point: `https://github.com/compound-life-ai/longClaw/blob/main/README.md`
+- repo root: `https://github.com/compound-life-ai/Turri/tree/main`
+- skills directory: `https://github.com/compound-life-ai/Turri/tree/main/skills`
+- install guide entry point: `https://github.com/compound-life-ai/Turri/blob/main/README.md`
 
 ## Install summary
 
-1. Clone `https://github.com/compound-life-ai/longClaw`.
+1. Clone `https://github.com/compound-life-ai/Turri`.
 2. Change into the repository.
 3. Run `openclaw plugins install -l .`.
 4. Run `openclaw plugins doctor` and `openclaw plugins inspect compound-clawskill` to verify.
