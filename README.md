@@ -243,6 +243,7 @@ Copy and paste the following commands into your OpenClaw chat session.
 # **Install the skills and plugins:**
 git clone https://github.com/compound-life-ai/Turri
 cd Turri
+npm install
 openclaw plugins install -l .
 
 # **Setup the daily cron jobs (replace <CHAT_ID> with your Telegram DM chat ID):**
@@ -324,6 +325,9 @@ Skills in `skills/` provide agent-facing guidance (when to use each tool, how to
 # Run Python tests
 python3 -m unittest discover -s tests -v
 
+# Install Node dependencies before linking the plugin
+npm install
+
 # Link plugin for local development
 openclaw plugins install -l .
 openclaw gateway restart
@@ -334,6 +338,8 @@ openclaw plugins inspect compound-clawskill
 # Diagnostics
 openclaw plugins doctor
 ```
+
+If `openclaw plugins doctor` warns that `plugins.allow is empty`, that is a separate trust warning for non-bundled plugins. It does not mean the Turri install itself failed.
 
 Tests use real (sanitized) Whoop API response fixtures from `tests/fixtures/whoop/`.
 
