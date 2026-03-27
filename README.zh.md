@@ -165,7 +165,7 @@ sequenceDiagram
 
 每天早上，`daily-coach` 的 cron 会汇总所有数据源的上下文，并并行分发给 10 个 specialist subagent。每个 subagent 完成后都会单独发出一条 Telegram 气泡消息。
 
-### 御医阁：十官
+### 太医院：十官
 
 <table>
 <tr>
