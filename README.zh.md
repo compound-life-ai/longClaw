@@ -6,9 +6,9 @@
 
 <h1 align="center">Turri</h1>
 
-<p align="center"><strong>专属健康Agent：10位专家，全为您服务</strong></p>
+<p align="center"><strong>个人健康多智能体系统：10位AI专家，专属服务   </strong></p>
 <p align="center">Turri是你的「专属太医院」，十位AI御医各司其职，实时「专家会诊」交叉分析你的生理指标、饮食营养、睡眠节律、血液标志物、运动负荷等。发现隐藏关联和趋势、提出可执行建议、校验科学证据、并设计属于你的自我实验。 </p>
-<p align="center">Compound 出品的个人健康 Agent · 兼容 Claude Code 与 OpenClaw</p>
+<p align="center">个人长寿优化智能体 · 兼容 Claude Code 与 OpenClaw · Compound 出品</p>
 
 <p align="center">
   <a href="README.md">English README</a> ·
