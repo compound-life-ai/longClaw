@@ -19,6 +19,21 @@
   <a href="#reference">Reference</a>
 </p>
 
+## Why This Exists
+
+Most health apps are **trackers**. They record what you tell them and show you charts. They don't think. They don't connect the dots between your sleep, your diet, and your lab results. They don't read papers to figure out why your CRP is trending up.
+
+Turri is different. It's an **agentic system**: a team of 10 specialized AI physicians that actively work on your health data.
+
+| What exists today | What Turri does |
+|---|---|
+| Log meals manually | Logs meals from photos or text, estimates nutrients via deterministic catalog + USDA API, learns your recipes |
+| See a weight chart | Detects that your weight drops faster on weeks with >150g protein/day AND >7h sleep |
+| Track supplements in a spreadsheet | Flags interactions (NIH ODS), tracks compliance, aligns with active trials |
+| Get generic health tips from AI chat | Searches PubMed & bioRxiv for evidence specific to YOUR data patterns |
+| Read a health report and forget about it | Builds a persistent health profile that makes every recommendation more precise over time |
+| Wonder if that thing you saw on Instagram actually works | Designs a controlled self-experiment, tracks execution, runs causal analysis — and says "not enough data" when there isn't |
+
 <a id="overview"></a>
 
 ## Overview
