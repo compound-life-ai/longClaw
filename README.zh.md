@@ -178,8 +178,8 @@ sequenceDiagram
 <tr>
 <td align="center" width="20%"><img src="docs/characters/bencao.svg" alt="本草师" width="80"/><br/><b>本草师</b><br/><sub>补剂：微量营养素缺口分析</sub></td>
 <td align="center" width="20%"><img src="docs/characters/shixiao.svg" alt="试效官" width="80"/><br/><b>试效官</b><br/><sub>实验：执行情况追踪</sub></td>
-<td align="center" width="20%"><img src="docs/characters/yuanpan.svg" alt="院判官" width="80"/><br/><b>院判官</b><br/><sub>试验设计：N-of-1 候选方案</sub></td>
-<td align="center" width="20%"><img src="docs/characters/yizheng.svg" alt="医政官" width="80"/><br/><b>医政官</b><br/><sub>安全审核：过度训练与异常下降信号</sub></td>
+<td align="center" width="20%"><img src="docs/characters/yuanpan.svg" alt="院判" width="80"/><br/><b>院判官</b><br/><sub>试验设计：N-of-1 候选方案</sub></td>
+<td align="center" width="20%"><img src="docs/characters/yizheng.svg" alt="医正" width="80"/><br/><b>医政官</b><br/><sub>安全审核：过度训练与异常下降信号</sub></td>
 <td align="center" width="20%"><img src="docs/characters/baogao.svg" alt="报告官" width="80"/><br/><b>报告官</b><br/><sub>报告：相关研究与文献</sub></td>
 </tr>
 </table>
