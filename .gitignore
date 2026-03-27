@@ -11,3 +11,6 @@ longevityOS-data/health/*.json
 longevityOS-data/insights/*.json
 longevityOS-data/news/*.json
 !longevityOS-data/**/.gitkeep
+
+# MCP server build output
+mcp-server/dist/
