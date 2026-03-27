@@ -6,8 +6,8 @@
 
 <h1 align="center">Turri</h1>
 
-<p align="center"><strong>A personal agentic longevity system.</strong></p>
-<p align="center">Cross-analyzes your sleep, nutrition, biomarkers, activities, and more. Finds hidden patterns. Proposes actionable insights. Validates scientific evidence. Designs self-experiments.</p>
+<p align="center"><strong>YOUR HEALTH FINALLY HAS AN EXPERT TEAM.</strong></p>
+<p align="center">Turri brings 10 specialist agents to you: they cross-analyze your sleep, meals, biomarkers, and activities, find hidden patterns, and turn scientific evidence into actionable advice.</p>
 <p align="center">Personal Health Agent by Compound · Works with Claude Code &amp; OpenClaw</p>
 
 <p align="center">
