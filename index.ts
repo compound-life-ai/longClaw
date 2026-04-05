@@ -286,6 +286,52 @@ export default definePluginEntry({
       });
     });
 
+    // ── learnings ─────────────────────────────────────────────
+    api.registerTool({
+      name: "learnings",
+      description:
+        "Search past debugging learnings, log new discoveries, or read trace logs for a specific run. Use this to check if an issue has been seen before, to record what you learned after resolving an issue, or to inspect the full trace pipeline for a failed tool call.",
+      parameters: Type.Object({
+        command: Type.Union([
+          Type.Literal("search"),
+          Type.Literal("log"),
+          Type.Literal("read_trace"),
+        ]),
+        input_json: Type.Optional(
+          Type.Object({}, { additionalProperties: true, description: "Learning payload for 'log': {type, key, insight, confidence, source, files?, skill?}" }),
+        ),
+        type_filter: Type.Optional(
+          Type.String({ description: "Filter by type: pattern, pitfall, preference, architecture, tool, operational" }),
+        ),
+        query: Type.Optional(Type.String({ description: "Keyword search across key, insight, files" })),
+        limit: Type.Optional(Type.Number({ description: "Max results for search", default: 10 })),
+        run_id: Type.Optional(Type.String({ description: "Run ID for read_trace command" })),
+      }),
+      async execute(_id, params) {
+        const env = debugEnv(_id);
+        const label = `${env.LONGCLAW_RUN_ID || "unknown"}-${_id}`;
+        const script = join(root, "scripts/common/learnings.py");
+
+        let stdout: string;
+        if (params.command === "search") {
+          const args = [script, "--data-root", dataRoot, "search"];
+          if (params.type_filter) args.push("--type", params.type_filter);
+          if (params.query) args.push("--query", params.query);
+          if (params.limit != null) args.push("--limit", String(params.limit));
+          stdout = await run(py, args, root, env);
+        } else if (params.command === "log") {
+          stdout = await withTempJson(
+            params.input_json,
+            (path) => run(py, [script, "--data-root", dataRoot, "log", "--input-json", path], root, env),
+            label,
+          );
+        } else {
+          stdout = await run(py, [script, "--data-root", dataRoot, "read-trace", "--run-id", params.run_id!], root, env);
+        }
+        return { content: [{ type: "text", text: stdout }] };
+      },
+    });
+
     // ── nutrition ──────────────────────────────────────────────
     api.registerTool({
       name: "nutrition",
