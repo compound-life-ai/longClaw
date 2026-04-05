@@ -19,7 +19,7 @@ class CommonPathTests(unittest.TestCase):
     def test_repo_root_and_default_data_root_point_into_repo(self) -> None:
         root = repo_root()
         self.assertTrue((root / "README.md").is_file())
-        self.assertTrue((root / "skills").is_dir())
+        self.assertTrue((root / "snap").is_dir())
         self.assertEqual(default_data_root(), root / "longevityOS-data")
 
     def test_ensure_dir_creates_and_returns_path(self) -> None:

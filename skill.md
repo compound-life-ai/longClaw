@@ -11,7 +11,7 @@ Use this skill when:
 - the user wants an overview of everything available in this repository
 - the user wants to know how to install the bundled skills in this directory
 - the user sends a health-related message that could be handled by one of the sub-skills
-- the user wants links to the repository or the bundled `skills/` directory
+- the user wants links to the repository or the bundled skill directories
 - the user asks "what can you do?", "help", "get started", or anything that suggests they want orientation
 
 ## Welcome and orientation
@@ -265,9 +265,9 @@ that would save 5+ minutes in a future session.
 - `README.md` for installation, verification, cron setup, and bundle-level architecture
 - `docs/install.md` for the direct install workflow
 - `docs/observability.md` for the full observability guide, log layer details, and triangulation workflows
-- `skills/snap/SKILL.md` for meal logging behavior and payload shape
-- `skills/health/SKILL.md` for Whoop import and questionnaire flows
-- `skills/news/SKILL.md` for curated digest behavior
-- `skills/insights/SKILL.md` for experiment creation, check-ins, and analysis
-- `skills/daily-coach/SKILL.md` for the scheduled coaching workflow
-- `skills/health-qa/SKILL.md` for interactive health Q&A via specialist agents
+- `snap/SKILL.md` for meal logging behavior and payload shape
+- `health/SKILL.md` for Whoop import and questionnaire flows
+- `news/SKILL.md` for curated digest behavior
+- `insights/SKILL.md` for experiment creation, check-ins, and analysis
+- `daily-coach/SKILL.md` for the scheduled coaching workflow
+- `health-qa/SKILL.md` for interactive health Q&A via specialist agents
