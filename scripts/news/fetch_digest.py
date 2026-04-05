@@ -15,6 +15,7 @@ if __package__ in (None, ""):
 
 from scripts.common.paths import default_data_root
 from scripts.common.storage import load_json, write_json
+from scripts.common.debug_log import log_event
 
 
 SOURCES = [
@@ -132,8 +133,12 @@ def fetch_digest(data_root: Path, limit: int) -> dict[str, Any]:
             xml_bytes = fetch_feed(source["feed"])
             parsed = parse_feed(xml_bytes, source["name"])
             all_items.extend(parsed)
+            log_event("fetch_digest", "feed_fetch", data_root=data_root,
+                      source=source["name"], status="ok", items=len(parsed))
         except Exception as exc:  # pragma: no cover - exercised in manual runs
             errors.append({"source": source["name"], "error": str(exc)})
+            log_event("fetch_digest", "feed_fetch", data_root=data_root,
+                      source=source["name"], status="error", error=str(exc))
 
     deduped = dedupe_items(all_items)
     scored = []
@@ -147,6 +152,9 @@ def fetch_digest(data_root: Path, limit: int) -> dict[str, Any]:
         key=lambda item: (int(item["score"]), item.get("published_at", ""), item["title"]),
         reverse=True,
     )
+
+    log_event("fetch_digest", "ranked", data_root=data_root,
+              total_items=len(deduped), returned=min(limit, len(ranked)))
 
     payload = {
         "fetched_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),

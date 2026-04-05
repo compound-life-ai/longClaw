@@ -20,6 +20,9 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.append(str(Path(__file__).resolve().parents[2]))
 
+from scripts.common.debug_log import log_event
+from scripts.common.paths import default_data_root
+
 BASE_URL = "https://api.prod.whoop.com/developer/v2"
 TOKEN_URL = "https://api.prod.whoop.com/oauth/oauth2/token"
 CLIENT_ID = "00872074-8e10-4d82-80d1-fb793f493dbb"
@@ -89,25 +92,34 @@ def refresh_access_token(refresh_token: str) -> dict[str, Any]:
         return json.loads(resp.read().decode())
 
 
-def ensure_valid_token(token_path: Path) -> str:
+def ensure_valid_token(token_path: Path, data_root: Path) -> str:
     """Return a working access token, refreshing if needed."""
     tokens = load_tokens(token_path)
     access_token = tokens["access_token"]
     # Try a lightweight call to check if the token works
     try:
         _request(f"{BASE_URL}/user/profile/basic", access_token)
+        log_event("import_whoop", "token_check", data_root=data_root, status="valid")
         return access_token
     except urllib.error.HTTPError as exc:
         if exc.code != 401:
             raise
+    log_event("import_whoop", "token_check", data_root=data_root, status="expired")
     # Token expired — refresh
-    new_tokens = refresh_access_token(tokens["refresh_token"])
+    try:
+        new_tokens = refresh_access_token(tokens["refresh_token"])
+    except Exception as refresh_err:
+        log_event("import_whoop", "token_refresh", data_root=data_root,
+                  status="failed", error=str(refresh_err))
+        raise
     updated = {
         "access_token": new_tokens["access_token"],
         "refresh_token": new_tokens.get("refresh_token", tokens["refresh_token"]),
         "exported_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
     }
     token_path.write_text(json.dumps(updated, indent=2, ensure_ascii=False), encoding="utf-8")
+    log_event("import_whoop", "token_refresh", data_root=data_root,
+              status="ok", tokens_saved=True)
     return updated["access_token"]
 
 
@@ -265,16 +277,31 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    data_root = default_data_root()
+
     if args.fixture_dir:
         summary = build_summary_from_fixtures(args.fixture_dir)
     elif args.token_file:
-        access_token = ensure_valid_token(args.token_file)
-        recovery = fetch_collection("/recovery", access_token)
-        sleep = fetch_collection("/activity/sleep", access_token)
-        cycles = fetch_collection("/cycle", access_token)
-        workouts = fetch_collection("/activity/workout", access_token)
+        access_token = ensure_valid_token(args.token_file, data_root)
+        endpoints = [
+            ("/recovery", "recovery"),
+            ("/activity/sleep", "sleep"),
+            ("/cycle", "cycles"),
+            ("/activity/workout", "workouts"),
+        ]
+        fetched: dict[str, list] = {}
+        for path, label in endpoints:
+            records = fetch_collection(path, access_token)
+            fetched[label] = records
+            log_event("import_whoop", "api_fetch", data_root=data_root,
+                      endpoint=path, records=len(records))
         body = fetch_single("/user/measurement/body", access_token)
-        summary = build_summary(recovery, sleep, cycles, workouts, body)
+        log_event("import_whoop", "api_fetch", data_root=data_root,
+                  endpoint="/user/measurement/body", records=1)
+        summary = build_summary(
+            fetched["recovery"], fetched["sleep"],
+            fetched["cycles"], fetched["workouts"], body,
+        )
     else:
         parser.error("one of --token-file or --fixture-dir is required")
 
