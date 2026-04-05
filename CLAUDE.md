@@ -72,4 +72,8 @@ Tests are in `tests/` using Python's `unittest`. Whoop API fixtures live in `tes
 
 ### Temp file pattern in index.ts
 
-Tools that pass JSON payloads to Python scripts use `withTempJson()` — writes params to a temp file, passes the path via `--input-json`, and cleans up after. This avoids shell escaping issues with complex JSON.
+Tools that pass JSON payloads to Python scripts use `withTempJson()` — writes params to a temp file, passes the path via `--input-json`, and cleans up after. This avoids shell escaping issues with complex JSON. On failure, the temp file is preserved as evidence in `longevityOS-data/debug/artifacts/`.
+
+### Observability
+
+All tool calls are logged to `longevityOS-data/debug/trace.jsonl` via OpenClaw plugin hooks registered in `index.ts`. The system tracks five layers: LLM output, SDK-delivered params (with auto-diff), execution result (with streak detection), script-level I/O, and preserved artifacts on failure. See `docs/observability.md` for the full guide including triangulation workflows and worked examples.

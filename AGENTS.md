@@ -15,5 +15,8 @@ This repo uses Python’s `unittest`; name new files `test_<domain>.py` and keep
 ## Commit & Pull Request Guidelines
 Recent history favors short, imperative commits, often in Conventional Commit style such as `docs: add section to README` or `chore: update .gitignore`. Keep commits scoped to one concern. PRs should summarize the affected tool or script path, list the test command(s) you ran, and link the related issue when available. Include screenshots only when documentation images or user-facing output examples change.
 
+## Observability & Debugging
+All tool calls are traced to `longevityOS-data/debug/trace.jsonl` via OpenClaw plugin hooks in `index.ts`. Layers: `llm_output` (raw LLM tool calls), `before_tool` (SDK-delivered params + cross-layer diff), `after_tool` (result + streak detection), `script_io` (Python-level events from `estimate_and_log.py`, `import_whoop.py`, `fetch_digest.py`), `artifact` (preserved temp files on failure). Session bookends (`session_start`/`session_end`) provide per-session summaries. Python scripts receive correlation IDs via `LONGCLAW_RUN_ID`, `LONGCLAW_SESSION_ID`, `LONGCLAW_TOOL_CALL_ID` env vars. See `docs/observability.md` for triangulation workflows and file/function index.
+
 ## Security & Data Handling
 Do not commit `longevityOS-data/`, OAuth tokens, health exports, or other personal data. Treat `seed/` and fixtures as sanitized examples only. When editing Whoop or coaching flows, preserve the current pattern of local-only storage and inspectable script output.
