@@ -146,7 +146,7 @@ Key fields:
 
 ### Layer 2: script_io
 
-Logged by Python scripts via `scripts/common/debug_log.py`. Only the
+Logged by Python scripts via `bin/common/debug_log.py`. Only the
 three scripts with blind spots are instrumented:
 
 | Script | Events logged | Why instrumented |
@@ -340,13 +340,13 @@ grep '"ScienceDaily"' trace.jsonl | grep '"error"' | wc -l
 | Hook: `after_tool_call` | ~180 | Streak detection, session stats, log, cleanup |
 | Hook: `session_end` | ~210 | Log session summary with tool stats |
 
-### Python (scripts/common/debug_log.py)
+### Python (bin/common/debug_log.py)
 
 | Function | Purpose |
 |----------|---------|
 | `log_event(script, event, *, data_root, **kwargs)` | Append one script_io entry to trace.jsonl |
 
-### Python (scripts/common/learnings.py)
+### Python (bin/common/learnings.py)
 
 | Function | Purpose |
 |----------|---------|
@@ -360,13 +360,13 @@ grep '"ScienceDaily"' trace.jsonl | grep '"error"' | wc -l
 
 | Script | Events | What they capture |
 |--------|--------|-------------------|
-| `scripts/nutrition/estimate_and_log.py` | `input_loaded` | Ingredient count, payload keys |
+| `bin/nutrition/estimate_and_log.py` | `input_loaded` | Ingredient count, payload keys |
 | | `enrichment_done` | Catalog hits vs LLM estimates |
 | | `csv_written` | Rows written, file path |
-| `scripts/health/import_whoop.py` | `token_check` | Token valid or expired |
+| `bin/health/import_whoop.py` | `token_check` | Token valid or expired |
 | | `token_refresh` | Refresh succeeded or failed |
 | | `api_fetch` | Endpoint, record count |
-| `scripts/news/fetch_digest.py` | `feed_fetch` | Per-source success/failure, item count |
+| `bin/news/fetch_digest.py` | `feed_fetch` | Per-source success/failure, item count |
 | | `ranked` | Total items, returned count |
 
 ## Learnings System
@@ -391,7 +391,7 @@ The `learnings` tool (registered in `index.ts`) exposes three commands:
  "key":"whoop-token-expiry",
  "insight":"Whoop refresh tokens expire after ~30 days of inactivity",
  "confidence":8,"source":"observed",
- "files":["scripts/health/import_whoop.py"]}
+ "files":["bin/health/import_whoop.py"]}
 ```
 
 Types: `pattern`, `pitfall`, `preference`, `architecture`, `tool`, `operational`

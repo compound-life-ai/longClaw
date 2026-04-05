@@ -16,7 +16,7 @@ Top-level structure observed from the public repo:
 - `agents/`
 - `data/`
 - `modeling/`
-- `scripts/`
+- `bin/`
 - `dashboard/`
 
 The orchestrator skill classifies user intent and dispatches specialized agents. The Python side handles storage, imports, analytics, and the dashboard.

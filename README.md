@@ -1,7 +1,7 @@
 > **Best experience:** Use the latest frontier model (GPT-5.4, Opus 4.6). This guide assumes a working [OpenClaw](https://docs.openclaw.ai) installation.
 
 <p align="center">
-  <img src="docs/images/turri-logo-badge.svg" alt="Turri logo" width="220" />
+  <img src="bin/docs/images/turri-logo-badge.svg" alt="Turri logo" width="220" />
 </p>
 
 <h1 align="center">Turri</h1>
@@ -57,7 +57,7 @@ Turri combines OpenClaw skills, deterministic Python helpers, and local data sto
 
 ### System Architecture
 
-![System Architecture](docs/images/architecture-diagram.png)
+![System Architecture](bin/docs/images/architecture-diagram.png)
 
 ```mermaid
 flowchart TB
@@ -86,7 +86,7 @@ flowchart TB
         TCoach["coaching_context"]
     end
 
-    subgraph Scripts["Script Layer"]
+    subgraph Scripts["Script Layer (bin/)"]
         EL["estimate_and_log.py"]
         LK["lookup.py"]
         IW["import_whoop.py"]
@@ -184,24 +184,24 @@ Every morning, the daily coach cron gathers context from all data stores and dis
 
 <table>
 <tr>
-<td align="center" width="20%"><img src="docs/characters/yuyi.svg" alt="Imperial Physician" width="80"/><br/><b>Imperial Physician</b><br/><sub>Orchestrator — synthesizes #1 priority</sub></td>
-<td align="center" width="20%"><img src="docs/characters/shiyi.svg" alt="Diet Physician" width="80"/><br/><b>Diet Physician</b><br/><sub>Nutrition — macros, micros, food suggestions</sub></td>
-<td align="center" width="20%"><img src="docs/characters/daoyin.svg" alt="Movement Master" width="80"/><br/><b>Movement Master</b><br/><sub>Exercise — strain-adjusted training</sub></td>
-<td align="center" width="20%"><img src="docs/characters/zhenmai.svg" alt="Pulse Reader" width="80"/><br/><b>Pulse Reader</b><br/><sub>Body Metrics — RHR, HRV, SpO₂ trends</sub></td>
-<td align="center" width="20%"><img src="docs/characters/yanfang.svg" alt="Formula Tester" width="80"/><br/><b>Formula Tester</b><br/><sub>Biomarkers — cross-domain patterns</sub></td>
+<td align="center" width="20%"><img src="bin/docs/characters/yuyi.svg" alt="Imperial Physician" width="80"/><br/><b>Imperial Physician</b><br/><sub>Orchestrator — synthesizes #1 priority</sub></td>
+<td align="center" width="20%"><img src="bin/docs/characters/shiyi.svg" alt="Diet Physician" width="80"/><br/><b>Diet Physician</b><br/><sub>Nutrition — macros, micros, food suggestions</sub></td>
+<td align="center" width="20%"><img src="bin/docs/characters/daoyin.svg" alt="Movement Master" width="80"/><br/><b>Movement Master</b><br/><sub>Exercise — strain-adjusted training</sub></td>
+<td align="center" width="20%"><img src="bin/docs/characters/zhenmai.svg" alt="Pulse Reader" width="80"/><br/><b>Pulse Reader</b><br/><sub>Body Metrics — RHR, HRV, SpO₂ trends</sub></td>
+<td align="center" width="20%"><img src="bin/docs/characters/yanfang.svg" alt="Formula Tester" width="80"/><br/><b>Formula Tester</b><br/><sub>Biomarkers — cross-domain patterns</sub></td>
 </tr>
 <tr>
-<td align="center" width="20%"><img src="docs/characters/bencao.svg" alt="Herbalist" width="80"/><br/><b>Herbalist</b><br/><sub>Supplements — micronutrient gap analysis</sub></td>
-<td align="center" width="20%"><img src="docs/characters/shixiao.svg" alt="Trial Monitor" width="80"/><br/><b>Trial Monitor</b><br/><sub>Experiments — compliance tracking</sub></td>
-<td align="center" width="20%"><img src="docs/characters/yuanpan.svg" alt="Court Magistrate" width="80"/><br/><b>Court Magistrate</b><br/><sub>Trial Design — N-of-1 candidates</sub></td>
-<td align="center" width="20%"><img src="docs/characters/yizheng.svg" alt="Medical Censor" width="80"/><br/><b>Medical Censor</b><br/><sub>Safety Review — overtraining, decline flags</sub></td>
-<td align="center" width="20%"><img src="docs/characters/baogao.svg" alt="Court Scribe" width="80"/><br/><b>Court Scribe</b><br/><sub>Reports — relevant research + literature</sub></td>
+<td align="center" width="20%"><img src="bin/docs/characters/bencao.svg" alt="Herbalist" width="80"/><br/><b>Herbalist</b><br/><sub>Supplements — micronutrient gap analysis</sub></td>
+<td align="center" width="20%"><img src="bin/docs/characters/shixiao.svg" alt="Trial Monitor" width="80"/><br/><b>Trial Monitor</b><br/><sub>Experiments — compliance tracking</sub></td>
+<td align="center" width="20%"><img src="bin/docs/characters/yuanpan.svg" alt="Court Magistrate" width="80"/><br/><b>Court Magistrate</b><br/><sub>Trial Design — N-of-1 candidates</sub></td>
+<td align="center" width="20%"><img src="bin/docs/characters/yizheng.svg" alt="Medical Censor" width="80"/><br/><b>Medical Censor</b><br/><sub>Safety Review — overtraining, decline flags</sub></td>
+<td align="center" width="20%"><img src="bin/docs/characters/baogao.svg" alt="Court Scribe" width="80"/><br/><b>Court Scribe</b><br/><sub>Reports — relevant research + literature</sub></td>
 </tr>
 </table>
 
 ### Dispatch Flow
 
-![Daily Coach Subagent Dispatch Flow](docs/images/dispatch-flow-diagram.png)
+![Daily Coach Subagent Dispatch Flow](bin/docs/images/dispatch-flow-diagram.png)
 
 <a id="showcases"></a>
 
@@ -212,35 +212,35 @@ Turri is designed to feel like a health operating system rather than a pile of s
 <details>
 <summary>🏥 Daily Coach — 10 specialists review your data every morning</summary>
 <p align="center">
-  <img src="docs/images/telegram-mockup.png" alt="Daily Coach" width="390" />
+  <img src="bin/docs/images/telegram-mockup.png" alt="Daily Coach" width="390" />
 </p>
 </details>
 
 <details>
 <summary>🍚 Weekly Nutrition Review — macros, micros, and personalized food suggestions</summary>
 <p align="center">
-  <img src="docs/images/mockup-nutrition.png" alt="Nutrition Review" width="390" />
+  <img src="bin/docs/images/mockup-nutrition.png" alt="Nutrition Review" width="390" />
 </p>
 </details>
 
 <details>
 <summary>🔍 Pattern Detection — caffeine, sleep, and travel correlations</summary>
 <p align="center">
-  <img src="docs/images/mockup-patterns.png" alt="Pattern Detection" width="390" />
+  <img src="bin/docs/images/mockup-patterns.png" alt="Pattern Detection" width="390" />
 </p>
 </details>
 
 <details>
 <summary>🧪 Blood Work Analysis — biomarker trends and optimization advice</summary>
 <p align="center">
-  <img src="docs/images/mockup-bloodwork.png" alt="Blood Work Analysis" width="390" />
+  <img src="bin/docs/images/mockup-bloodwork.png" alt="Blood Work Analysis" width="390" />
 </p>
 </details>
 
 <details>
 <summary>🌙 Always On — late night chat, empathetic and human</summary>
 <p align="center">
-  <img src="docs/images/mockup-sleep.png" alt="Late Night Chat" width="390" />
+  <img src="bin/docs/images/mockup-sleep.png" alt="Late Night Chat" width="390" />
 </p>
 </details>
 
@@ -322,9 +322,9 @@ This is a native [OpenClaw plugin](https://docs.openclaw.ai/plugins/building-plu
 | `coaching_context` | Generate daily coaching context from all data |
 | `learnings` | Search/log debugging discoveries, read trace logs |
 
-Each tool wraps the corresponding Python script in `scripts/` — the SDK entry point (`index.ts`) shells out to them via `execFile`.
+Each tool wraps the corresponding Python script in `bin/` — the SDK entry point (`index.ts`) shells out to them via `execFile`.
 
-Skills in `skills/` provide agent-facing guidance (when to use each tool, how to present results). The tools provide the typed, inspectable interface that OpenClaw registers.
+Skills in top-level directories (`snap/`, `health/`, etc.) provide agent-facing guidance (when to use each tool, how to present results). The tools provide the typed, inspectable interface that OpenClaw registers.
 
 **Relevant OpenClaw docs:**
 
@@ -339,7 +339,7 @@ Skills in `skills/` provide agent-facing guidance (when to use each tool, how to
 
 ```bash
 # Run Python tests
-python3 -m unittest discover -s tests -v
+python3 -m unittest discover -s bin/tests -v
 
 # Install Node dependencies before linking the plugin
 npm install
@@ -357,7 +357,7 @@ openclaw plugins doctor
 
 If `openclaw plugins doctor` warns that `plugins.allow is empty`, that is a separate trust warning for non-bundled plugins. It does not mean the Turri install itself failed.
 
-Tests use real (sanitized) Whoop API response fixtures from `tests/fixtures/whoop/`.
+Tests use real (sanitized) Whoop API response fixtures from `bin/tests/fixtures/whoop/`.
 
 ### Repo Layout
 
@@ -365,21 +365,26 @@ Tests use real (sanitized) Whoop API response fixtures from `tests/fixtures/whoo
 index.ts               SDK entry point — registers 8 tools + observability hooks
 openclaw.plugin.json   Plugin manifest (skills, config schema)
 package.json           Package metadata + openclaw extensions
-SKILL.md               Root meta skill (natural language routing + debugging guide)
-skills/                OpenClaw-facing skill definitions
+skill.md               Root meta skill (natural language routing + debugging guide)
+snap/                  Meal logging skill
+health/                Health profile & Whoop skill
+health-qa/             Health Q&A skill
+insights/              Self-experiments skill
+news/                  Health news digest skill
+daily-coach/           Cron-driven daily coaching skill
 agents/                Specialist subagent prompts (10 files)
-scripts/               Deterministic Python helpers (called by tools)
-  common/debug_log.py  Structured JSONL logging for Python scripts
-  common/learnings.py  Persistent debugging knowledge store
-cron/                  Example cron job configs
-seed/                  Optional fixture data
+bin/                   Scripts, tests, docs, seed data, cron configs
+  common/              Shared Python utilities (storage, paths, logging, learnings)
+  nutrition/           Meal logging & nutrient enrichment scripts
+  health/              Health profile & Whoop import scripts
+  insights/            Self-experiment scripts
+  news/                News digest scripts
+  coach/               Daily coaching context script
+  tests/               Unit tests + Whoop API fixtures
+  seed/                Bootstrap fixture data
+  cron/                Example cron job configs
+  docs/                Architecture and design notes
 longevityOS-data/      Runtime data (gitignored)
-  debug/trace.jsonl    Tool call trace log (all layers)
-  debug/learnings.jsonl Agent debugging discoveries
-  debug/artifacts/     Preserved temp files from failed tool calls
-tests/                 Unit and CLI tests
-docs/                  Architecture and design notes
-  observability.md     Observability guide with triangulation workflows
 website/               Next.js landing page
 ```
 
@@ -411,13 +416,13 @@ Key features:
 
 Three scripts with hook blind spots have additional instrumentation: `estimate_and_log.py` (temp file + enrichment), `import_whoop.py` (token refresh + 5 API calls), `fetch_digest.py` (per-feed results). The other five scripts are sufficiently covered by hooks alone.
 
-All logs go to `longevityOS-data/debug/` (gitignored, local-only). See [docs/observability.md](docs/observability.md) for the full guide with triangulation workflows and worked examples.
+All logs go to `longevityOS-data/debug/` (gitignored, local-only). See [bin/docs/observability.md](bin/docs/observability.md) for the full guide with triangulation workflows and worked examples.
 
 ### Docs
 
-- [docs/observability.md](docs/observability.md) — observability layers, triangulation, learnings system
-- [docs/install.md](docs/install.md)
-- [docs/openclaw-extension-survey.md](docs/openclaw-extension-survey.md)
-- [docs/proposed-health-companion-architecture.md](docs/proposed-health-companion-architecture.md)
-- [docs/longevity-os-reference-notes.md](docs/longevity-os-reference-notes.md)
-- [docs/news-sources.md](docs/news-sources.md)
+- [bin/docs/observability.md](bin/docs/observability.md) — observability layers, triangulation, learnings system
+- [bin/docs/install.md](bin/docs/install.md)
+- [bin/docs/openclaw-extension-survey.md](bin/docs/openclaw-extension-survey.md)
+- [bin/docs/proposed-health-companion-architecture.md](bin/docs/proposed-health-companion-architecture.md)
+- [bin/docs/longevity-os-reference-notes.md](bin/docs/longevity-os-reference-notes.md)
+- [bin/docs/news-sources.md](bin/docs/news-sources.md)

@@ -34,7 +34,7 @@ Why:
 
 ```text
 docs/
-skills/
+top-level 
   snap/
     SKILL.md
   health/
@@ -43,7 +43,7 @@ skills/
     SKILL.md
   insights/
     SKILL.md
-scripts/
+bin/
   nutrition/
     estimate_and_log.py
     csv_store.py
@@ -68,7 +68,7 @@ longevityOS-data/
     cache.json
 ```
 
-This keeps the public behavior in `skills/` and the operational logic in `scripts/`.
+This keeps the public behavior in `top-level ` and the operational logic in `bin/`.
 
 ## Feature Mapping
 

@@ -38,7 +38,7 @@ Expected result:
 2. Verify `/snap`, `/health`, `/news`, and `/insights` are available and usable.
 3. If a Telegram command does not appear in the slash picker, try typing it manually first.
 4. On first use, the agent will offer to load sample data if the data directories are empty.
-5. Configure the cron templates from `cron/` with your Telegram DM chat id and local timezone.
+5. Configure the cron templates from `bin/cron/` with your Telegram DM chat id and local timezone.
 
 ## Fresh Session Required
 
@@ -72,8 +72,8 @@ Apple Health often gives users `export.zip` rather than a raw XML file.
 This bundle now supports both:
 
 ```bash
-python3 scripts/health/import_apple_health.py --input-zip ~/Downloads/export.zip
-python3 scripts/health/import_apple_health.py --input-xml /path/to/apple_health_export/export.xml
+python3 bin/health/import_apple_health.py --input-zip ~/Downloads/export.zip
+python3 bin/health/import_apple_health.py --input-xml /path/to/apple_health_export/export.xml
 ```
 
 If you prefer manual extraction, extract `apple_health_export/export.xml` from the zip first.
@@ -85,7 +85,7 @@ If you prefer manual extraction, extract `apple_health_export/export.xml` from t
 3. Test `/snap` with a food photo.
 4. Run `/health`.
 5. Run `/insights`.
-6. Enable `cron/daily-health-coach.example.json` if you want the personalized daily coaching message.
+6. Enable `bin/cron/daily-health-coach.example.json` if you want the personalized daily coaching message.
 
 ## Uninstall
 

@@ -211,7 +211,7 @@ learnings({
     "insight": "One sentence: what went wrong and why",
     "confidence": 7,
     "source": "observed",
-    "files": ["scripts/path/to/relevant/file.py"]
+    "files": ["bin/path/to/relevant/file.py"]
   }
 })
 ```
@@ -263,8 +263,8 @@ that would save 5+ minutes in a future session.
 ## What to inspect for details
 
 - `README.md` for installation, verification, cron setup, and bundle-level architecture
-- `docs/install.md` for the direct install workflow
-- `docs/observability.md` for the full observability guide, log layer details, and triangulation workflows
+- `bin/docs/install.md` for the direct install workflow
+- `bin/docs/observability.md` for the full observability guide, log layer details, and triangulation workflows
 - `snap/SKILL.md` for meal logging behavior and payload shape
 - `health/SKILL.md` for Whoop import and questionnaire flows
 - `news/SKILL.md` for curated digest behavior
