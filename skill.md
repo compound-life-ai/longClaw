@@ -11,7 +11,7 @@ Use this skill when:
 - the user wants an overview of everything available in this repository
 - the user wants to know how to install the bundled skills in this directory
 - the user sends a health-related message that could be handled by one of the sub-skills
-- the user wants links to the repository or the bundled `skills/` directory
+- the user wants links to the repository or the bundled skill directories
 - the user asks "what can you do?", "help", "get started", or anything that suggests they want orientation
 
 ## Welcome and orientation
@@ -70,7 +70,7 @@ When the user asks about the daily coaching feature or cron setup:
 1. Explain what it does: "Every morning, 10 specialist agents each review all your data — nutrition, recovery, strain, experiments, news — and send you a personalized coaching message on Telegram. It's like having a health team that reads your data overnight."
 2. Explain the requirements:
    - A Telegram bot set up with OpenClaw (the user needs their Telegram DM chat ID)
-   - Cron job configuration (3 template files in `cron/`)
+   - Cron job configuration (3 template files in `bin/cron/`)
    - For all 10 agents: bump `maxChildrenPerAgent` and `maxConcurrent` to 10 in `~/.openclaw/openclaw.json`
 3. Offer to walk them through each step when they're ready.
 
@@ -107,11 +107,11 @@ If the user agrees to sample data, copy the seed fixtures:
 
 ```bash
 mkdir -p "{baseDir}/longevityOS-data/nutrition" "{baseDir}/longevityOS-data/health" "{baseDir}/longevityOS-data/insights" "{baseDir}/longevityOS-data/news"
-cp "{baseDir}/seed/nutrition/meals.csv" "{baseDir}/longevityOS-data/nutrition/"
-cp "{baseDir}/seed/health/profile.json" "{baseDir}/longevityOS-data/health/"
-cp "{baseDir}/seed/insights/experiments.json" "{baseDir}/longevityOS-data/insights/"
-cp "{baseDir}/seed/insights/checkins.json" "{baseDir}/longevityOS-data/insights/"
-cp "{baseDir}/seed/news/cache.json" "{baseDir}/longevityOS-data/news/"
+cp "{baseDir}/bin/seed/nutrition/meals.csv" "{baseDir}/longevityOS-data/nutrition/"
+cp "{baseDir}/bin/seed/health/profile.json" "{baseDir}/longevityOS-data/health/"
+cp "{baseDir}/bin/seed/insights/experiments.json" "{baseDir}/longevityOS-data/insights/"
+cp "{baseDir}/bin/seed/insights/checkins.json" "{baseDir}/longevityOS-data/insights/"
+cp "{baseDir}/bin/seed/news/cache.json" "{baseDir}/longevityOS-data/news/"
 ```
 
 After loading seed data, briefly explain what was loaded and suggest something to try: "I loaded 3 days of sample meals, a health profile with Whoop data, an active experiment, and some news. Try asking 'how's my nutrition this week?' or 'what's my active experiment?' to see it in action."
@@ -211,7 +211,7 @@ learnings({
     "insight": "One sentence: what went wrong and why",
     "confidence": 7,
     "source": "observed",
-    "files": ["scripts/path/to/relevant/file.py"]
+    "files": ["bin/path/to/relevant/file.py"]
   }
 })
 ```
@@ -263,11 +263,11 @@ that would save 5+ minutes in a future session.
 ## What to inspect for details
 
 - `README.md` for installation, verification, cron setup, and bundle-level architecture
-- `docs/install.md` for the direct install workflow
-- `docs/observability.md` for the full observability guide, log layer details, and triangulation workflows
-- `skills/snap/SKILL.md` for meal logging behavior and payload shape
-- `skills/health/SKILL.md` for Whoop import and questionnaire flows
-- `skills/news/SKILL.md` for curated digest behavior
-- `skills/insights/SKILL.md` for experiment creation, check-ins, and analysis
-- `skills/daily-coach/SKILL.md` for the scheduled coaching workflow
-- `skills/health-qa/SKILL.md` for interactive health Q&A via specialist agents
+- `bin/docs/install.md` for the direct install workflow
+- `bin/docs/observability.md` for the full observability guide, log layer details, and triangulation workflows
+- `snap/SKILL.md` for meal logging behavior and payload shape
+- `health/SKILL.md` for Whoop import and questionnaire flows
+- `news/SKILL.md` for curated digest behavior
+- `insights/SKILL.md` for experiment creation, check-ins, and analysis
+- `daily-coach/SKILL.md` for the scheduled coaching workflow
+- `health-qa/SKILL.md` for interactive health Q&A via specialist agents

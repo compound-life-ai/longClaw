@@ -414,7 +414,7 @@ export default definePluginEntry({
       async execute(_id, params) {
         const env = debugEnv(_id);
         const label = `${env.LONGCLAW_RUN_ID || "unknown"}-${_id}`;
-        const script = join(root, "scripts/common/learnings.py");
+        const script = join(root, "bin/common/learnings.py");
 
         let stdout: string;
         if (params.command === "search") {
@@ -465,20 +465,20 @@ export default definePluginEntry({
           case "log":
             stdout = await withTempJson(
               params.input_json,
-              (path) => run(py, [join(root, "scripts/nutrition/estimate_and_log.py"), "--data-root", dataRoot, "log", "--input-json", path], root, env),
+              (path) => run(py, [join(root, "bin/nutrition/estimate_and_log.py"), "--data-root", dataRoot, "log", "--input-json", path], root, env),
               label,
             );
             break;
           case "daily_summary":
             stdout = await run(py, [
-              join(root, "scripts/nutrition/daily_summary.py"),
+              join(root, "bin/nutrition/daily_summary.py"),
               "--data-root", dataRoot,
               "--date", params.date!,
             ], root, env);
             break;
           case "weekly_summary":
             stdout = await run(py, [
-              join(root, "scripts/nutrition/weekly_summary.py"),
+              join(root, "bin/nutrition/weekly_summary.py"),
               "--data-root", dataRoot,
               "--end-date", params.end_date!,
               "--days", String(params.days ?? 7),
@@ -508,7 +508,7 @@ export default definePluginEntry({
       async execute(_id, params) {
         const env = debugEnv(_id);
         const label = `${env.LONGCLAW_RUN_ID || "unknown"}-${_id}`;
-        const script = join(root, "scripts/health/profile_store.py");
+        const script = join(root, "bin/health/profile_store.py");
         const subcmd = params.command === "merge_questionnaire"
           ? "merge-questionnaire"
           : params.command === "merge_import"
@@ -539,7 +539,7 @@ export default definePluginEntry({
         const env = debugEnv(_id);
         const tokenFile = join(dataRoot, "health/whoop_tokens.json");
         const stdout = await run(py, [
-          join(root, "scripts/health/import_whoop.py"),
+          join(root, "bin/health/import_whoop.py"),
           "--token-file", tokenFile,
         ], root, env);
         return { content: [{ type: "text", text: stdout }] };
@@ -557,13 +557,13 @@ export default definePluginEntry({
         const label = `${env.LONGCLAW_RUN_ID || "unknown"}-${_id}`;
         const tokenFile = join(dataRoot, "health/whoop_tokens.json");
         const importOut = await run(py, [
-          join(root, "scripts/health/import_whoop.py"),
+          join(root, "bin/health/import_whoop.py"),
           "--token-file", tokenFile,
         ], root, env);
         const mergeOut = await withTempJson(
           JSON.parse(importOut),
           (path) => run(py, [
-            join(root, "scripts/health/profile_store.py"),
+            join(root, "bin/health/profile_store.py"),
             "--data-root", dataRoot, "merge-import", "--input-json", path,
           ], root, env),
           label,
@@ -594,7 +594,7 @@ export default definePluginEntry({
       async execute(_id, params) {
         const env = debugEnv(_id);
         const label = `${env.LONGCLAW_RUN_ID || "unknown"}-${_id}`;
-        const script = join(root, "scripts/insights/experiments.py");
+        const script = join(root, "bin/insights/experiments.py");
         const subcmd = params.command === "gap_report" ? "gap-report" : params.command;
 
         let stdout: string;
@@ -623,7 +623,7 @@ export default definePluginEntry({
       async execute(_id, params) {
         const env = debugEnv(_id);
         const stdout = await run(py, [
-          join(root, "scripts/news/fetch_digest.py"),
+          join(root, "bin/news/fetch_digest.py"),
           "--data-root", dataRoot,
           "--limit", String(params.limit ?? 6),
         ], root, env);
@@ -643,7 +643,7 @@ export default definePluginEntry({
       async execute(_id, params) {
         const env = debugEnv(_id);
         const args = [
-          join(root, "scripts/coach/daily_health_coach.py"),
+          join(root, "bin/coach/daily_health_coach.py"),
           "--data-root", dataRoot,
         ];
         if (params.today_date) args.push("--today-date", params.today_date);
