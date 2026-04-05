@@ -61,6 +61,7 @@ All runtime data lives in `longevityOS-data/` (gitignored). Subdirectories: `nut
 | `experiments` | `scripts/insights/experiments.py` |
 | `news_digest` | `scripts/news/fetch_digest.py` |
 | `coaching_context` | `scripts/coach/daily_health_coach.py` |
+| `learnings` | `scripts/common/learnings.py` |
 
 ### Specialist subagents
 

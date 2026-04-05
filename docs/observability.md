@@ -346,6 +346,16 @@ grep '"ScienceDaily"' trace.jsonl | grep '"error"' | wc -l
 |----------|---------|
 | `log_event(script, event, *, data_root, **kwargs)` | Append one script_io entry to trace.jsonl |
 
+### Python (scripts/common/learnings.py)
+
+| Function | Purpose |
+|----------|---------|
+| `search_learnings(data_root, type_filter, query, limit)` | Search with confidence decay + dedup |
+| `log_learning(data_root, payload)` | Validate and append a learning entry |
+| `read_trace(data_root, run_id)` | Read trace entries for a specific runId |
+| `dedupe_learnings(entries)` | Latest-wins dedup by key+type |
+| `apply_confidence_decay(entry)` | -1 confidence per 30 days for observed/inferred |
+
 ### Instrumented scripts
 
 | Script | Events | What they capture |
@@ -359,12 +369,64 @@ grep '"ScienceDaily"' trace.jsonl | grep '"error"' | wc -l
 | `scripts/news/fetch_digest.py` | `feed_fetch` | Per-source success/failure, item count |
 | | `ranked` | Total items, returned count |
 
+## Learnings System
+
+Persistent JSONL store at `longevityOS-data/debug/learnings.jsonl`.
+Agents search at session start and log after resolving issues.
+
+### Tool interface
+
+The `learnings` tool (registered in `index.ts`) exposes three commands:
+
+| Command | What it does |
+|---------|-------------|
+| `search` | Search existing learnings by type, keyword, or both |
+| `log` | Append a new learning entry |
+| `read_trace` | Read trace.jsonl entries for a specific runId |
+
+### Learning schema
+
+```jsonl
+{"ts":"2026-04-05T09:00:00Z","skill":"investigate","type":"pitfall",
+ "key":"whoop-token-expiry",
+ "insight":"Whoop refresh tokens expire after ~30 days of inactivity",
+ "confidence":8,"source":"observed",
+ "files":["scripts/health/import_whoop.py"]}
+```
+
+Types: `pattern`, `pitfall`, `preference`, `architecture`, `tool`, `operational`
+
+Sources: `observed` (verified in code), `user-stated`, `inferred`
+
+### Confidence decay
+
+`observed` and `inferred` learnings lose 1 confidence point per 30 days.
+This ensures stale learnings fade naturally. `user-stated` learnings
+don't decay.
+
+### Deduplication
+
+Append-only storage, deduped at read time. When multiple entries share
+the same `key` + `type`, the latest one wins. This means updating a
+learning is just logging a new entry with the same key.
+
+### Agent guidelines
+
+The meta-skill (`skill.md`) instructs agents to:
+1. Search learnings BEFORE debugging a new issue
+2. Log discoveries AFTER resolving an issue
+3. Reference prior learnings when they apply ("Prior learning applied: [key]")
+4. Escalate after 3 failed attempts
+
+Full agent-facing instructions are in `skill.md` under "When a tool call fails".
+
 ## On-Disk Layout
 
 ```
 longevityOS-data/
   debug/
     trace.jsonl              <-- all layers, append-only
+    learnings.jsonl          <-- agent discoveries, append-only
     artifacts/               <-- preserved temp files on failure
       r_7f2a-tc_9x3k.json
       ...
