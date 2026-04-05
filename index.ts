@@ -1,8 +1,8 @@
 import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
 import { Type } from "@sinclair/typebox";
 import { execFile } from "node:child_process";
-import { writeFile, unlink, appendFile, mkdir, copyFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
+import { writeFile, unlink, appendFile, mkdir, copyFile, readFile, stat } from "node:fs/promises";
+import { tmpdir, homedir } from "node:os";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 
@@ -80,6 +80,101 @@ function extractToolCalls(lastAssistant: unknown): { name: string; arguments: un
     }
   }
   return calls;
+}
+
+// ---------------------------------------------------------------------------
+// Version update check
+// ---------------------------------------------------------------------------
+
+const REMOTE_PACKAGE_URL =
+  "https://raw.githubusercontent.com/compound-life-ai/Turri/main/package.json";
+const UPDATE_CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
+
+type UpdateStatus = {
+  local: string;
+  remote: string | null;
+  updateAvailable: boolean;
+  checkedAt: string;
+  error?: string;
+};
+
+let cachedUpdateStatus: UpdateStatus | null = null;
+
+function updateCachePath(): string {
+  return join(homedir(), ".longclaw-update-check");
+}
+
+async function readCachedUpdateStatus(): Promise<UpdateStatus | null> {
+  try {
+    const raw = await readFile(updateCachePath(), "utf-8");
+    const cached = JSON.parse(raw) as UpdateStatus;
+    const age = Date.now() - new Date(cached.checkedAt).getTime();
+    if (age < UPDATE_CACHE_TTL_MS) return cached;
+  } catch { /* no cache or expired */ }
+  return null;
+}
+
+async function writeCachedUpdateStatus(status: UpdateStatus) {
+  try {
+    await writeFile(updateCachePath(), JSON.stringify(status));
+  } catch { /* best effort */ }
+}
+
+function getLocalVersion(root: string): string {
+  // Synchronous read is fine here — runs once at startup
+  try {
+    const pkg = require(join(root, "package.json"));
+    return pkg.version || "0.0.0";
+  } catch {
+    return "0.0.0";
+  }
+}
+
+async function fetchRemoteVersion(): Promise<string | null> {
+  try {
+    const resp = await fetch(REMOTE_PACKAGE_URL, {
+      signal: AbortSignal.timeout(5000),
+    });
+    if (!resp.ok) return null;
+    const pkg = await resp.json();
+    return pkg.version || null;
+  } catch {
+    return null;
+  }
+}
+
+function isNewerVersion(local: string, remote: string): boolean {
+  const lp = local.split(".").map(Number);
+  const rp = remote.split(".").map(Number);
+  for (let i = 0; i < Math.max(lp.length, rp.length); i++) {
+    const l = lp[i] ?? 0;
+    const r = rp[i] ?? 0;
+    if (r > l) return true;
+    if (r < l) return false;
+  }
+  return false;
+}
+
+async function checkForUpdate(root: string): Promise<UpdateStatus> {
+  // Check cache first
+  const cached = await readCachedUpdateStatus();
+  if (cached) {
+    cachedUpdateStatus = cached;
+    return cached;
+  }
+
+  const local = getLocalVersion(root);
+  const remote = await fetchRemoteVersion();
+  const status: UpdateStatus = {
+    local,
+    remote,
+    updateAvailable: remote ? isNewerVersion(local, remote) : false,
+    checkedAt: new Date().toISOString(),
+  };
+
+  await writeCachedUpdateStatus(status);
+  cachedUpdateStatus = status;
+  return status;
 }
 
 // ---------------------------------------------------------------------------
@@ -171,12 +266,21 @@ export default definePluginEntry({
 
     api.registerHook("session_start", async (event: any, ctx: any) => {
       sessionStats = { total: 0, succeeded: 0, failed: 0, failures: [] };
+      // Fire update check in background — don't block session start
+      checkForUpdate(root).catch(() => {});
       await appendLog({
         layer: "session_start",
         sessionId: event.sessionId,
         sessionKey: event.sessionKey,
         resumedFrom: event.resumedFrom ?? null,
       });
+    });
+
+    api.registerHook("before_prompt_build", async () => {
+      if (!cachedUpdateStatus?.updateAvailable) return;
+      return {
+        prependContext: `[LongClaw update available: v${cachedUpdateStatus.local} → v${cachedUpdateStatus.remote}. Upgrade: cd ${root} && git pull && npm install && openclaw gateway restart]`,
+      };
     });
 
     api.registerHook("llm_output", async (event: any) => {
