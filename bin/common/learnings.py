@@ -6,9 +6,9 @@ Duplicates resolved at read time (latest wins per key+type).
 Confidence decays: observed/inferred lose 1 point per 30 days.
 
 CLI usage:
-    python3 scripts/common/learnings.py --data-root DATA search [--type TYPE] [--query Q] [--limit N]
-    python3 scripts/common/learnings.py --data-root DATA log --input-json PATH
-    python3 scripts/common/learnings.py --data-root DATA read-trace --run-id RUN_ID
+    python3 bin/common/learnings.py --data-root DATA search [--type TYPE] [--query Q] [--limit N]
+    python3 bin/common/learnings.py --data-root DATA log --input-json PATH
+    python3 bin/common/learnings.py --data-root DATA read-trace --run-id RUN_ID
 """
 from __future__ import annotations
 
@@ -22,8 +22,8 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.append(str(Path(__file__).resolve().parents[2]))
 
-from scripts.common.paths import default_data_root
-from scripts.common.storage import utc_now_iso
+from bin.common.paths import default_data_root
+from bin.common.storage import utc_now_iso
 
 VALID_TYPES = ("pattern", "pitfall", "preference", "architecture", "tool", "operational")
 VALID_SOURCES = ("observed", "user-stated", "inferred")

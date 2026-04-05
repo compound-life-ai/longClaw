@@ -1,7 +1,7 @@
 """Fetch and normalize Whoop data into a profile-ready summary.
 
 Usage:
-    python3 scripts/health/import_whoop.py \
+    python3 bin/health/import_whoop.py \
         --token-file longevityOS-data/health/whoop_tokens.json
 
 Outputs a JSON summary to stdout, suitable for piping into profile_store.py merge-import.
@@ -20,8 +20,8 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.append(str(Path(__file__).resolve().parents[2]))
 
-from scripts.common.debug_log import log_event
-from scripts.common.paths import default_data_root
+from bin.common.debug_log import log_event
+from bin.common.paths import default_data_root
 
 BASE_URL = "https://api.prod.whoop.com/developer/v2"
 TOKEN_URL = "https://api.prod.whoop.com/oauth/oauth2/token"

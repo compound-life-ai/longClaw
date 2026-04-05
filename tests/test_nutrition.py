@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.nutrition.estimate_and_log import (
+from bin.nutrition.estimate_and_log import (
     FIELDNAMES,
     load_payload,
     log_payload,
@@ -17,13 +17,13 @@ from scripts.nutrition.estimate_and_log import (
     summarize_day,
     to_float,
 )
-from scripts.nutrition.lookup import (
+from bin.nutrition.lookup import (
     DEFAULT_CACHE_TTL_DAYS,
     enrich_ingredient,
     normalize_ingredient_name,
     nutrition_cache_path,
 )
-from scripts.common.storage import write_json
+from bin.common.storage import write_json
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -205,7 +205,7 @@ class NutritionScriptTests(unittest.TestCase):
             log_result = subprocess.run(
                 [
                     sys.executable,
-                    "scripts/nutrition/estimate_and_log.py",
+                    "bin/nutrition/estimate_and_log.py",
                     "--data-root",
                     str(data_root),
                     "log",
@@ -220,7 +220,7 @@ class NutritionScriptTests(unittest.TestCase):
             summary_result = subprocess.run(
                 [
                     sys.executable,
-                    "scripts/nutrition/estimate_and_log.py",
+                    "bin/nutrition/estimate_and_log.py",
                     "--data-root",
                     str(data_root),
                     "summary",

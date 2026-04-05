@@ -5,7 +5,7 @@ Reads LONGCLAW_RUN_ID, LONGCLAW_SESSION_ID, and LONGCLAW_TOOL_CALL_ID
 from environment for correlation with TypeScript-level hook logs.
 
 Usage:
-    from scripts.common.debug_log import log_event
+    from bin.common.debug_log import log_event
 
     log_event("estimate_and_log", "input_loaded",
               data_root=data_root,

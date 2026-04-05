@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.health.import_whoop import (
+from bin.health.import_whoop import (
     average,
     build_summary,
     build_summary_from_fixtures,
@@ -18,7 +18,7 @@ from scripts.health.import_whoop import (
     normalize_sleep,
     normalize_workouts,
 )
-from scripts.health.profile_store import (
+from bin.health.profile_store import (
     default_profile,
     merge_import,
     merge_questionnaire,
@@ -170,7 +170,7 @@ class ProfileStoreTests(unittest.TestCase):
             subprocess.run(
                 [
                     sys.executable,
-                    "scripts/health/profile_store.py",
+                    "bin/health/profile_store.py",
                     "--data-root",
                     str(data_root),
                     "merge-questionnaire",
@@ -185,7 +185,7 @@ class ProfileStoreTests(unittest.TestCase):
             subprocess.run(
                 [
                     sys.executable,
-                    "scripts/health/profile_store.py",
+                    "bin/health/profile_store.py",
                     "--data-root",
                     str(data_root),
                     "merge-import",
@@ -200,7 +200,7 @@ class ProfileStoreTests(unittest.TestCase):
             show_result = subprocess.run(
                 [
                     sys.executable,
-                    "scripts/health/profile_store.py",
+                    "bin/health/profile_store.py",
                     "--data-root",
                     str(data_root),
                     "show",
@@ -220,7 +220,7 @@ class ImportWhoopCLITests(unittest.TestCase):
         result = subprocess.run(
             [
                 sys.executable,
-                "scripts/health/import_whoop.py",
+                "bin/health/import_whoop.py",
                 "--fixture-dir",
                 str(FIXTURE_DIR),
             ],

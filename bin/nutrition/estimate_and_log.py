@@ -13,10 +13,10 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.append(str(Path(__file__).resolve().parents[2]))
 
-from scripts.common.paths import default_data_root
-from scripts.common.storage import append_csv_rows, utc_now_iso
-from scripts.common.debug_log import log_event
-from scripts.nutrition.lookup import enrich_ingredient
+from bin.common.paths import default_data_root
+from bin.common.storage import append_csv_rows, utc_now_iso
+from bin.common.debug_log import log_event
+from bin.nutrition.lookup import enrich_ingredient
 
 
 FIELDNAMES = [

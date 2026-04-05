@@ -13,9 +13,9 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.append(str(Path(__file__).resolve().parents[2]))
 
-from scripts.common.paths import default_data_root
-from scripts.common.storage import load_json, write_json
-from scripts.common.debug_log import log_event
+from bin.common.paths import default_data_root
+from bin.common.storage import load_json, write_json
+from bin.common.debug_log import log_event
 
 
 SOURCES = [

@@ -8,9 +8,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.common.storage import write_json
-from scripts.coach.daily_health_coach import build_daily_coach_context
-from scripts.insights.experiments import add_checkin, create_experiment
+from bin.common.storage import write_json
+from bin.coach.daily_health_coach import build_daily_coach_context
+from bin.insights.experiments import add_checkin, create_experiment
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -209,7 +209,7 @@ class DailyCoachTests(unittest.TestCase):
             result = subprocess.run(
                 [
                     sys.executable,
-                    "scripts/coach/daily_health_coach.py",
+                    "bin/coach/daily_health_coach.py",
                     "--data-root",
                     str(data_root),
                     "--today-date",

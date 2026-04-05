@@ -6,8 +6,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from scripts.common.storage import load_json
-from scripts.news.fetch_digest import (
+from bin.common.storage import load_json
+from bin.news.fetch_digest import (
     cache_path,
     dedupe_items,
     fetch_digest,
@@ -84,7 +84,7 @@ class NewsScriptTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             data_root = Path(tmp_dir)
-            with patch("scripts.news.fetch_digest.fetch_feed", side_effect=fake_fetch):
+            with patch("bin.news.fetch_digest.fetch_feed", side_effect=fake_fetch):
                 result = fetch_digest(data_root, limit=5)
 
             self.assertEqual(len(result["errors"]), 1)

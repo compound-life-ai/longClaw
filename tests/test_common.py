@@ -5,8 +5,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.common.paths import default_data_root, ensure_dir, repo_root
-from scripts.common.storage import (
+from bin.common.paths import default_data_root, ensure_dir, repo_root
+from bin.common.storage import (
     append_csv_rows,
     ensure_csv_with_header,
     load_json,

@@ -9,8 +9,8 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.append(str(Path(__file__).resolve().parents[2]))
 
-from scripts.common.paths import default_data_root
-from scripts.common.storage import load_json, utc_now_iso, write_json
+from bin.common.paths import default_data_root
+from bin.common.storage import load_json, utc_now_iso, write_json
 
 
 def profile_path(data_root: Path) -> Path:

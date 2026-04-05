@@ -11,10 +11,10 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.append(str(Path(__file__).resolve().parents[2]))
 
-from scripts.common.paths import default_data_root
-from scripts.common.storage import load_json, utc_now_iso
-from scripts.health.profile_store import profile_path
-from scripts.insights.experiments import (
+from bin.common.paths import default_data_root
+from bin.common.storage import load_json, utc_now_iso
+from bin.health.profile_store import profile_path
+from bin.insights.experiments import (
     analyze_experiment,
     checkins_path,
     count_meal_days,
@@ -23,8 +23,8 @@ from scripts.insights.experiments import (
     experiments_path,
     gap_report,
 )
-from scripts.news.fetch_digest import cache_path as news_cache_path
-from scripts.nutrition.estimate_and_log import summarize_day
+from bin.news.fetch_digest import cache_path as news_cache_path
+from bin.nutrition.estimate_and_log import summarize_day
 
 
 DOMAIN_NEWS_KEYWORDS = {

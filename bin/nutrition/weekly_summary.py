@@ -15,9 +15,9 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.append(str(Path(__file__).resolve().parents[2]))
 
-from scripts.common.paths import default_data_root
-from scripts.nutrition.estimate_and_log import summarize_day
-from scripts.nutrition.rda_data import RDA_DAILY
+from bin.common.paths import default_data_root
+from bin.nutrition.estimate_and_log import summarize_day
+from bin.nutrition.rda_data import RDA_DAILY
 
 
 def weekly_summary(

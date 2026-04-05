@@ -2,7 +2,7 @@
 
 Run once with a valid access token to capture real response shapes:
 
-    python3 scripts/health/snapshot_whoop.py \
+    python3 bin/health/snapshot_whoop.py \
         --token-file longevityOS-data/health/whoop_tokens.json \
         --output-dir tests/fixtures/whoop
 """

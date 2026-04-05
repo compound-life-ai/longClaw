@@ -7,15 +7,15 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.common.storage import load_json
-from scripts.health.profile_store import default_profile, profile_path
-from scripts.insights.experiments import (
+from bin.common.storage import load_json
+from bin.health.profile_store import default_profile, profile_path
+from bin.insights.experiments import (
     analyze_experiment,
     checkins_path,
     experiments_path,
     gap_report,
 )
-from scripts.nutrition.estimate_and_log import FIELDNAMES, summarize_day
+from bin.nutrition.estimate_and_log import FIELDNAMES, summarize_day
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]

@@ -5,8 +5,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
-from scripts.common.storage import load_json, utc_now_iso, write_json
-from scripts.nutrition.catalog_data import (
+from bin.common.storage import load_json, utc_now_iso, write_json
+from bin.nutrition.catalog_data import (
     INGREDIENT_ALIASES,
     INGREDIENT_CATALOG,
     PORTION_GRAMS,

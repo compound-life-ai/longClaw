@@ -7,8 +7,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.common.storage import write_json
-from scripts.insights.experiments import (
+from bin.common.storage import write_json
+from bin.insights.experiments import (
     add_checkin,
     analyze_experiment,
     checkins_path,
@@ -159,7 +159,7 @@ class InsightsScriptTests(unittest.TestCase):
             create_result = subprocess.run(
                 [
                     sys.executable,
-                    "scripts/insights/experiments.py",
+                    "bin/insights/experiments.py",
                     "--data-root",
                     str(data_root),
                     "create",
@@ -174,7 +174,7 @@ class InsightsScriptTests(unittest.TestCase):
             gap_result = subprocess.run(
                 [
                     sys.executable,
-                    "scripts/insights/experiments.py",
+                    "bin/insights/experiments.py",
                     "--data-root",
                     str(data_root),
                     "gap-report",
