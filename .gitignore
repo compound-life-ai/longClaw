@@ -11,3 +11,5 @@ longevityOS-data/health/*.json
 longevityOS-data/insights/*.json
 longevityOS-data/news/*.json
 !longevityOS-data/**/.gitkeep
+.DS_Store
+data/
