@@ -27,8 +27,8 @@ from bin.health.profile_store import (
 )
 
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
-FIXTURE_DIR = REPO_ROOT / "tests" / "fixtures" / "whoop"
+REPO_ROOT = Path(__file__).resolve().parents[2]
+FIXTURE_DIR = REPO_ROOT / "bin" / "tests" / "fixtures" / "whoop"
 
 
 def load_fixture(name: str) -> dict:

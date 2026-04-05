@@ -23,7 +23,7 @@ from bin.insights.experiments import (
 )
 
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 class InsightsScriptTests(unittest.TestCase):

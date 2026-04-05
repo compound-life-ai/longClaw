@@ -18,8 +18,8 @@ from bin.insights.experiments import (
 from bin.nutrition.estimate_and_log import FIELDNAMES, summarize_day
 
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
-SEED_DIR = REPO_ROOT / "seed"
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SEED_DIR = REPO_ROOT / "bin" / "seed"
 
 
 class SeedFixtureValidityTests(unittest.TestCase):

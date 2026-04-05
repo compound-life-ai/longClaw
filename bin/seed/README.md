@@ -19,7 +19,7 @@ On first use, the agent will detect empty data directories and offer to load see
 For manual seeding:
 
 ```bash
-cp -r seed/* longevityOS-data/
+cp -r bin/seed/* longevityOS-data/
 ```
 
 To reset back to empty:

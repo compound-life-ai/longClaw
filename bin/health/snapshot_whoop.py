@@ -4,7 +4,7 @@ Run once with a valid access token to capture real response shapes:
 
     python3 bin/health/snapshot_whoop.py \
         --token-file longevityOS-data/health/whoop_tokens.json \
-        --output-dir tests/fixtures/whoop
+        --output-dir bin/tests/fixtures/whoop
 """
 from __future__ import annotations
 

@@ -13,7 +13,7 @@ from bin.coach.daily_health_coach import build_daily_coach_context
 from bin.insights.experiments import add_checkin, create_experiment
 
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 class DailyCoachTests(unittest.TestCase):
@@ -223,8 +223,8 @@ class DailyCoachTests(unittest.TestCase):
             payload = json.loads(result.stdout)
             self.assertIn("generated_at", payload)
 
-        news_cron = json.loads((REPO_ROOT / "cron" / "news-digest.example.json").read_text(encoding="utf-8"))
-        coach_cron = json.loads((REPO_ROOT / "cron" / "daily-health-coach.example.json").read_text(encoding="utf-8"))
+        news_cron = json.loads((REPO_ROOT / "bin" / "cron" / "news-digest.example.json").read_text(encoding="utf-8"))
+        coach_cron = json.loads((REPO_ROOT / "bin" / "cron" / "daily-health-coach.example.json").read_text(encoding="utf-8"))
         self.assertEqual(coach_cron["payload"]["delivery"] if "delivery" in coach_cron["payload"] else None, None)
         self.assertEqual(coach_cron["delivery"]["channel"], "telegram")
         self.assertEqual(coach_cron["sessionTarget"], "isolated")

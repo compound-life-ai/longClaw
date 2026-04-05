@@ -26,7 +26,7 @@ from bin.nutrition.lookup import (
 from bin.common.storage import write_json
 
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 class NutritionScriptTests(unittest.TestCase):
