@@ -15,6 +15,7 @@ if __package__ in (None, ""):
 
 from scripts.common.paths import default_data_root
 from scripts.common.storage import append_csv_rows, utc_now_iso
+from scripts.common.debug_log import log_event
 from scripts.nutrition.lookup import enrich_ingredient
 
 
@@ -132,6 +133,10 @@ def infer_meal_type_from_hour(hour: int) -> str:
 
 
 def log_payload(payload: dict[str, Any], data_root: Path) -> dict[str, Any]:
+    log_event("estimate_and_log", "input_loaded", data_root=data_root,
+              ingredient_count=len(payload.get("ingredients", [])),
+              payload_keys=sorted(payload.keys()))
+
     timestamp = parse_timestamp(payload.get("timestamp"))
     date_str = slug_date(timestamp)
     meal_id = str(payload.get("meal_id") or uuid.uuid4())
@@ -155,6 +160,8 @@ def log_payload(payload: dict[str, Any], data_root: Path) -> dict[str, Any]:
         "fat_g": 0.0,
         "fiber_g": 0.0,
     }
+    catalog_hits = 0
+    llm_estimates = 0
 
     for ingredient in payload["ingredients"]:
         resolved = enrich_ingredient(ingredient, data_root)
@@ -203,10 +210,19 @@ def log_payload(payload: dict[str, Any], data_root: Path) -> dict[str, Any]:
                 "confidence": row["ingredient_confidence"],
             }
         )
+        if row["nutrient_source"] and "catalog" in row["nutrient_source"]:
+            catalog_hits += 1
+        else:
+            llm_estimates += 1
         for key in meal_totals:
             meal_totals[key] = round(meal_totals[key] + row[key], 2)
 
+    log_event("estimate_and_log", "enrichment_done", data_root=data_root,
+              total=len(rows), catalog_hits=catalog_hits, llm_estimates=llm_estimates)
+
     append_csv_rows(nutrition_csv_path(data_root), FIELDNAMES, rows)
+    log_event("estimate_and_log", "csv_written", data_root=data_root,
+              rows=len(rows), file=str(nutrition_csv_path(data_root)))
     day_summary = summarize_day(data_root, date_str)
     return {
         "ok": True,

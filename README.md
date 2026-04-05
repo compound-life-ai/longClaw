@@ -309,7 +309,7 @@ The sections below keep the full technical detail from the original README and a
 
 ### Plugin & SDK
 
-This is a native [OpenClaw plugin](https://docs.openclaw.ai/plugins/building-plugins) that registers 7 tools via the [Plugin SDK](https://docs.openclaw.ai/plugins/sdk-overview):
+This is a native [OpenClaw plugin](https://docs.openclaw.ai/plugins/building-plugins) that registers 8 tools via the [Plugin SDK](https://docs.openclaw.ai/plugins/sdk-overview):
 
 | Tool | Description |
 |------|-------------|
@@ -320,6 +320,7 @@ This is a native [OpenClaw plugin](https://docs.openclaw.ai/plugins/building-plu
 | `experiments` | Create, check-in, analyze self-experiments |
 | `news_digest` | Fetch ranked health/longevity news |
 | `coaching_context` | Generate daily coaching context from all data |
+| `learnings` | Search/log debugging discoveries, read trace logs |
 
 Each tool wraps the corresponding Python script in `scripts/` — the SDK entry point (`index.ts`) shells out to them via `execFile`.
 
@@ -361,23 +362,60 @@ Tests use real (sanitized) Whoop API response fixtures from `tests/fixtures/whoo
 ### Repo Layout
 
 ```
-index.ts               SDK entry point — registers 7 tools
+index.ts               SDK entry point — registers 8 tools + observability hooks
 openclaw.plugin.json   Plugin manifest (skills, config schema)
 package.json           Package metadata + openclaw extensions
-SKILL.md               Root meta skill (natural language routing)
+SKILL.md               Root meta skill (natural language routing + debugging guide)
 skills/                OpenClaw-facing skill definitions
 agents/                Specialist subagent prompts (10 files)
 scripts/               Deterministic Python helpers (called by tools)
+  common/debug_log.py  Structured JSONL logging for Python scripts
+  common/learnings.py  Persistent debugging knowledge store
 cron/                  Example cron job configs
 seed/                  Optional fixture data
 longevityOS-data/      Runtime data (gitignored)
+  debug/trace.jsonl    Tool call trace log (all layers)
+  debug/learnings.jsonl Agent debugging discoveries
+  debug/artifacts/     Preserved temp files from failed tool calls
 tests/                 Unit and CLI tests
 docs/                  Architecture and design notes
+  observability.md     Observability guide with triangulation workflows
 website/               Next.js landing page
 ```
 
+### Observability
+
+All tool calls are traced through OpenClaw plugin hooks registered in `index.ts`. The trace captures five layers of the tool call pipeline — from what the LLM generated, through SDK processing, to script execution — enabling root cause diagnosis without reproducing the bug.
+
+```
+  LLM generates tool call
+         |
+  Layer -1: llm_output .......... what the model generated
+         |
+  Layer  0: before_tool ......... what execute() received + auto-diff vs LLM
+         |
+  Layer  1: after_tool .......... result, error, duration + streak detection
+         |
+  Layer  2: script_io ........... internal script events (3 scripts)
+         |
+  Layer  3: artifact ............ preserved temp files on failure
+```
+
+Key features:
+- **Cross-layer diffing** — auto-detects when the SDK mutates LLM-generated arguments (would have instantly solved the Bug #8 empty `input_json` issue)
+- **Streak detection** — flags consecutive failures of the same tool
+- **Session summaries** — one-line overview of all tool calls at session end
+- **Evidence preservation** — temp files saved to `debug/artifacts/` on failure instead of being deleted
+- **Learnings system** — persistent JSONL store where agents record debugging discoveries with confidence decay (observed/inferred lose 1pt per 30 days)
+- **Agent debugging protocol** — `skill.md` instructs agents to search learnings before debugging, read trace logs, diagnose by layer, and log discoveries
+
+Three scripts with hook blind spots have additional instrumentation: `estimate_and_log.py` (temp file + enrichment), `import_whoop.py` (token refresh + 5 API calls), `fetch_digest.py` (per-feed results). The other five scripts are sufficiently covered by hooks alone.
+
+All logs go to `longevityOS-data/debug/` (gitignored, local-only). See [docs/observability.md](docs/observability.md) for the full guide with triangulation workflows and worked examples.
+
 ### Docs
 
+- [docs/observability.md](docs/observability.md) — observability layers, triangulation, learnings system
 - [docs/install.md](docs/install.md)
 - [docs/openclaw-extension-survey.md](docs/openclaw-extension-survey.md)
 - [docs/proposed-health-companion-architecture.md](docs/proposed-health-companion-architecture.md)
