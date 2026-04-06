@@ -1,6 +1,6 @@
 ---
 name: snap
-description: Log meals from food photos or natural language meal descriptions with ingredient-centric calorie, macro, and full micronutrient detail.
+description: Log meals from food photos or natural language descriptions — infer ingredients, call the nutrition tool immediately, and return full micronutrient detail. Do not estimate nutrition in chat manually.
 user-invocable: true
 ---
 
@@ -15,12 +15,23 @@ Use this skill when:
 Behavior rules:
 
 - Reply in the user's language.
-- If a photo-only message has low confidence, ask a brief confirmation before logging anything.
-- If confidence is high, proceed directly.
+- **Always log via the `nutrition` tool.** Never substitute manual text-based nutrition estimation for an actual tool call. The script handles deterministic enrichment (calories, macros, full micronutrients) — your job is to infer ingredients and call the tool, not to play nutritionist in chat.
 - Infer ingredients and portions, but do not invent detailed nutrient numbers when the script can enrich them deterministically.
 - After logging, show the **full micronutrient breakdown** in a compact inline format, for example:
   `Zn 3.2mg · Ca 58mg · VitD 16.4µg · Se 73mcg · Fe 1.8mg · Folate 57µg · Omega-3 1.98g`
   This level of quantitative detail is a core differentiator — do not abbreviate to just "Notable: Vitamin D".
+
+### When to proceed vs. when to confirm
+
+- **Proceed directly (no confirmation needed):**
+  - Photo + any meal context (e.g. "正在吃早餐", "lunch", "having a snack") — the text removes ambiguity.
+  - Natural language description (e.g. "had salmon and rice") — user intent is clear.
+  - Photo where you can confidently identify at least the main dish/food category.
+- **Ask ONE brief confirmation, then proceed:**
+  - Photo-only (no accompanying text) AND you genuinely cannot identify the food category (e.g. blurry photo, unfamiliar dish, ambiguous container).
+  - The confirmation question should be specific: "這看起來像是優格碗，對嗎？" — not an open-ended ingredient list request.
+  - Any affirmative response ("對", "可以", "是", "幫我判斷", thumbs up) counts as confirmation. After confirmation, **immediately call the tool** with your best estimate. Do not ask again or offer more estimates.
+- **Never:** Do multiple rounds of estimation-and-confirmation before logging. One round max. If you're wrong, the user can correct after seeing the logged result.
 
 Meal-type inference rules:
 

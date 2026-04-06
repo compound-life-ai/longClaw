@@ -355,7 +355,7 @@ export default definePluginEntry({
     api.registerTool({
       name: "nutrition",
       description:
-        "Log meals, get daily nutrition totals, or get weekly summary vs RDA targets",
+        "Log meals from food photos or descriptions (infer ingredients, then call with command 'log'), get daily nutrition totals, or get weekly summary vs RDA targets. Always call this tool to log — never estimate nutrition manually in chat.",
       parameters: Type.Object({
         command: Type.Union([
           Type.Literal("log"),
