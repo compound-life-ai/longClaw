@@ -7,9 +7,11 @@ __pycache__/
 .pytest_cache/
 *.pyc
 longevityOS-data/nutrition/*.csv
+longevityOS-data/nutrition/*.json
 longevityOS-data/health/*.json
 longevityOS-data/insights/*.json
 longevityOS-data/news/*.json
+longevityOS-data/debug/
 !longevityOS-data/**/.gitkeep
 .DS_Store
 data/
