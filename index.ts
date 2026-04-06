@@ -2,7 +2,8 @@ import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
 import { Type } from "@sinclair/typebox";
 import { writeFile, unlink, appendFile, mkdir, copyFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { randomUUID } from "node:crypto";
 import { checkForUpdate, type UpdateStatus } from "./version-check.ts";
 import { mergeEnv } from "./env-merge.ts";
@@ -81,6 +82,34 @@ function extractToolCalls(lastAssistant: unknown): { name: string; arguments: un
     }
   }
   return calls;
+}
+
+/** Map our Python scripts to their registered tool names. */
+const SCRIPT_TO_TOOL: Record<string, string> = {
+  "estimate_and_log": "nutrition",
+  "daily_summary": "nutrition",
+  "weekly_summary": "nutrition",
+  "profile_store": "health_profile",
+  "import_whoop": "whoop_sync",
+  "experiments": "experiments",
+  "fetch_digest": "news_digest",
+  "daily_health_coach": "coaching_context",
+  "learnings": "learnings",
+};
+
+/**
+ * When the agent uses native `exec` to run our Python scripts directly,
+ * resolve the effective tool name so logging/streaks use domain names
+ * (e.g. "nutrition") instead of generic "exec".
+ */
+function resolveExecTool(toolName: string, params: Record<string, unknown>): { resolvedTool: string; script: string } | undefined {
+  if (toolName !== "exec") return undefined;
+  const cmd = String(params?.command ?? "");
+  const match = cmd.match(/\bbin\/(?:nutrition|health|insights|news|coach|common)\/(\w+)\.py\b/);
+  if (!match) return undefined;
+  const script = match[1];
+  const resolvedTool = SCRIPT_TO_TOOL[script];
+  return resolvedTool ? { resolvedTool, script } : undefined;
 }
 
 // ---------------------------------------------------------------------------
@@ -172,14 +201,16 @@ export default definePluginEntry({
     // Store the SDK's sanctioned process runner
     runCommand = api.runtime.system.runCommandWithTimeout;
 
-    // Resolve debug paths now that dataRoot is known
-    debugDir = join(dataRoot, "debug");
+    // Resolve debug paths using real filesystem path (api.resolvePath returns
+    // SDK-internal paths that work with runCommand but not with node:fs)
+    const pluginDir = dirname(fileURLToPath(import.meta.url));
+    debugDir = join(pluginDir, "longevityOS-data", "debug");
     traceFile = join(debugDir, "trace.jsonl");
     artifactsDir = join(debugDir, "artifacts");
 
     // ── observability hooks ─────────────────────────────────────
 
-    api.registerHook("session_start", async (event: any, ctx: any) => {
+    api.on("session_start", async (event, ctx) => {
       sessionStats = { total: 0, succeeded: 0, failed: 0, failures: [] };
       // Fire update check in background — don't block session start
       checkForUpdate(root).then(s => { cachedUpdateStatus = s; }).catch(() => {});
@@ -191,14 +222,14 @@ export default definePluginEntry({
       });
     });
 
-    api.registerHook("before_prompt_build", async () => {
+    api.on("before_prompt_build", async () => {
       if (!cachedUpdateStatus?.updateAvailable) return;
       return {
         prependContext: `[LongClaw update available: v${cachedUpdateStatus.local} → v${cachedUpdateStatus.remote}. Upgrade: cd ${root} && git pull && npm install && openclaw gateway restart]`,
       };
     });
 
-    api.registerHook("llm_output", async (event: any) => {
+    api.on("llm_output", async (event) => {
       const toolCalls = extractToolCalls(event.lastAssistant);
       // Store tool call args for cross-layer diffing in before_tool_call
       if (toolCalls.length > 0) {
@@ -219,16 +250,18 @@ export default definePluginEntry({
       });
     });
 
-    api.registerHook("before_tool_call", async (event: any, ctx: any) => {
-      const toolCallId = event.toolCallId ?? randomUUID();
+    api.on("before_tool_call", async (event, ctx) => {
+      const toolCallId = ctx.toolCallId ?? randomUUID();
       const runId = event.runId ?? "";
-      const sessionId = ctx?.sessionId ?? "";
+      const sessionId = ctx.sessionId ?? "";
+      const resolved = resolveExecTool(event.toolName, event.params ?? {});
 
       // Store context so execute() can pass env vars to Python
       runContexts.set(toolCallId, { runId, sessionId });
 
       // Cross-layer diff: compare LLM-generated args vs SDK-delivered params
-      const llmArgs = llmToolArgs.get(runId)?.get(event.toolName);
+      const effectiveTool = resolved?.resolvedTool ?? event.toolName;
+      const llmArgs = llmToolArgs.get(runId)?.get(effectiveTool);
       const paramDiff = diffParams(llmArgs, event.params ?? {});
 
       await appendLog({
@@ -237,20 +270,23 @@ export default definePluginEntry({
         sessionId,
         toolCallId,
         toolName: event.toolName,
+        ...(resolved ? { resolvedTool: resolved.resolvedTool, script: resolved.script } : {}),
         params: event.params,
         ...(paramDiff ? { llm_diff: paramDiff } : {}),
       });
     });
 
-    api.registerHook("after_tool_call", async (event: any, ctx: any) => {
-      const toolCallId = event.toolCallId ?? "";
-      const toolName = event.toolName;
+    api.on("after_tool_call", async (event, ctx) => {
+      const toolCallId = ctx.toolCallId ?? "";
+      const resolved = resolveExecTool(event.toolName, event.params ?? {});
+      const effectiveTool = resolved?.resolvedTool ?? event.toolName;
       const error = event.error;
 
-      // Streak detection
+      // Streak detection — use resolved tool name so "nutrition" failures
+      // are tracked together whether called via registered tool or exec
       let streak: Record<string, unknown> | undefined;
       if (error) {
-        const prev = failStreaks.get(toolName);
+        const prev = failStreaks.get(effectiveTool);
         if (prev) {
           prev.count++;
           prev.error = error;
@@ -258,12 +294,12 @@ export default definePluginEntry({
             same_error: prev.error === error,
             pattern: prev.count >= 3 ? "consistent_failure" : "recurring" };
         } else {
-          failStreaks.set(toolName, { count: 1, error, since: new Date().toISOString() });
+          failStreaks.set(effectiveTool, { count: 1, error, since: new Date().toISOString() });
         }
         sessionStats.failed++;
-        sessionStats.failures.push({ tool: toolName, error });
+        sessionStats.failures.push({ tool: effectiveTool, error });
       } else {
-        failStreaks.delete(toolName);
+        failStreaks.delete(effectiveTool);
         sessionStats.succeeded++;
       }
       sessionStats.total++;
@@ -271,9 +307,10 @@ export default definePluginEntry({
       await appendLog({
         layer: "after_tool",
         runId: event.runId ?? "",
-        sessionId: ctx?.sessionId ?? "",
+        sessionId: ctx.sessionId ?? "",
         toolCallId,
-        toolName,
+        toolName: event.toolName,
+        ...(resolved ? { resolvedTool: resolved.resolvedTool, script: resolved.script } : {}),
         durationMs: event.durationMs,
         error: error ?? null,
         ...(streak ? { streak } : {}),
@@ -284,7 +321,7 @@ export default definePluginEntry({
       if (event.runId) llmToolArgs.delete(event.runId);
     });
 
-    api.registerHook("session_end", async (event: any) => {
+    api.on("session_end", async (event, ctx) => {
       await appendLog({
         layer: "session_end",
         sessionId: event.sessionId,
