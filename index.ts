@@ -5,6 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 import { checkForUpdate, type UpdateStatus } from "./version-check.ts";
+import { mergeEnv } from "./env-merge.ts";
 
 // ---------------------------------------------------------------------------
 // Debug / observability  (see docs/observability.md)
@@ -83,8 +84,7 @@ function extractToolCalls(lastAssistant: unknown): { name: string; arguments: un
 }
 
 // ---------------------------------------------------------------------------
-// Version update check  (fetch lives in version-check.ts to avoid
-// the scanner's env-harvesting rule: process.env + fetch in same file)
+// Version update check  (network calls live in version-check.ts)
 // ---------------------------------------------------------------------------
 
 let cachedUpdateStatus: UpdateStatus | null = null;
@@ -104,7 +104,7 @@ async function run(
 ): Promise<string> {
   const result = await runCommand(
     [cmd, ...args],
-    { timeoutMs: 120_000, cwd, env: env ? { ...process.env, ...env } : undefined },
+    { timeoutMs: 120_000, cwd, env: mergeEnv(env) },
   );
   if (result.code !== 0) {
     throw new Error(result.stderr || `Process exited with code ${result.code}`);
@@ -448,7 +448,7 @@ export default definePluginEntry({
     api.registerTool({
       name: "whoop_initiate",
       description:
-        "First-time Whoop setup: validate saved OAuth tokens and fetch initial data from the Whoop API. Use this only during onboarding after the user completes the OAuth flow and saves their tokens. For ongoing data sync, use whoop_sync instead.",
+        "First-time Whoop setup: validate saved OAuth tokens and pull initial data from the Whoop API. Use this only during onboarding after the user completes the OAuth flow and saves their tokens. For ongoing data sync, use whoop_sync instead.",
       parameters: Type.Object({}),
       async execute(_id) {
         const env = debugEnv(_id);
