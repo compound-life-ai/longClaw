@@ -1,10 +1,11 @@
 import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
 import { Type } from "@sinclair/typebox";
-import { execFile } from "node:child_process";
-import { writeFile, unlink, appendFile, mkdir, copyFile, readFile, stat } from "node:fs/promises";
-import { tmpdir, homedir } from "node:os";
+import { writeFile, unlink, appendFile, mkdir, copyFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
+import { checkForUpdate, type UpdateStatus } from "./version-check.ts";
+import { mergeEnv } from "./env-merge.ts";
 
 // ---------------------------------------------------------------------------
 // Debug / observability  (see docs/observability.md)
@@ -83,121 +84,32 @@ function extractToolCalls(lastAssistant: unknown): { name: string; arguments: un
 }
 
 // ---------------------------------------------------------------------------
-// Version update check
+// Version update check  (network calls live in version-check.ts)
 // ---------------------------------------------------------------------------
-
-const REMOTE_PACKAGE_URL =
-  "https://raw.githubusercontent.com/compound-life-ai/Turri/main/package.json";
-const UPDATE_CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
-
-type UpdateStatus = {
-  local: string;
-  remote: string | null;
-  updateAvailable: boolean;
-  checkedAt: string;
-  error?: string;
-};
 
 let cachedUpdateStatus: UpdateStatus | null = null;
 
-function updateCachePath(): string {
-  return join(homedir(), ".longclaw-update-check");
-}
-
-async function readCachedUpdateStatus(): Promise<UpdateStatus | null> {
-  try {
-    const raw = await readFile(updateCachePath(), "utf-8");
-    const cached = JSON.parse(raw) as UpdateStatus;
-    const age = Date.now() - new Date(cached.checkedAt).getTime();
-    if (age < UPDATE_CACHE_TTL_MS) return cached;
-  } catch { /* no cache or expired */ }
-  return null;
-}
-
-async function writeCachedUpdateStatus(status: UpdateStatus) {
-  try {
-    await writeFile(updateCachePath(), JSON.stringify(status));
-  } catch { /* best effort */ }
-}
-
-function getLocalVersion(root: string): string {
-  // Synchronous read is fine here — runs once at startup
-  try {
-    const pkg = require(join(root, "package.json"));
-    return pkg.version || "0.0.0";
-  } catch {
-    return "0.0.0";
-  }
-}
-
-async function fetchRemoteVersion(): Promise<string | null> {
-  try {
-    const resp = await fetch(REMOTE_PACKAGE_URL, {
-      signal: AbortSignal.timeout(5000),
-    });
-    if (!resp.ok) return null;
-    const pkg = await resp.json();
-    return pkg.version || null;
-  } catch {
-    return null;
-  }
-}
-
-function isNewerVersion(local: string, remote: string): boolean {
-  const lp = local.split(".").map(Number);
-  const rp = remote.split(".").map(Number);
-  for (let i = 0; i < Math.max(lp.length, rp.length); i++) {
-    const l = lp[i] ?? 0;
-    const r = rp[i] ?? 0;
-    if (r > l) return true;
-    if (r < l) return false;
-  }
-  return false;
-}
-
-async function checkForUpdate(root: string): Promise<UpdateStatus> {
-  // Check cache first
-  const cached = await readCachedUpdateStatus();
-  if (cached) {
-    cachedUpdateStatus = cached;
-    return cached;
-  }
-
-  const local = getLocalVersion(root);
-  const remote = await fetchRemoteVersion();
-  const status: UpdateStatus = {
-    local,
-    remote,
-    updateAvailable: remote ? isNewerVersion(local, remote) : false,
-    checkedAt: new Date().toISOString(),
-  };
-
-  await writeCachedUpdateStatus(status);
-  cachedUpdateStatus = status;
-  return status;
-}
-
 // ---------------------------------------------------------------------------
-// Subprocess runner
+// Subprocess runner  (uses OpenClaw SDK's runCommandWithTimeout)
 // ---------------------------------------------------------------------------
 
-function run(
+/** Set from api.runtime.system.runCommandWithTimeout in register(). */
+let runCommand: (argv: string[], opts: { timeoutMs: number; cwd?: string; env?: NodeJS.ProcessEnv }) => Promise<{ stdout: string; stderr: string; code: number | null }>;
+
+async function run(
   cmd: string,
   args: string[],
   cwd: string,
   env?: Record<string, string>,
 ): Promise<string> {
-  return new Promise((resolve, reject) => {
-    execFile(
-      cmd,
-      args,
-      { cwd, maxBuffer: 4 * 1024 * 1024, env: env ? { ...process.env, ...env } : undefined },
-      (err, stdout, stderr) => {
-        if (err) reject(new Error(stderr || err.message));
-        else resolve(stdout);
-      },
-    );
-  });
+  const result = await runCommand(
+    [cmd, ...args],
+    { timeoutMs: 120_000, cwd, env: mergeEnv(env) },
+  );
+  if (result.code !== 0) {
+    throw new Error(result.stderr || `Process exited with code ${result.code}`);
+  }
+  return result.stdout;
 }
 
 async function withTempJson(
@@ -257,6 +169,9 @@ export default definePluginEntry({
     const dataRoot = api.resolvePath("longevityOS-data");
     const py = "python3";
 
+    // Store the SDK's sanctioned process runner
+    runCommand = api.runtime.system.runCommandWithTimeout;
+
     // Resolve debug paths now that dataRoot is known
     debugDir = join(dataRoot, "debug");
     traceFile = join(debugDir, "trace.jsonl");
@@ -267,7 +182,7 @@ export default definePluginEntry({
     api.registerHook("session_start", async (event: any, ctx: any) => {
       sessionStats = { total: 0, succeeded: 0, failed: 0, failures: [] };
       // Fire update check in background — don't block session start
-      checkForUpdate(root).catch(() => {});
+      checkForUpdate(root).then(s => { cachedUpdateStatus = s; }).catch(() => {});
       await appendLog({
         layer: "session_start",
         sessionId: event.sessionId,
@@ -533,7 +448,7 @@ export default definePluginEntry({
     api.registerTool({
       name: "whoop_initiate",
       description:
-        "First-time Whoop setup: validate saved OAuth tokens and fetch initial data from the Whoop API. Use this only during onboarding after the user completes the OAuth flow and saves their tokens. For ongoing data sync, use whoop_sync instead.",
+        "First-time Whoop setup: validate saved OAuth tokens and pull initial data from the Whoop API. Use this only during onboarding after the user completes the OAuth flow and saves their tokens. For ongoing data sync, use whoop_sync instead.",
       parameters: Type.Object({}),
       async execute(_id) {
         const env = debugEnv(_id);
